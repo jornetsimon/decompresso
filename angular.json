@@ -73,21 +73,33 @@
                   "with": "src/environments/environment.staging.ts"
                 }
               ]
+            },
+            "hmr": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.hmr.ts"
+                }
+              ]
             }
           }
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "mascarade:build"
+            "browserTarget": "mascarade:build",
+            "hmrWarning": false
           },
           "configurations": {
             "production": {
               "browserTarget": "mascarade:build:production"
+            },
+            "hmr": {
+              "hmr": true,
+              "browserTarget": "mascarade:build:hmr"
             }
           }
         },
-
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
@@ -137,6 +149,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "mascarade"
+    }
+  },
+  "defaultProject": "mascarade",
+  "cli": {
+    "analytics": false
+  }
 }
