@@ -32,9 +32,13 @@
     "@angular/platform-browser-dynamic": "~10.1.6",
     "@angular/router": "~10.1.6",
     "@ant-design/icons-angular": "^10.0.1",
+    "@codewithdan/observable-store": "^2.2.11",
+    "@ngneat/until-destroy": "^8.0.3",
+    "date-fns": "^2.16.1",
     "ng-zorro-antd": "^10.0.2",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",
+    "uuid": "^8.3.1",
     "zone.js": "~0.10.2"
   },
   "devDependencies": {
@@ -59,6 +63,6 @@
     "tslint": "~6.1.0",
     "tslint-config-prettier": "^1.18.0",
     "tslint-immutable": "^6.0.1",
-    "typescript": "~4.0.2"
+    "typescript": "^4.0.3"
   }
 }
