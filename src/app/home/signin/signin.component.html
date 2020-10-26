@@ -1,0 +1,24 @@
+<nz-card class="card">
+	<form nz-form nzLayout="vertical" [formGroup]="formGroup">
+		<nz-form-item>
+			<nz-form-label class="label">
+				Je rejoins mes collègues avec mon adresse pro&nbsp;
+				<i
+					nz-icon
+					nz-tooltip
+					nzTooltipTitle="What do you want other to call you"
+					nzType="question-circle"
+					nzTheme="outline"
+				></i>
+			</nz-form-label>
+			<nz-form-control nzHasFeedback [nzValidateStatus]="emailControlStatus()">
+				<mas-private-domain-email formControlName="email"></mas-private-domain-email>
+			</nz-form-control>
+		</nz-form-item>
+		<div fxLayoutAlign="center" class="login-button-container">
+			<button nz-button nzType="primary" nzSize="large" nzShape="round" [disabled]="false">
+				Accéder au chat
+			</button>
+		</div>
+	</form>
+</nz-card>

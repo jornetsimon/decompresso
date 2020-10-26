@@ -9,19 +9,22 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { fr_FR, NZ_I18N } from 'ng-zorro-antd/i18n';
 import { registerLocaleData } from '@angular/common';
 import fr from '@angular/common/locales/fr';
-import { FlexLayoutModule } from '@angular/flex-layout';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { LayoutComponent } from './layout/layout.component';
+import { SharedModule } from './shared/shared.module';
 
 registerLocaleData(fr);
 
 @NgModule({
-	declarations: [AppComponent],
+	declarations: [AppComponent, LayoutComponent],
 	imports: [
 		BrowserModule,
 		AppRoutingModule,
 		FormsModule,
 		HttpClientModule,
 		BrowserAnimationsModule,
-		FlexLayoutModule,
+		SharedModule,
+		NzIconModule.forRoot([]),
 	],
 	providers: [
 		{ provide: NZ_I18N, useValue: fr_FR },

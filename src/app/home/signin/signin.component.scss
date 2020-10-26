@@ -1,0 +1,26 @@
+.card {
+	border-radius: 20px;
+}
+::ng-deep .card .ant-card-body {
+	padding: 30px;
+	border-radius: 20px;
+	box-shadow: 1px 2px 12px 0px #e2e2e2;
+}
+
+.label {
+	display: flex;
+	justify-content: center;
+	font-style: italic;
+}
+::ng-deep .label label {
+	color: #737373;
+	font-size: small;
+}
+
+.login-button-container {
+	margin-top: 20px;
+}
+.login-button-container button {
+	font-weight: bold;
+	text-transform: uppercase;
+}
