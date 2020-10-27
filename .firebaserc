@@ -1,5 +1,14 @@
 {
   "projects": {
     "default": "mascarade-chat"
+  },
+  "targets": {
+    "mascarade-chat": {
+      "hosting": {
+        "mascarade": [
+          "mascarade-chat"
+        ]
+      }
+    }
   }
 }

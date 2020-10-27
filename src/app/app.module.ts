@@ -12,6 +12,9 @@ import fr from '@angular/common/locales/fr';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { LayoutComponent } from './layout/layout.component';
 import { SharedModule } from './shared/shared.module';
+import { AngularFireModule } from '@angular/fire';
+import { AngularFirestoreModule, SETTINGS as FIRESTORE_SETTINGS } from '@angular/fire/firestore';
+import { environment } from '../environments/environment';
 
 registerLocaleData(fr);
 
@@ -25,10 +28,21 @@ registerLocaleData(fr);
 		BrowserAnimationsModule,
 		SharedModule,
 		NzIconModule.forRoot([]),
+		AngularFireModule.initializeApp(environment.firebase),
+		AngularFirestoreModule,
 	],
 	providers: [
 		{ provide: NZ_I18N, useValue: fr_FR },
 		{ provide: LOCALE_ID, useValue: 'fr' },
+		{
+			provide: FIRESTORE_SETTINGS,
+			useFactory: () =>
+				environment.production ||
+				environment.staging ||
+				window.location.hostname !== 'localhost'
+					? {}
+					: { host: 'localhost:8888', ssl: false },
+		},
 	],
 	bootstrap: [AppComponent],
 })
