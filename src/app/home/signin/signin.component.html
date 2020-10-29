@@ -1,5 +1,5 @@
 <nz-card class="card">
-	<form nz-form nzLayout="vertical" [formGroup]="formGroup">
+	<form nz-form nzLayout="vertical" [formGroup]="formGroup" (ngSubmit)="submit()">
 		<nz-form-item>
 			<nz-form-label class="label">
 				Je rejoins mes collègues avec mon adresse pro&nbsp;
@@ -11,12 +11,22 @@
 					nzTheme="outline"
 				></i>
 			</nz-form-label>
-			<nz-form-control nzHasFeedback [nzValidateStatus]="emailControlStatus()">
+			<nz-form-control
+				nzHasFeedback
+				nzValidatingTip="Vérification..."
+				[nzValidateStatus]="emailControlStatus()"
+				[nzErrorTip]="emailErrorsTpl"
+			>
 				<mas-private-domain-email formControlName="email"></mas-private-domain-email>
+				<ng-template #emailErrorsTpl>
+					<ng-container *ngIf="formGroup.get('email')?.hasError('emailDomainIsPublic')">
+						Les adresses email publiques ne sont pas autorisées 🙅‍♂️<br />
+					</ng-container>
+				</ng-template>
 			</nz-form-control>
 		</nz-form-item>
 		<div fxLayoutAlign="center" class="login-button-container">
-			<button nz-button nzType="primary" nzSize="large" nzShape="round" [disabled]="false">
+			<button nz-button nzType="primary" nzSize="large" [disabled]="formGroup.invalid">
 				Accéder au chat
 			</button>
 		</div>

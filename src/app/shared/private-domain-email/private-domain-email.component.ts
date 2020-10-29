@@ -23,9 +23,10 @@ import { PrivateDomainEmailService } from './private-domain-email.service';
 })
 export class PrivateDomainEmailComponent extends BaseControlValueAccessor<string> {
 	// tslint:disable-next-line:readonly-array
-	defaultValidators = [PrivateDomainEmailService.emailValidator];
-	// tslint:disable-next-line:readonly-array
-	defaultAsyncValidators = [];
+	defaultValidators = [
+		PrivateDomainEmailService.emailValidator,
+		PrivateDomainEmailService.emailDomainIsPrivate,
+	];
 
 	control = new FormControl(undefined, [Validators.required]);
 
