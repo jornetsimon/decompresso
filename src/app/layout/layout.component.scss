@@ -8,3 +8,21 @@
 	padding-left: 10vw;
 	padding-right: 10vw;
 }
+
+.user-infos {
+	position: fixed;
+	bottom: -5px;
+	left: -5px;
+	padding-bottom: 5px;
+	padding-left: 5px;
+}
+
+.nickname {
+	font-style: oblique;
+	font-weight: bolder;
+	/*margin-bottom: 5px;*/
+}
+
+::ng-deep .user-infos .ant-card-body {
+	padding: 10px;
+}

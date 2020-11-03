@@ -15,11 +15,14 @@ import { SharedModule } from './shared/shared.module';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule, SETTINGS as FIRESTORE_SETTINGS } from '@angular/fire/firestore';
 import { environment } from '../environments/environment';
+import { AngularFireFunctionsModule, ORIGIN as FUNCTIONS_ORIGIN } from '@angular/fire/functions';
+import { AngularFireAuthModule } from '@angular/fire/auth';
+import { WelcomeComponent } from './welcome/welcome.component';
 
 registerLocaleData(fr);
 
 @NgModule({
-	declarations: [AppComponent, LayoutComponent],
+	declarations: [AppComponent, LayoutComponent, WelcomeComponent],
 	imports: [
 		BrowserModule,
 		AppRoutingModule,
@@ -30,6 +33,8 @@ registerLocaleData(fr);
 		NzIconModule.forRoot([]),
 		AngularFireModule.initializeApp(environment.firebase),
 		AngularFirestoreModule,
+		AngularFireFunctionsModule,
+		AngularFireAuthModule,
 	],
 	providers: [
 		{ provide: NZ_I18N, useValue: fr_FR },
@@ -42,6 +47,15 @@ registerLocaleData(fr);
 				window.location.hostname !== 'localhost'
 					? {}
 					: { host: 'localhost:8888', ssl: false },
+		},
+		{
+			provide: FUNCTIONS_ORIGIN,
+			useFactory: () =>
+				environment.production ||
+				environment.staging ||
+				window.location.hostname !== 'localhost'
+					? undefined
+					: 'http://localhost:5001',
 		},
 	],
 	bootstrap: [AppComponent],

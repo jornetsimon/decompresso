@@ -5,4 +5,18 @@
 	<div class="main-container" fxFlex="grow">
 		<router-outlet></router-outlet>
 	</div>
+	<nz-card class="user-infos" *ngIf="authService.isAuthenticated$ | async">
+		<div class="nickname">PandaRoux</div>
+		<div>
+			<button
+				nz-button
+				nzSize="small"
+				nzType="link"
+				style="padding: 0 !important; font-size: smaller"
+				(click)="logout()"
+			>
+				Déconnexion
+			</button>
+		</div>
+	</nz-card>
 </div>

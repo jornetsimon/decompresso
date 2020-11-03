@@ -1,34 +1,84 @@
-<nz-card class="card">
-	<form nz-form nzLayout="vertical" [formGroup]="formGroup" (ngSubmit)="submit()">
-		<nz-form-item>
-			<nz-form-label class="label">
-				Je rejoins mes collègues avec mon adresse pro&nbsp;
-				<i
-					nz-icon
-					nz-tooltip
-					nzTooltipTitle="What do you want other to call you"
-					nzType="question-circle"
-					nzTheme="outline"
-				></i>
-			</nz-form-label>
-			<nz-form-control
-				nzHasFeedback
-				nzValidatingTip="Vérification..."
-				[nzValidateStatus]="emailControlStatus()"
-				[nzErrorTip]="emailErrorsTpl"
+<nz-alert
+	nzType="success"
+	[nzDescription]="authenticatedTpl"
+	nzShowIcon
+	*ngIf="authService.isAuthenticated$ | async; else loginCardTpl"
+></nz-alert>
+<ng-template #authenticatedTpl>
+	Connecté !
+	<br />
+	Vous pouvez maintenance fermer cette fenêtre.
+</ng-template>
+<ng-template #loginCardTpl>
+	<nz-card class="card">
+		<form nz-form nzLayout="vertical" [formGroup]="formGroup" (ngSubmit)="submitClicked()">
+			<nz-form-item>
+				<nz-form-label class="label">
+					Je rejoins mes collègues avec mon adresse pro&nbsp;
+					<i
+						nz-icon
+						nz-tooltip
+						nzTooltipTitle="What do you want other to call you"
+						nzType="question-circle"
+						nzTheme="outline"
+					></i>
+				</nz-form-label>
+				<nz-form-control
+					nzHasFeedback
+					nzValidatingTip="Vérification..."
+					[nzValidateStatus]="emailControlStatus()"
+					[nzErrorTip]="emailErrorsTpl"
+				>
+					<mas-private-domain-email formControlName="email"></mas-private-domain-email>
+					<ng-template #emailErrorsTpl>
+						<ng-container
+							*ngIf="formGroup.get('email')?.hasError('emailDomainIsPublic')"
+						>
+							Les adresses email publiques ne sont pas autorisées 🙅‍♂️<br />
+						</ng-container>
+					</ng-template>
+				</nz-form-control>
+			</nz-form-item>
+			<div
+				fxLayout="column"
+				fxLayoutAlign="center center"
+				fxLayoutGap="20px"
+				class="login-button-container"
 			>
-				<mas-private-domain-email formControlName="email"></mas-private-domain-email>
-				<ng-template #emailErrorsTpl>
-					<ng-container *ngIf="formGroup.get('email')?.hasError('emailDomainIsPublic')">
-						Les adresses email publiques ne sont pas autorisées 🙅‍♂️<br />
-					</ng-container>
+				<button
+					nz-button
+					type="submit"
+					nzType="primary"
+					nzSize="large"
+					[disabled]="formGroup.invalid"
+					[nzLoading]="loading"
+					*ngIf="(submitState$ | async)?.status !== 'sent'; else authMailSentTpl"
+				>
+					Connexion
+				</button>
+				<nz-alert
+					nzType="error"
+					nzShowIcon
+					[nzDescription]="authMailError"
+					*ngIf="(submitState$ | async)?.status === 'error'"
+				></nz-alert>
+				<ng-template #authMailSentTpl>
+					<nz-alert
+						nzType="info"
+						nzShowIcon
+						nzIconType="mail"
+						[nzDescription]="waitDescriptionTpl"
+					></nz-alert>
+					<ng-template #waitDescriptionTpl>
+						Un email vous a été envoyé.
+						<br />
+						Il ne vous plus reste qu'à cliquer sur le lien pour vous connecter.
+					</ng-template>
 				</ng-template>
-			</nz-form-control>
-		</nz-form-item>
-		<div fxLayoutAlign="center" class="login-button-container">
-			<button nz-button nzType="primary" nzSize="large" [disabled]="formGroup.invalid">
-				Accéder au chat
-			</button>
-		</div>
-	</form>
-</nz-card>
+				<ng-template #authMailError>
+					Une erreur est survenue, nous en somme désolé 🙁
+				</ng-template>
+			</div>
+		</form>
+	</nz-card>
+</ng-template>
