@@ -16,7 +16,7 @@ import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule, SETTINGS as FIRESTORE_SETTINGS } from '@angular/fire/firestore';
 import { environment } from '../environments/environment';
 import { AngularFireFunctionsModule, ORIGIN as FUNCTIONS_ORIGIN } from '@angular/fire/functions';
-import { AngularFireAuthModule } from '@angular/fire/auth';
+import { AngularFireAuth, AngularFireAuthModule } from '@angular/fire/auth';
 import { WelcomeComponent } from './welcome/welcome.component';
 
 registerLocaleData(fr);
@@ -60,4 +60,10 @@ registerLocaleData(fr);
 	],
 	bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule {
+	constructor(private auth: AngularFireAuth) {
+		if (!environment.production && !environment.staging) {
+			this.auth.useEmulator('http://localhost:9099/');
+		}
+	}
+}

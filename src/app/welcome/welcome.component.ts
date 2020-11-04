@@ -1,28 +1,25 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { AuthService } from '../shared/services/auth.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { Router } from '@angular/router';
+import { UntilDestroy } from '@ngneat/until-destroy';
+import { DataService } from '../shared/services/data.service';
 
+@UntilDestroy()
 @Component({
 	selector: 'mas-welcome',
 	templateUrl: './welcome.component.html',
 	styleUrls: ['./welcome.component.scss'],
 })
-export class WelcomeComponent implements OnInit {
+export class WelcomeComponent {
 	constructor(
 		public authService: AuthService,
-		private message: NzMessageService,
-		private router: Router
-	) {}
-
-	ngOnInit(): void {
-		this.authService.signInFromEmailLink().subscribe({
-			next: (data) => {
-				this.message.success('Connecté !');
-			},
-			error: (err) => {
-				console.error(err);
-				this.router.navigateByUrl('/');
+		private dataService: DataService,
+		private message: NzMessageService
+	) {
+		this.authService.loginOrCreateAccount().subscribe({
+			next: (user) => {
+				console.log(user);
+				this.message.success('Connecté');
 			},
 		});
 	}

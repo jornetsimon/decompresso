@@ -5,10 +5,15 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { from, Observable, of } from 'rxjs';
 import { User as FirebaseUser } from 'firebase/app';
 import { ObservableStore } from '@codewithdan/observable-store';
-import { catchError, map, tap } from 'rxjs/operators';
+import { catchError, map, switchMap, take, tap } from 'rxjs/operators';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Serialized } from '../utilities/data-transfer-object';
 import { serialize } from '../utilities/serialize';
+import { User } from '../model/user';
+import { DataService } from './data.service';
+import { Router } from '@angular/router';
+import { NzModalService } from 'ng-zorro-antd/modal';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 interface StoreState {
 	auth_email: string;
@@ -30,7 +35,11 @@ export class AuthService extends ObservableStore<StoreState> {
 	constructor(
 		private afs: AngularFirestore,
 		private fns: AngularFireFunctions,
-		private auth: AngularFireAuth
+		private auth: AngularFireAuth,
+		private router: Router,
+		private nzModalService: NzModalService,
+		private message: NzMessageService,
+		private dataService: DataService
 	) {
 		super({});
 
@@ -50,6 +59,9 @@ export class AuthService extends ObservableStore<StoreState> {
 			.subscribe();
 	}
 
+	/**
+	 * Send an email to log in
+	 */
 	sendSignInLink(
 		email: string
 	): Observable<{
@@ -78,9 +90,12 @@ export class AuthService extends ObservableStore<StoreState> {
 		);
 	}
 
-	signInFromEmailLink() {
+	/**
+	 * Authenticates the user with the magic link
+	 */
+	private signInFromEmailLink() {
 		return from(this.auth.isSignInWithEmailLink(window.location.href)).pipe(
-			map((isSignInWithEmailLink) => {
+			switchMap((isSignInWithEmailLink) => {
 				// Confirm the link is a sign-in with email link.
 				if (isSignInWithEmailLink) {
 					// Additional state parameters can also be passed via URL.
@@ -108,7 +123,79 @@ export class AuthService extends ObservableStore<StoreState> {
 		);
 	}
 
+	/**
+	 * Log user in or create their account in database
+	 */
+	loginOrCreateAccount(): Observable<User> {
+		return this.isAuthenticated$.pipe(
+			take(1),
+			switchMap((isAuthenticated) => {
+				if (isAuthenticated) {
+					return this.authUser$;
+				} else {
+					return this.signInFromEmailLink().pipe(
+						tap({
+							error: async (err) => {
+								if (err.code === 'auth/user-disabled') {
+									await this.logout().toPromise();
+									this.message.error('Cette adresse email a été refusée');
+								} else {
+									this.message.error('Authentification échouée');
+								}
+								this.router.navigateByUrl('/');
+							},
+						}),
+						map((credential: firebase.auth.UserCredential) => credential.user)
+					);
+				}
+			}),
+			switchMap((authUser: firebase.User | null) => {
+				if (!authUser) {
+					throw new Error('missing_auth_user');
+				}
+				return this.dataService.user$(authUser.uid).pipe(
+					take(1),
+					switchMap((user) => {
+						if (!user) {
+							// No user found in database
+							return this.createUser().pipe(
+								tap({
+									next: () => {
+										this.message.success('Votre compte a bien été créé');
+									},
+									error: async (err: Error) => {
+										await this.logout().toPromise();
+										await this.router.navigateByUrl('/');
+										if (err.message === 'public_email_domain') {
+											this.nzModalService.error({
+												nzTitle: 'Votre adresse email est personnelle',
+												nzContent:
+													'Merci de vous connecter avec votre adresse professionnelle',
+												nzOkText: 'Compris',
+											});
+										}
+									},
+								})
+							);
+						}
+						return of(user);
+					})
+				);
+			}),
+			take(1)
+		);
+	}
+
 	logout() {
 		return from(this.auth.signOut());
+	}
+
+	/**
+	 * Calls a cloud function to create a user account in the database.
+	 * Requires the user to be authenticated.
+	 */
+	private createUser() {
+		const callable = this.fns.httpsCallable('createUser');
+		return callable({});
 	}
 }

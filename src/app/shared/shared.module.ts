@@ -14,6 +14,8 @@ import { QuestionCircleOutline } from '@ant-design/icons-angular/icons';
 import { NzAlertModule } from 'ng-zorro-antd/alert';
 import { NzMessageModule } from 'ng-zorro-antd/message';
 import { NzSkeletonModule } from 'ng-zorro-antd/skeleton';
+import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
 
 // tslint:disable-next-line:readonly-array
 const icons: IconDefinition[] = [QuestionCircleOutline];
@@ -34,6 +36,8 @@ const modules: ReadonlyArray<any> = [
 	NzAlertModule,
 	NzMessageModule,
 	NzSkeletonModule,
+	NzModalModule,
+	NzSpinModule,
 ];
 
 @NgModule({
