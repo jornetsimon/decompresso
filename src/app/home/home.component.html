@@ -1,9 +1,17 @@
 <div fxLayout="column" fxLayoutAlign="start stretch" style="height: 100%">
 	<div fxFlex="0 0 20%" fxLayout="column" fxLayoutAlign="center" style="font-size: medium">
-		<div style="max-width: 700px; margin: auto">
-			Lorem ipsum dolor sit amet, consectetur adipisicing elit. Earum esse fugiat ipsum
-			molestiae voluptates? Ab dolor, eligendi id incidunt iure laudantium, maxime modi odit
-			omnis porro possimus quo suscipit vel.
+		<div id="intro">
+			<div id="headline" [roughNotation]="headlineAnnotationConfig">
+				Et si on réinventait la pause-café ?
+			</div>
+			<div>
+				Venez tchatter
+				<span id="anon" [roughNotation]="anonAnnotationConfig">anonymement</span>
+				avec vos collègues
+				<i nz-icon nzType="comment" nzTheme="outline"></i>
+				<br />
+				Boulot ou petits ragots, à vous de choisir !
+			</div>
 		</div>
 	</div>
 	<div fxFlex="grow" fxLayout="column" fxLayoutAlign="center center" style="padding-bottom: 20%">

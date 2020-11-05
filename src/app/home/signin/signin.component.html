@@ -14,14 +14,21 @@
 		<form nz-form nzLayout="vertical" [formGroup]="formGroup" (ngSubmit)="submitClicked()">
 			<nz-form-item>
 				<nz-form-label class="label">
-					Je rejoins mes collègues avec mon adresse pro&nbsp;
+					Je rejoins mes collègues avec mon adresse pro
 					<i
 						nz-icon
 						nz-tooltip
-						nzTooltipTitle="What do you want other to call you"
+						[nzTooltipTitle]="labelTooltip"
+						nzTooltipOverlayClassName="labelTooltip"
 						nzType="question-circle"
 						nzTheme="outline"
+						style="margin-left: 5px"
 					></i>
+					<ng-template #labelTooltip>
+						En vous connectant avec votre email professionnel, nous vous mettons
+						directement en contact avec les collègues de votre entreprise, grâce au nom
+						de domaine.
+					</ng-template>
 				</nz-form-label>
 				<nz-form-control
 					nzHasFeedback

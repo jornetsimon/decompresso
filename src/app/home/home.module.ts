@@ -6,10 +6,14 @@ import { PrivateDomainEmailModule } from '../shared/private-domain-email/private
 import { SigninComponent } from './signin/signin.component';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { IconDefinition } from '@ant-design/icons-angular';
-import { MailOutline, QuestionCircleOutline } from '@ant-design/icons-angular/icons';
+import {
+	CommentOutline,
+	MailOutline,
+	QuestionCircleOutline,
+} from '@ant-design/icons-angular/icons';
 
 // tslint:disable-next-line:readonly-array
-const icons: IconDefinition[] = [QuestionCircleOutline, MailOutline];
+const icons: IconDefinition[] = [QuestionCircleOutline, MailOutline, CommentOutline];
 
 const homeRoutes: Routes = [
 	{

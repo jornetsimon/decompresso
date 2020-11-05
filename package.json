@@ -17,7 +17,7 @@
     "e2e": "ng e2e",
     "format:check": "prettier --config ./.prettierrc --check -- 'src/{app,environments,assets}/**/*{.ts,.js,.json,.css,.scss,.html}' 'package.json'",
     "format:write": "prettier --config ./.prettierrc --write -- 'src/{app,environments,assets}/**/*{.ts,.js,.json,.css,.scss,.html}' 'package.json'",
-    "staging-server": "angular-http-server --path dist/job-tunnel-web"
+    "staging-server": "angular-http-server --path dist/mascarade"
   },
   "private": true,
   "dependencies": {
@@ -37,14 +37,16 @@
     "@ngneat/until-destroy": "^8.0.3",
     "basscss": "^8.0.2",
     "date-fns": "^2.16.1",
+    "firebase": "^7.13.1",
+    "ng-rough-notation": "^1.1.2",
     "ng-zorro-antd": "^10.0.2",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",
     "uuid": "^8.3.1",
-    "zone.js": "~0.10.2",
-    "firebase": "^7.13.1"
+    "zone.js": "~0.10.2"
   },
   "devDependencies": {
+    "@angular-devkit/architect": ">= 0.900 < 0.1100",
     "@angular-devkit/build-angular": "~0.1001.7",
     "@angular/cli": "~10.1.7",
     "@angular/compiler-cli": "~10.1.6",
@@ -53,6 +55,10 @@
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "^12.11.1",
     "codelyzer": "^6.0.0",
+    "firebase-tools": "^8.0.0",
+    "fuzzy": "^0.1.3",
+    "inquirer": "^6.2.2",
+    "inquirer-autocomplete-prompt": "^1.0.1",
     "jasmine-core": "~3.6.0",
     "jasmine-spec-reporter": "~5.0.0",
     "karma": "~5.0.0",
@@ -61,17 +67,12 @@
     "karma-jasmine": "~4.0.0",
     "karma-jasmine-html-reporter": "^1.5.0",
     "nz-tslint-rules": "^0.901.2",
+    "open": "^7.0.3",
     "protractor": "~7.0.0",
     "ts-node": "~8.3.0",
     "tslint": "~6.1.0",
     "tslint-config-prettier": "^1.18.0",
     "tslint-immutable": "^6.0.1",
-    "typescript": "^4.0.3",
-    "@angular-devkit/architect": ">= 0.900 < 0.1100",
-    "firebase-tools": "^8.0.0",
-    "fuzzy": "^0.1.3",
-    "inquirer": "^6.2.2",
-    "inquirer-autocomplete-prompt": "^1.0.1",
-    "open": "^7.0.3"
+    "typescript": "^4.0.3"
   }
 }

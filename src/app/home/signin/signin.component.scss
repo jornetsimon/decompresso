@@ -1,10 +1,12 @@
+$card-radius: 10px;
+
 .card {
-	border-radius: 20px;
+	border-radius: $card-radius;
 }
 ::ng-deep .card .ant-card-body {
 	padding: 30px;
-	border-radius: 20px;
-	box-shadow: 1px 2px 12px 0px #e2e2e2;
+	border-radius: $card-radius;
+	box-shadow: 1px 2px 12px 0 #e2e2e2;
 }
 
 .label {
@@ -23,4 +25,10 @@
 .login-button-container button {
 	font-weight: bold;
 	text-transform: uppercase;
+}
+
+@media (min-width: 768px) {
+	::ng-deep .labelTooltip {
+		min-width: 500px;
+	}
 }
