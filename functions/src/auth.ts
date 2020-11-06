@@ -6,6 +6,8 @@ import { createRoom } from './room';
 import * as admin from 'firebase-admin';
 import FieldValue = admin.firestore.FieldValue;
 
+const randomColor = require('randomcolor');
+
 const emailPattern = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 export const createUser = functions.https.onCall(async (data, context) => {
@@ -47,6 +49,9 @@ export const createUser = functions.https.onCall(async (data, context) => {
 	batch.set(db.doc(`${Endpoints.Rooms}/${domain}/${Endpoints.RoomMembers}/${uid}`), {
 		nickname,
 		createdAt: admin.firestore.FieldValue.serverTimestamp(),
+		color: randomColor({
+			luminosity: 'dark',
+		}),
 	});
 	batch.update(db.doc(`${Endpoints.Rooms}/${domain}`), 'member_count', FieldValue.increment(1));
 	await batch.commit();
