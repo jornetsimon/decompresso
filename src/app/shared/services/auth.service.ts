@@ -3,7 +3,6 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { from, Observable, of } from 'rxjs';
-import { User as FirebaseUser } from 'firebase/app';
 import { ObservableStore } from '@codewithdan/observable-store';
 import { catchError, map, switchMap, take, tap } from 'rxjs/operators';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -14,6 +13,10 @@ import { DataService } from './data.service';
 import { Router } from '@angular/router';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import firebase from 'firebase';
+
+type FirebaseUser = firebase.User;
+type FirebaseUserCredential = firebase.auth.UserCredential;
 
 interface StoreState {
 	auth_email: string;
@@ -41,7 +44,7 @@ export class AuthService extends ObservableStore<StoreState> {
 		private message: NzMessageService,
 		private dataService: DataService
 	) {
-		super({});
+		super({ logStateChanges: true });
 
 		// Initialize auth state
 		this.setState({ auth_user: undefined }, 'INIT_AUTH_STATE');
@@ -145,11 +148,11 @@ export class AuthService extends ObservableStore<StoreState> {
 								this.router.navigateByUrl('/');
 							},
 						}),
-						map((credential: firebase.auth.UserCredential) => credential.user)
+						map((credential: FirebaseUserCredential) => credential.user)
 					);
 				}
 			}),
-			switchMap((authUser: firebase.User | null) => {
+			switchMap((authUser: FirebaseUser | null) => {
 				if (!authUser) {
 					throw new Error('missing_auth_user');
 				}

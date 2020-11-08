@@ -28,7 +28,7 @@ export const createUser = functions.https.onCall(async (data, context) => {
 
 	if (isDomainPublic) {
 		// Delete the user
-		auth.deleteUser(uid);
+		await auth.deleteUser(uid);
 		throw new functions.https.HttpsError('invalid-argument', 'public_email_domain');
 	}
 
