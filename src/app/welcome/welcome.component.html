@@ -1,4 +1,49 @@
 <div fxLayoutAlign="center center" style="height: 100%">
-	<nz-spin nzSimple nzSize="large" nzTip="Authentification en cours"></nz-spin>
+	<nz-spin
+		nzSimple
+		nzSize="large"
+		nzTip="Authentification en cours..."
+		[nzIndicator]="indicatorTemplate"
+		*ngIf="!($loginOrCreateAccount | async)"
+	></nz-spin>
+	<ng-template #indicatorTemplate><i nz-icon nzType="loading" class="spinner"></i></ng-template>
+	<ng-container *ngIf="$loginOrCreateAccount | async as authResult">
+		<ng-container *ngIf="authResult?.authType === 'created'">
+			<div fxLayout="column" fxLayoutAlign="center center" class="result">
+				<i nz-icon nzType="check-circle" nzTheme="fill" id="check-icon"></i>
+				<div id="welcome">Bienvenue dans le salon</div>
+				<h1 nz-typography id="domain">{{ authResult.user.domain }}</h1>
+				<p id="whoami">
+					Retrouvez vos collègues de bureau et chattez avec eux incognito avec votre
+					super&nbsp;pseudo&nbsp;:
+					<span
+						id="nickname"
+						[style.color]="authResult.user.color"
+						[roughNotation]="{
+							type: 'underline',
+							animationDelay: 1000,
+							iterations: 1,
+							animationDuration: 2500,
+							color: authResult.user.color,
+							padding: 5
+						}"
+						nz-tooltip
+						nzTooltipTitle="👌"
+						nzTooltipColor="#ffffff"
+					>
+						{{ authResult.user.nickname }}
+					</span>
+				</p>
+				<button
+					nz-button
+					nzType="primary"
+					nzSize="large"
+					[routerLink]="'/room/' + authResult.user.domain"
+				>
+					<i nz-icon nzType="comment" nzTheme="outline"></i>
+					Accéder au salon
+				</button>
+			</div>
+		</ng-container>
+	</ng-container>
 </div>
-<pre>{{ authService.authUser$ | async | json }}</pre>

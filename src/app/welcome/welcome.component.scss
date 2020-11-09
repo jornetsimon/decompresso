@@ -1,0 +1,33 @@
+::ng-deep .ant-spin {
+	font-size: 15px;
+	font-style: italic;
+}
+.spinner {
+	font-size: 64px;
+	margin-bottom: 20px;
+}
+
+.result {
+	max-width: 460px;
+
+	#check-icon {
+		color: #52c41a;
+		font-size: 72px;
+		margin-bottom: 24px;
+	}
+	#welcome {
+		font-size: 18px;
+	}
+	#domain {
+		white-space: nowrap;
+	}
+	#whoami {
+		text-align: center;
+		font-size: 1.1em;
+		margin-bottom: 2em;
+	}
+	#nickname {
+		font-size: 22px;
+		margin: auto 5px;
+	}
+}

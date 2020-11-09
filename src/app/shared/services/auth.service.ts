@@ -4,15 +4,13 @@ import { AngularFireFunctions } from '@angular/fire/functions';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { from, Observable, of } from 'rxjs';
 import { ObservableStore } from '@codewithdan/observable-store';
-import { catchError, map, switchMap, take, tap } from 'rxjs/operators';
+import { catchError, delay, first, map, retryWhen, switchMap, take, tap } from 'rxjs/operators';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Serialized } from '../utilities/data-transfer-object';
 import { serialize } from '../utilities/serialize';
 import { User } from '../model/user';
 import { DataService } from './data.service';
 import { Router } from '@angular/router';
-import { NzModalService } from 'ng-zorro-antd/modal';
-import { NzMessageService } from 'ng-zorro-antd/message';
 import firebase from 'firebase';
 
 type FirebaseUser = firebase.User;
@@ -20,7 +18,13 @@ type FirebaseUserCredential = firebase.auth.UserCredential;
 
 interface StoreState {
 	auth_email: string;
-	auth_user: Serialized<FirebaseUser> | null | undefined;
+	auth_credential: Serialized<FirebaseUser> | null | undefined;
+	user: User | undefined;
+}
+
+export enum AuthType {
+	Created = 'created',
+	LoggedIn = 'loggedIn',
 }
 
 @UntilDestroy()
@@ -31,35 +35,53 @@ export class AuthService extends ObservableStore<StoreState> {
 	/**
 	 * Has the authentication been checked?
 	 */
-	authChecked$ = this.globalStateChanged.pipe(map((state) => state.auth_user !== undefined));
-	authUser$: Observable<FirebaseUser | null> = this.auth.user;
+	authChecked$ = this.globalStateChanged.pipe(
+		map((state) => state.auth_credential !== undefined)
+	);
+	authCredential$: Observable<FirebaseUser | null> = this.auth.user;
 	isAuthenticated$: Observable<boolean> = this.auth.user.pipe(map((user) => !!user));
+	/**
+	 * The connected user
+	 */
+	user$: Observable<User | undefined> = this.globalStateChanged.pipe(
+		map((state: StoreState) => state.user)
+	);
 
 	constructor(
 		private afs: AngularFirestore,
 		private fns: AngularFireFunctions,
 		private auth: AngularFireAuth,
 		private router: Router,
-		private nzModalService: NzModalService,
-		private message: NzMessageService,
 		private dataService: DataService
 	) {
-		super({ logStateChanges: true });
+		super({});
 
 		// Initialize auth state
-		this.setState({ auth_user: undefined }, 'INIT_AUTH_STATE');
+		this.setState({ auth_credential: undefined, user: undefined }, 'INIT_AUTH_STATE');
 
-		this.auth.authState
-			.pipe(
-				tap((auth_credential) => {
-					this.setState(
-						{ auth_user: serialize(auth_credential) },
-						'AUTH_CREDENTIAL_CHANGE'
-					);
-				}),
-				untilDestroyed(this)
-			)
-			.subscribe();
+		// Map auth credential to user data in DB
+		const authUserChanges$: Observable<User | undefined> = this.auth.authState.pipe(
+			tap((auth_credential) => {
+				this.setState(
+					{ auth_credential: serialize(auth_credential) },
+					'AUTH_CREDENTIAL_CHANGE'
+				);
+			}),
+			switchMap((auth_credential) => {
+				if (!auth_credential) {
+					return of(undefined);
+				}
+				return this.dataService.user$(auth_credential.uid).pipe(
+					first(),
+					// The request will be retried every 2 seconds for 5 times
+					retryWhen((errors) => errors.pipe(delay(2000), take(5)))
+				);
+			})
+		);
+		// When the authenticated user changes, update state
+		authUserChanges$.pipe(untilDestroyed(this)).subscribe((user) => {
+			this.setState({ user }, 'AUTH_USER_CHANGE');
+		});
 	}
 
 	/**
@@ -82,7 +104,6 @@ export class AuthService extends ObservableStore<StoreState> {
 				return { status: 'sent' };
 			}),
 			catchError((err) => {
-				console.error(err);
 				return of({ status: 'error', message: err.message });
 			}),
 			tap({
@@ -129,25 +150,14 @@ export class AuthService extends ObservableStore<StoreState> {
 	/**
 	 * Log user in or create their account in database
 	 */
-	loginOrCreateAccount(): Observable<User> {
+	loginOrCreateAccount(): Observable<{ authType: AuthType; user: User }> {
 		return this.isAuthenticated$.pipe(
 			take(1),
 			switchMap((isAuthenticated) => {
 				if (isAuthenticated) {
-					return this.authUser$;
+					return this.authCredential$;
 				} else {
 					return this.signInFromEmailLink().pipe(
-						tap({
-							error: async (err) => {
-								if (err.code === 'auth/user-disabled') {
-									await this.logout().toPromise();
-									this.message.error('Cette adresse email a été refusée');
-								} else {
-									this.message.error('Authentification échouée');
-								}
-								this.router.navigateByUrl('/');
-							},
-						}),
 						map((credential: FirebaseUserCredential) => credential.user)
 					);
 				}
@@ -162,35 +172,33 @@ export class AuthService extends ObservableStore<StoreState> {
 						if (!user) {
 							// No user found in database
 							return this.createUser().pipe(
-								tap({
-									next: () => {
-										this.message.success('Votre compte a bien été créé');
-									},
-									error: async (err: Error) => {
-										await this.logout().toPromise();
-										await this.router.navigateByUrl('/');
-										if (err.message === 'public_email_domain') {
-											this.nzModalService.error({
-												nzTitle: 'Votre adresse email est personnelle',
-												nzContent:
-													'Merci de vous connecter avec votre adresse professionnelle',
-												nzOkText: 'Compris',
-											});
-										}
-									},
+								map((createdUser) => {
+									return {
+										authType: AuthType.Created,
+										user: createdUser,
+									};
 								})
 							);
 						}
-						return of(user);
+						return of({ authType: AuthType.LoggedIn, user });
 					})
 				);
 			}),
-			take(1)
+			take(1),
+			tap({
+				next: (authResult) => {
+					this.setState({ user: authResult.user }, 'USER_LOGGED_IN');
+				},
+			})
 		);
 	}
 
 	logout() {
-		return from(this.auth.signOut());
+		return from(this.auth.signOut()).pipe(
+			tap(() => {
+				this.setState({ user: undefined, auth_credential: null }, 'USER_LOGOUT');
+			})
+		);
 	}
 
 	/**

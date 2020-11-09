@@ -1,5 +1,19 @@
 #header {
 	margin: 2rem 1rem;
+	color: #231f20;
+}
+#header:hover {
+	color: #ffa500;
+}
+#logo {
+	transition: filter 0.5s;
+}
+#header:hover #logo {
+	filter: invert(54%) sepia(84%) saturate(511%) hue-rotate(358deg) brightness(107%) contrast(107%);
+}
+
+#footer {
+	width: 100%;
 }
 
 #logo {

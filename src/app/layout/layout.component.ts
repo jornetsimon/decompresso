@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LayoutComponent implements OnInit {
+	now = Date.now();
 	constructor(
 		public authService: AuthService,
 		private message: NzMessageService,

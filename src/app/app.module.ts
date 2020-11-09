@@ -18,6 +18,7 @@ import { environment } from '../environments/environment';
 import { AngularFireFunctionsModule, ORIGIN as FUNCTIONS_ORIGIN } from '@angular/fire/functions';
 import { AngularFireAuth, AngularFireAuthModule } from '@angular/fire/auth';
 import { WelcomeComponent } from './welcome/welcome.component';
+import { CheckCircleFill, CommentOutline } from '@ant-design/icons-angular/icons';
 
 registerLocaleData(fr);
 
@@ -30,7 +31,7 @@ registerLocaleData(fr);
 		HttpClientModule,
 		BrowserAnimationsModule,
 		SharedModule,
-		NzIconModule.forRoot([]),
+		NzIconModule.forRoot([CommentOutline, CheckCircleFill]),
 		AngularFireModule.initializeApp(environment.firebase),
 		AngularFirestoreModule,
 		AngularFireFunctionsModule,

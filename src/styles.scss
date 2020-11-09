@@ -1,2 +1,11 @@
 @import 'styles/fonts';
 @import 'styles/utilities';
+
+.firebase-emulator-warning {
+	display: none;
+}
+
+::selection {
+	color: white;
+	background: #23201f;
+}

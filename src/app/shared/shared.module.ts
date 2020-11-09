@@ -17,6 +17,8 @@ import { NzSkeletonModule } from 'ng-zorro-antd/skeleton';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { RoughNotationModule } from 'ng-rough-notation';
+import { NzResultModule } from 'ng-zorro-antd/result';
+import { NzTypographyModule } from 'ng-zorro-antd/typography';
 
 // tslint:disable-next-line:readonly-array
 const icons: IconDefinition[] = [QuestionCircleOutline];
@@ -39,6 +41,8 @@ const modules: ReadonlyArray<any> = [
 	NzSkeletonModule,
 	NzModalModule,
 	NzSpinModule,
+	NzResultModule,
+	NzTypographyModule,
 	RoughNotationModule,
 ];
 

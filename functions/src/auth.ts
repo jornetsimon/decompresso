@@ -17,8 +17,8 @@ export const createUser = functions.https.onCall(async (data, context) => {
 		throw new functions.https.HttpsError('failed-precondition', 'not_authenticated');
 	}
 	const uid = context.auth.uid;
-	const user = await auth.getUser(uid);
-	const email = user.email;
+	const authUser = await auth.getUser(uid);
+	const email = authUser.email;
 	if (!email || !email.match(emailPattern)) {
 		throw new functions.https.HttpsError('invalid-argument', 'invalid_email');
 	}
@@ -36,30 +36,25 @@ export const createUser = functions.https.onCall(async (data, context) => {
 	await createRoom(domain);
 
 	const nickname = await pickNickname(domain);
-
-	const batch = db.batch();
-	batch.set(db.doc(`${Endpoints.Users}/${uid}`), {
+	const color = randomColor({
+		luminosity: 'dark',
+	});
+	const user = {
 		nickname,
 		domain,
 		createdAt: admin.firestore.FieldValue.serverTimestamp(),
-	});
+		color,
+	};
+
+	const batch = db.batch();
+	batch.set(db.doc(`${Endpoints.Users}/${uid}`), user);
 	batch.set(db.doc(`${Endpoints.UserPersonalData}/${uid}`), {
 		email,
 	});
-	batch.set(db.doc(`${Endpoints.Rooms}/${domain}/${Endpoints.RoomMembers}/${uid}`), {
-		nickname,
-		createdAt: admin.firestore.FieldValue.serverTimestamp(),
-		color: randomColor({
-			luminosity: 'dark',
-		}),
-	});
+	batch.set(db.doc(`${Endpoints.Rooms}/${domain}/${Endpoints.RoomMembers}/${uid}`), user);
 	batch.update(db.doc(`${Endpoints.Rooms}/${domain}`), 'member_count', FieldValue.increment(1));
 	await batch.commit();
 
 	const userSnap = await db.doc(`${Endpoints.Users}/${uid}`).get();
-	const roomSnap = await db.doc(`${Endpoints.Rooms}/${domain}`).get();
-	return {
-		user: userSnap.data(),
-		room: roomSnap.data(),
-	};
+	return userSnap.data();
 });
