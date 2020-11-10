@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
-import { PRIVATE_DOMAINS } from './private-domains';
+import { PUBLIC_DOMAINS } from './public-domains';
 
 export const emailPattern = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
@@ -20,7 +20,7 @@ export class PrivateDomainEmailService {
 		}
 		const controlDomain = controlValue.split('@')[1];
 		const isDomainPublic =
-			PRIVATE_DOMAINS.find((element) => element.domain === controlDomain) !== undefined;
+			PUBLIC_DOMAINS.find((element) => element.domain === controlDomain) !== undefined;
 		if (isDomainPublic) {
 			return { emailDomainIsPublic: true };
 		}

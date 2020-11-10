@@ -1,4 +1,4 @@
-export const PRIVATE_DOMAINS: ReadonlyArray<{ domain: string; type: string }> = [
+export const PUBLIC_DOMAINS: ReadonlyArray<{ domain: string; type: string }> = [
 	{
 		domain: '0sg.net',
 		type: 'free',
