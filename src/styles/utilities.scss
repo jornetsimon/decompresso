@@ -38,3 +38,7 @@
 .cursor-pointer:hover {
 	cursor: pointer;
 }
+.eyes-only {
+	cursor: default;
+	user-select: none;
+}

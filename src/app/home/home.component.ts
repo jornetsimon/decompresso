@@ -12,7 +12,7 @@ export class HomeComponent implements OnInit {
 		type: 'underline',
 		animationDelay: 1000,
 		animationDuration: 1500,
-		padding: 0,
+		padding: 5,
 	};
 	anonAnnotationConfig: Partial<RoughAnnotationConfig & { animationDelay: number }> = {
 		color: '#fdfd96',

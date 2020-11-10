@@ -1,14 +1,18 @@
 <div fxLayout="column" fxLayoutAlign="start stretch" style="height: 100%">
-	<div fxFlex="0 0 20%" fxLayout="column" fxLayoutAlign="center" style="font-size: medium">
+	<div fxFlex="0 0 20%" fxLayout="column" fxLayoutAlign="center">
 		<div id="intro">
-			<div id="headline" [roughNotation]="headlineAnnotationConfig">
-				Et si on réinventait la pause-café ?
+			<div id="headline">
+				<span [roughNotation]="headlineAnnotationConfig">
+					Et si on réinventait la <span class="nowrap">pause-café</span>&nbsp;?
+				</span>
 			</div>
 			<div>
 				Venez tchatter
 				<span id="anon" [roughNotation]="anonAnnotationConfig">anonymement</span>
-				avec vos collègues
-				<i nz-icon nzType="comment" nzTheme="outline"></i>
+				avec
+				<span class="nowrap"
+					>vos&nbsp;collègues <i nz-icon nzType="comment" nzTheme="outline"></i
+				></span>
 				<br />
 				Boulot ou petits ragots, à vous de choisir !
 			</div>
@@ -18,10 +22,8 @@
 		fxFlex="grow"
 		fxLayout="column"
 		fxLayoutAlign="center center"
-		style="padding-bottom: min(150px, 20%)"
+		style="padding: min(150px, 10vmin) 0"
 	>
-		<div style="max-width: min(90vw, 500px); width: 100%">
-			<mas-signin></mas-signin>
-		</div>
+		<mas-signin></mas-signin>
 	</div>
 </div>

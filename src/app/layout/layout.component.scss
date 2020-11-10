@@ -1,5 +1,5 @@
 #header {
-	margin: 2rem 1rem;
+	margin: max(1rem, 2.5vh) 1rem;
 	color: #231f20;
 }
 #header:hover {
@@ -26,8 +26,12 @@
 
 .main-container {
 	width: 100%;
-	padding-left: 10vw;
-	padding-right: 10vw;
+}
+@media (min-width: 425px) {
+	.main-container {
+		padding-left: 7.5vw;
+		padding-right: 7.5vw;
+	}
 }
 
 .user-infos {
