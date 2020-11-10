@@ -49,3 +49,7 @@ $card-radius: 10px;
 		min-width: 500px;
 	}
 }
+
+::ng-deep .ant-alert-error {
+	font-weight: 500;
+}

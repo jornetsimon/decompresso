@@ -22,6 +22,7 @@ import { User } from '../model/user';
 import { DataService } from './data.service';
 import { Router } from '@angular/router';
 import firebase from 'firebase';
+import { ErrorWithCode } from '../utilities/errors';
 
 type FirebaseUser = firebase.User;
 type FirebaseUserCredential = firebase.auth.UserCredential;
@@ -114,8 +115,8 @@ export class AuthService extends ObservableStore<StoreState> {
 			map(() => {
 				return { status: 'sent' };
 			}),
-			catchError((err) => {
-				return of({ status: 'error', message: err.message });
+			catchError((err: ErrorWithCode) => {
+				return of({ status: 'error', message: err.code });
 			}),
 			tap({
 				next: () => {

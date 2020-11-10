@@ -63,12 +63,14 @@
 				>
 					Connexion
 				</button>
-				<nz-alert
-					nzType="error"
-					nzShowIcon
-					[nzDescription]="authMailError"
-					*ngIf="(submitState$ | async)?.status === 'error'"
-				></nz-alert>
+				<ng-container *ngIf="submitState$ | async as submitState">
+					<nz-alert
+						nzType="error"
+						nzShowIcon
+						[nzDescription]="authMailErrorMessage(submitState.message)"
+						*ngIf="submitState.status === 'error'"
+					></nz-alert>
+				</ng-container>
 				<ng-template #authMailSentTpl>
 					<nz-alert
 						nzType="info"
@@ -81,9 +83,6 @@
 						<br />
 						Il ne vous plus reste qu'à cliquer sur le lien pour vous connecter.
 					</ng-template>
-				</ng-template>
-				<ng-template #authMailError>
-					Une erreur est survenue, nous en somme désolé 🙁
 				</ng-template>
 			</div>
 		</form>

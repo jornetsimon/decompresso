@@ -56,4 +56,14 @@ export class SigninComponent {
 	submitClicked() {
 		this.submitSubject.next();
 	}
+
+	/**
+	 * The message to display when sending the auth email failed
+	 */
+	authMailErrorMessage(message?: string): string {
+		if (message === 'auth/user-disabled') {
+			return 'Désolé, votre compte a été désactivé.';
+		}
+		return 'Une erreur est survenue, nous en somme désolé 🙁';
+	}
 }
