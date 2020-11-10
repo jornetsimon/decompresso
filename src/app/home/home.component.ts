@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RoughAnnotationConfig } from 'rough-notation/lib/model';
 
 @Component({
@@ -7,7 +7,7 @@ import { RoughAnnotationConfig } from 'rough-notation/lib/model';
 	styleUrls: ['./home.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent {
 	headlineAnnotationConfig: Partial<RoughAnnotationConfig & { animationDelay: number }> = {
 		type: 'underline',
 		animationDelay: 1000,
@@ -23,6 +23,4 @@ export class HomeComponent implements OnInit {
 	};
 
 	constructor() {}
-
-	ngOnInit(): void {}
 }

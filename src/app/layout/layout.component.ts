@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { AuthService } from '../shared/services/auth.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { Router } from '@angular/router';
@@ -9,15 +9,13 @@ import { Router } from '@angular/router';
 	styleUrls: ['./layout.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LayoutComponent implements OnInit {
+export class LayoutComponent {
 	now = Date.now();
 	constructor(
 		public authService: AuthService,
 		private message: NzMessageService,
 		private router: Router
 	) {}
-
-	ngOnInit(): void {}
 
 	logout() {
 		this.authService.logout().subscribe({

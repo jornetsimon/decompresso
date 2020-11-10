@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { from, Observable, of } from 'rxjs';
@@ -20,7 +19,6 @@ import { Serialized } from '../utilities/data-transfer-object';
 import { serialize } from '../utilities/serialize';
 import { User } from '../model/user';
 import { DataService } from './data.service';
-import { Router } from '@angular/router';
 import firebase from 'firebase';
 import { ErrorWithCode } from '../utilities/errors';
 
@@ -37,6 +35,9 @@ export enum AuthType {
 	LoggedIn = 'loggedIn',
 }
 
+/**
+ * Authentication service
+ */
 @UntilDestroy()
 @Injectable({
 	providedIn: 'root',
@@ -48,10 +49,16 @@ export class AuthService extends ObservableStore<StoreState> {
 	authChecked$ = this.globalStateChanged.pipe(
 		map((state) => state.auth_credential !== undefined)
 	);
+	/**
+	 * The Firebase Auth user credential
+	 */
 	authCredential$: Observable<FirebaseUser | null> = this.auth.user;
+	/**
+	 * Is the user authenticated
+	 */
 	isAuthenticated$: Observable<boolean> = this.auth.user.pipe(map((user) => !!user));
 	/**
-	 * The connected user
+	 * The connected user data
 	 */
 	user$: Observable<User | null> = this.globalStateChanged.pipe(
 		map((state: StoreState) => state.user),
@@ -59,10 +66,8 @@ export class AuthService extends ObservableStore<StoreState> {
 	);
 
 	constructor(
-		private afs: AngularFirestore,
 		private fns: AngularFireFunctions,
 		private auth: AngularFireAuth,
-		private router: Router,
 		private dataService: DataService
 	) {
 		super({});
@@ -70,34 +75,40 @@ export class AuthService extends ObservableStore<StoreState> {
 		// Initialize auth state
 		this.setState({ auth_credential: undefined, user: null }, 'INIT_AUTH_STATE');
 
-		// Map auth credential to user data in DB
-		const authUserChanges$: Observable<User | null> = this.auth.user.pipe(
-			tap((auth_credential) => {
-				this.setState(
-					{ auth_credential: serialize(auth_credential) },
-					'AUTH_CREDENTIAL_CHANGE'
-				);
-			}),
-			switchMap((auth_credential) => {
-				if (!auth_credential) {
-					return of(null);
-				}
-				return this.dataService.user$(auth_credential.uid).pipe(
-					first(),
-					// The request will be retried every 2 seconds for 5 times
-					retryWhen((errors) => errors.pipe(delay(2000), take(5))),
-					map((user) => (user ? user : null))
-				);
-			})
-		);
 		// When the authenticated user changes, update state
-		authUserChanges$.pipe(untilDestroyed(this)).subscribe((user) => {
-			this.setState({ user }, 'AUTH_USER_CHANGE');
-		});
+		// This is triggered by automatic auth process, login and logout
+		this.auth.user
+			.pipe(
+				// Update auth_credential state
+				tap((auth_credential) => {
+					this.setState(
+						{ auth_credential: serialize(auth_credential) },
+						'AUTH_CREDENTIAL_CHANGE'
+					);
+				}),
+				// Map the auth credential to its user data in DB
+				switchMap((auth_credential) => {
+					if (!auth_credential) {
+						return of(null);
+					}
+					return this.dataService.user$(auth_credential.uid).pipe(
+						first(),
+						// The request will be retried every 2 seconds for 5 times
+						retryWhen((errors) => errors.pipe(delay(2000), take(5))),
+						map((user) => (user ? user : null))
+					);
+				}),
+				// Update user state
+				tap((user: User | null) => {
+					this.setState({ user }, 'AUTH_USER_CHANGE');
+				}),
+				untilDestroyed(this)
+			)
+			.subscribe();
 	}
 
 	/**
-	 * Send an email to log in
+	 * Send an email to a user to log in with magic link
 	 */
 	sendSignInLink(
 		email: string
@@ -122,39 +133,6 @@ export class AuthService extends ObservableStore<StoreState> {
 				next: () => {
 					window.localStorage.setItem('emailForSignIn', email);
 				},
-			})
-		);
-	}
-
-	/**
-	 * Authenticates the user with the magic link
-	 */
-	private signInFromEmailLink() {
-		return from(this.auth.isSignInWithEmailLink(window.location.href)).pipe(
-			switchMap((isSignInWithEmailLink) => {
-				// Confirm the link is a sign-in with email link.
-				if (isSignInWithEmailLink) {
-					// Additional state parameters can also be passed via URL.
-					// This can be used to continue the user's intended action before triggering
-					// the sign-in operation.
-					// Get the email if available. This should be available if the user completes
-					// the flow on the same device where they started it.
-					let email = window.localStorage.getItem('emailForSignIn') as string;
-					if (!email) {
-						// User opened the link on a different device. To prevent session fixation
-						// attacks, ask the user to provide the associated email again. For example:
-						const confirmEmail = window.prompt('Merci de confirmer votre email');
-						if (!confirmEmail) {
-							throw new Error(`L'adresse email ne correspond pas au lien cliqué.`);
-						} else {
-							email = confirmEmail;
-						}
-					}
-					// The client SDK will parse the code from the link for you.
-					return from(this.auth.signInWithEmailLink(email, window.location.href));
-				} else {
-					throw new Error('sign_in_with_email_link_failed');
-				}
 			})
 		);
 	}
@@ -205,8 +183,44 @@ export class AuthService extends ObservableStore<StoreState> {
 		);
 	}
 
+	/**
+	 * Log the user out
+	 */
 	logout() {
 		return from(this.auth.signOut());
+	}
+
+	/**
+	 * Authenticates the user with the magic link
+	 */
+	private signInFromEmailLink() {
+		return from(this.auth.isSignInWithEmailLink(window.location.href)).pipe(
+			switchMap((isSignInWithEmailLink) => {
+				// Confirm the link is a sign-in with email link.
+				if (isSignInWithEmailLink) {
+					// Additional state parameters can also be passed via URL.
+					// This can be used to continue the user's intended action before triggering
+					// the sign-in operation.
+					// Get the email if available. This should be available if the user completes
+					// the flow on the same device where they started it.
+					let email = window.localStorage.getItem('emailForSignIn') as string;
+					if (!email) {
+						// User opened the link on a different device. To prevent session fixation
+						// attacks, ask the user to provide the associated email again. For example:
+						const confirmEmail = window.prompt('Merci de confirmer votre email');
+						if (!confirmEmail) {
+							throw new Error(`L'adresse email ne correspond pas au lien cliqué.`);
+						} else {
+							email = confirmEmail;
+						}
+					}
+					// The client SDK will parse the code from the link for you.
+					return from(this.auth.signInWithEmailLink(email, window.location.href));
+				} else {
+					throw new Error('sign_in_with_email_link_failed');
+				}
+			})
+		);
 	}
 
 	/**

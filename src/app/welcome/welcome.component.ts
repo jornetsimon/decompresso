@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { AuthService, AuthType } from '../shared/services/auth.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -13,6 +13,7 @@ import { ErrorWithCode } from '../shared/utilities/errors';
 	selector: 'mas-welcome',
 	templateUrl: './welcome.component.html',
 	styleUrls: ['./welcome.component.scss'],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WelcomeComponent {
 	$loginOrCreateAccount = this.authService.loginOrCreateAccount().pipe(

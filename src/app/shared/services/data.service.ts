@@ -11,6 +11,11 @@ export enum Endpoints {
 }
 export enum Buckets {}
 
+/**
+ * Database layer
+ *
+ * Stores endpoints, references and streams from the database
+ */
 @Injectable({
 	providedIn: 'root',
 })

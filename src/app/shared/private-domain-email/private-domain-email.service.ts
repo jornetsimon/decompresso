@@ -10,8 +10,16 @@ export const emailPattern = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)
 export class PrivateDomainEmailService {
 	constructor() {}
 
+	/**
+	 * Validates an email address
+	 */
 	static emailValidator: ValidatorFn = Validators.pattern(emailPattern);
 
+	/**
+	 * Validates an email address is from a private domain
+	 * Uses a local list of public email domains
+	 * @see PUBLIC_DOMAINS
+	 */
 	static emailDomainIsPrivate: ValidatorFn = (control): ValidationErrors | null => {
 		const controlValue: string | undefined = control.value;
 		if (!controlValue || controlValue.split('@').length < 2) {
