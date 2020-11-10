@@ -4,7 +4,17 @@ import { AngularFireFunctions } from '@angular/fire/functions';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { from, Observable, of } from 'rxjs';
 import { ObservableStore } from '@codewithdan/observable-store';
-import { catchError, delay, first, map, retryWhen, switchMap, take, tap } from 'rxjs/operators';
+import {
+	catchError,
+	delay,
+	distinctUntilChanged,
+	first,
+	map,
+	retryWhen,
+	switchMap,
+	take,
+	tap,
+} from 'rxjs/operators';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Serialized } from '../utilities/data-transfer-object';
 import { serialize } from '../utilities/serialize';
@@ -17,9 +27,8 @@ type FirebaseUser = firebase.User;
 type FirebaseUserCredential = firebase.auth.UserCredential;
 
 interface StoreState {
-	auth_email: string;
 	auth_credential: Serialized<FirebaseUser> | null | undefined;
-	user: User | undefined;
+	user: User | null;
 }
 
 export enum AuthType {
@@ -43,8 +52,9 @@ export class AuthService extends ObservableStore<StoreState> {
 	/**
 	 * The connected user
 	 */
-	user$: Observable<User | undefined> = this.globalStateChanged.pipe(
-		map((state: StoreState) => state.user)
+	user$: Observable<User | null> = this.globalStateChanged.pipe(
+		map((state: StoreState) => state.user),
+		distinctUntilChanged()
 	);
 
 	constructor(
@@ -57,10 +67,10 @@ export class AuthService extends ObservableStore<StoreState> {
 		super({});
 
 		// Initialize auth state
-		this.setState({ auth_credential: undefined, user: undefined }, 'INIT_AUTH_STATE');
+		this.setState({ auth_credential: undefined, user: null }, 'INIT_AUTH_STATE');
 
 		// Map auth credential to user data in DB
-		const authUserChanges$: Observable<User | undefined> = this.auth.authState.pipe(
+		const authUserChanges$: Observable<User | null> = this.auth.user.pipe(
 			tap((auth_credential) => {
 				this.setState(
 					{ auth_credential: serialize(auth_credential) },
@@ -69,12 +79,13 @@ export class AuthService extends ObservableStore<StoreState> {
 			}),
 			switchMap((auth_credential) => {
 				if (!auth_credential) {
-					return of(undefined);
+					return of(null);
 				}
 				return this.dataService.user$(auth_credential.uid).pipe(
 					first(),
 					// The request will be retried every 2 seconds for 5 times
-					retryWhen((errors) => errors.pipe(delay(2000), take(5)))
+					retryWhen((errors) => errors.pipe(delay(2000), take(5))),
+					map((user) => (user ? user : null))
 				);
 			})
 		);
@@ -194,11 +205,7 @@ export class AuthService extends ObservableStore<StoreState> {
 	}
 
 	logout() {
-		return from(this.auth.signOut()).pipe(
-			tap(() => {
-				this.setState({ user: undefined, auth_credential: null }, 'USER_LOGOUT');
-			})
-		);
+		return from(this.auth.signOut());
 	}
 
 	/**
