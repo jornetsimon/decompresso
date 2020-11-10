@@ -15,12 +15,12 @@ import {
 	tap,
 } from 'rxjs/operators';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { Serialized } from '../utilities/data-transfer-object';
-import { serialize } from '../utilities/serialize';
-import { User } from '../model/user';
+import { Serialized } from '@utilities/data-transfer-object';
+import { serialize } from '@utilities/serialize';
+import { User } from '@model/user';
 import { DataService } from './data.service';
 import firebase from 'firebase';
-import { ErrorWithCode } from '../utilities/errors';
+import { ErrorWithCode } from '@utilities/errors';
 
 type FirebaseUser = firebase.User;
 type FirebaseUserCredential = firebase.auth.UserCredential;

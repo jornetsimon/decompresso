@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { AuthService, AuthType } from '../shared/services/auth.service';
+import { AuthService, AuthType } from '@services/auth.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { DataService } from '../shared/services/data.service';
+import { DataService } from '@services/data.service';
 import { filter, share, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { NzModalService } from 'ng-zorro-antd/modal';
-import { ErrorWithCode } from '../shared/utilities/errors';
+import { ErrorWithCode } from '@utilities/errors';
 
 @UntilDestroy()
 @Component({

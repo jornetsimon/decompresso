@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { AuthService } from '../../shared/services/auth.service';
+import { AuthService } from '@services/auth.service';
 import { filter, share, switchMap, tap } from 'rxjs/operators';
 import { Observable, Subject } from 'rxjs';
 import { UntilDestroy } from '@ngneat/until-destroy';

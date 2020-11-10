@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { User } from '../model/user';
-import { Room } from '../model/room';
+import { User } from '@model/user';
+import { Room } from '@model/room';
 
 export enum Endpoints {
 	Users = '/users',

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, forwardRef } from '@angular/core';
-import { BaseControlValueAccessor } from '../utilities/base-control-value-accessor';
+import { BaseControlValueAccessor } from '@utilities/base-control-value-accessor';
 import { FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validators } from '@angular/forms';
 import { PrivateDomainEmailService } from './private-domain-email.service';
 import { generateEmailPlaceholder } from './email-placeholder';

@@ -1,7 +1,7 @@
 {
 	"compileOnSave": false,
 	"compilerOptions": {
-		"baseUrl": "./",
+		"baseUrl": "src/app",
 		"outDir": "./dist/out-tsc",
 		"sourceMap": true,
 		"declaration": false,
@@ -12,7 +12,12 @@
 		"target": "es2015",
 		"module": "es2020",
 		"lib": ["es2018", "dom"],
-		"allowSyntheticDefaultImports": true
+		"allowSyntheticDefaultImports": true,
+		"paths": {
+			"@services/*": ["shared/services/*"],
+			"@model/*": ["shared/model/*"],
+			"@utilities/*": ["shared/utilities/*"]
+		}
 	},
 	"angularCompilerOptions": {
 		"strictTemplates": true,
