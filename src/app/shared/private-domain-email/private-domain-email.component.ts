@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, forwardRef } from '@angular/core';
 import { BaseControlValueAccessor } from '../utilities/base-control-value-accessor';
 import { FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validators } from '@angular/forms';
 import { PrivateDomainEmailService } from './private-domain-email.service';
+import { generateEmailPlaceholder } from './email-placeholder';
 
 @Component({
 	selector: 'mas-private-domain-email',
@@ -29,11 +30,14 @@ export class PrivateDomainEmailComponent extends BaseControlValueAccessor<string
 	];
 
 	control = new FormControl(undefined, [Validators.required]);
+	emailPlaceholder: string;
 
 	constructor() {
 		super();
 		this.control.valueChanges.subscribe((value) => {
 			this.sweetChange(value);
 		});
+
+		this.emailPlaceholder = generateEmailPlaceholder();
 	}
 }
