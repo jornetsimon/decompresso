@@ -1,12 +1,18 @@
 #header {
 	margin: max(1rem, 2.5vh) 1rem;
 	color: #231f20;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
 }
 #header:hover {
 	color: #ffa500;
 }
 #logo {
+	height: 100px;
 	transition: filter 0.5s;
+	margin: 0 1em;
 }
 #header:hover #logo {
 	filter: invert(54%) sepia(84%) saturate(511%) hue-rotate(358deg) brightness(107%) contrast(107%);
@@ -19,6 +25,25 @@
 #title {
 	font-size: 40px;
 	font-family: 'Carter One', cursive;
+}
+
+/* When the height is limited, compact the layout */
+@media (max-height: 600px) {
+	#header {
+		flex-direction: row;
+		align-items: flex-start;
+	}
+	#logo {
+		height: 40px;
+	}
+	#title {
+		font-size: 30px;
+	}
+	#footer {
+		flex: 0 0 50px !important;
+		max-height: 50px !important;
+		min-height: 50px !important;
+	}
 }
 
 .main-container {
