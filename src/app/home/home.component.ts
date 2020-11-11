@@ -13,6 +13,7 @@ export class HomeComponent {
 		animationDelay: 1000,
 		animationDuration: 1500,
 		padding: 5,
+		multiline: true,
 	};
 	anonAnnotationConfig: Partial<RoughAnnotationConfig & { animationDelay: number }> = {
 		color: '#fdfd96',
