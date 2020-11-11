@@ -23,6 +23,7 @@
   },
   "private": true,
   "dependencies": {
+    "@angular/service-worker": "^10.2.3",
     "@angular/animations": "~10.2.2",
     "@angular/cdk": "^10.2.7",
     "@angular/common": "~10.2.2",

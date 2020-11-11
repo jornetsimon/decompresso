@@ -19,6 +19,7 @@ import { AngularFireFunctionsModule, ORIGIN as FUNCTIONS_ORIGIN } from '@angular
 import { AngularFireAuth, AngularFireAuthModule } from '@angular/fire/auth';
 import { WelcomeComponent } from './welcome/welcome.component';
 import { CheckCircleFill, CommentOutline } from '@ant-design/icons-angular/icons';
+import { ServiceWorkerModule } from '@angular/service-worker';
 
 registerLocaleData(fr);
 
@@ -36,6 +37,7 @@ registerLocaleData(fr);
 		AngularFirestoreModule,
 		AngularFireFunctionsModule,
 		AngularFireAuthModule,
+		ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
 	],
 	providers: [
 		{ provide: NZ_I18N, useValue: fr_FR },
