@@ -1,7 +1,6 @@
 export const environment = {
 	production: true,
 	staging: false,
-	hmr: false,
 	firebase: {
 		apiKey: 'AIzaSyAh9r2WbA-i0sNA3IS3V6dYMexOb2Rd2ZI',
 		authDomain: 'mascarade-chat.firebaseapp.com',

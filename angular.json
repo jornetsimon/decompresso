@@ -24,7 +24,6 @@
             "tsConfig": "tsconfig.app.json",
             "allowedCommonJsDependencies": [
               "@ant-design/colors",
-              "@angularclass/hmr",
               "@angular/common/locales/fr"
             ],
             "aot": true,
@@ -77,30 +76,17 @@
                   "with": "src/environments/environment.staging.ts"
                 }
               ]
-            },
-            "hmr": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.hmr.ts"
-                }
-              ]
             }
           }
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "mascarade:build",
-            "hmrWarning": false
+            "browserTarget": "mascarade:build"
           },
           "configurations": {
             "production": {
               "browserTarget": "mascarade:build:production"
-            },
-            "hmr": {
-              "hmr": true,
-              "browserTarget": "mascarade:build:hmr"
             }
           }
         },
