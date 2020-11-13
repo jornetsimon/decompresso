@@ -21,10 +21,10 @@ export enum Buckets {}
 })
 export class DataService {
 	userDoc(uid: string) {
-		return this.afs.collection(Endpoints.Users).doc<User>(uid);
+		return this.afs.collection<User>(Endpoints.Users).doc(uid);
 	}
 	roomDoc(uid: string) {
-		return this.afs.collection(Endpoints.Rooms).doc<Room>(uid);
+		return this.afs.collection<Room>(Endpoints.Rooms).doc(uid);
 	}
 	constructor(private afs: AngularFirestore) {}
 

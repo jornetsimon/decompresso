@@ -1,6 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { LOCALE_ID, NgModule } from '@angular/core';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { FormsModule } from '@angular/forms';
@@ -13,10 +12,16 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { LayoutComponent } from './layout/layout.component';
 import { SharedModule } from './shared/shared.module';
 import { AngularFireModule } from '@angular/fire';
-import { AngularFirestoreModule, SETTINGS as FIRESTORE_SETTINGS } from '@angular/fire/firestore';
+import {
+	AngularFirestoreModule,
+	USE_EMULATOR as USE_FIRESTORE_EMULATOR,
+} from '@angular/fire/firestore';
 import { environment } from '../environments/environment';
-import { AngularFireFunctionsModule, ORIGIN as FUNCTIONS_ORIGIN } from '@angular/fire/functions';
-import { AngularFireAuth, AngularFireAuthModule } from '@angular/fire/auth';
+import {
+	AngularFireFunctionsModule,
+	USE_EMULATOR as USE_FUNCTIONS_EMULATOR,
+} from '@angular/fire/functions';
+import { AngularFireAuthModule, USE_EMULATOR as USE_AUTH_EMULATOR } from '@angular/fire/auth';
 import { WelcomeComponent } from './welcome/welcome.component';
 import { CheckCircleFill, CommentOutline } from '@ant-design/icons-angular/icons';
 import { ServiceWorkerModule } from '@angular/service-worker';
@@ -43,30 +48,18 @@ registerLocaleData(fr);
 		{ provide: NZ_I18N, useValue: fr_FR },
 		{ provide: LOCALE_ID, useValue: 'fr' },
 		{
-			provide: FIRESTORE_SETTINGS,
-			useFactory: () =>
-				environment.production ||
-				environment.staging ||
-				window.location.hostname !== 'localhost'
-					? {}
-					: { host: 'localhost:8888', ssl: false },
+			provide: USE_FIRESTORE_EMULATOR,
+			useValue: environment.useEmulators ? ['localhost', 8888] : undefined,
 		},
 		{
-			provide: FUNCTIONS_ORIGIN,
-			useFactory: () =>
-				environment.production ||
-				environment.staging ||
-				window.location.hostname !== 'localhost'
-					? undefined
-					: 'http://localhost:5001',
+			provide: USE_FUNCTIONS_EMULATOR,
+			useValue: environment.useEmulators ? ['localhost', 5001] : undefined,
+		},
+		{
+			provide: USE_AUTH_EMULATOR,
+			useValue: environment.useEmulators ? ['localhost', 9099] : undefined,
 		},
 	],
 	bootstrap: [AppComponent],
 })
-export class AppModule {
-	constructor(private auth: AngularFireAuth) {
-		if (!environment.production && !environment.staging) {
-			this.auth.useEmulator('http://localhost:9099/');
-		}
-	}
-}
+export class AppModule {}
