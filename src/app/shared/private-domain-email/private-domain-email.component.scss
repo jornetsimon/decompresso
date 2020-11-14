@@ -1,10 +1,15 @@
 input {
-	font-size: 30px;
+	font-size: clamp(
+		20px, // min
+		5vw, // value
+		30px // max
+	);
 	border-radius: 10px;
 	padding: 6px 15px;
 	width: 100%;
 }
 
+/*
 @media (max-width: 424px) {
 	input {
 		font-size: 24px;
@@ -15,3 +20,4 @@ input {
 		font-size: 27px;
 	}
 }
+*/

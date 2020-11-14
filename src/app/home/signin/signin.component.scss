@@ -33,7 +33,7 @@ $card-radius: 10px;
 }
 ::ng-deep .label label {
 	color: #737373;
-	font-size: small;
+	font-size: clamp(12px, 2vw, 14px);
 }
 
 .login-button-container {
