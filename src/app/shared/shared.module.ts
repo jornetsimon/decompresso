@@ -19,6 +19,7 @@ import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { RoughNotationModule } from 'ng-rough-notation';
 import { NzResultModule } from 'ng-zorro-antd/result';
 import { NzTypographyModule } from 'ng-zorro-antd/typography';
+import { NgxVibrationModule } from 'ngx-vibration';
 
 // tslint:disable-next-line:readonly-array
 const icons: IconDefinition[] = [QuestionCircleOutline];
@@ -44,6 +45,9 @@ const modules: ReadonlyArray<any> = [
 	NzResultModule,
 	NzTypographyModule,
 	RoughNotationModule,
+	NgxVibrationModule.forRoot({
+		defaultPattern: [25]
+	})
 ];
 
 @NgModule({

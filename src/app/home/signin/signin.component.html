@@ -60,6 +60,7 @@
 					[disabled]="formGroup.invalid"
 					[nzLoading]="loading"
 					*ngIf="(submitState$ | async)?.status !== 'sent'; else authMailSentTpl"
+					ngxVibration
 				>
 					Connexion
 				</button>
