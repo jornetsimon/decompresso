@@ -1,0 +1,37 @@
+<ng-container *ngIf="authService.user$ | async as user">
+	<nz-drawer
+		[nzVisible]="layoutService.showUserDrawer"
+		[nzPlacement]="placement"
+		[nzTitle]="titleTpl"
+		(nzOnClose)="layoutService.showUserDrawer = false"
+	>
+		<div style="height: 100%" fxLayout="column">
+			<div fxFlex="grow">
+				<section>
+					<label>Domaine</label>
+					<div class="value">
+						{{ user.domain }}
+					</div>
+				</section>
+				<section>
+					<label>Inscrit le</label>
+					<div class="value">
+						{{ user.createdAt | timestampToDate: 'dd/MM/yyyy' }}
+					</div>
+				</section>
+			</div>
+			<div fxFlex="none">
+				<div fxLayoutAlign="center">
+					<button nz-button nzType="default" nzDanger (click)="logout()">
+						<i nz-icon nzType="logout" nzTheme="outline"></i>
+						Déconnexion
+					</button>
+				</div>
+			</div>
+		</div>
+	</nz-drawer>
+
+	<ng-template #titleTpl>
+		<h3 nz-typography class="nickname" [style.color]="user.color">{{ user.nickname }}</h3>
+	</ng-template>
+</ng-container>

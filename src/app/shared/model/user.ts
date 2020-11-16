@@ -1,6 +1,8 @@
+import { Timestamp } from '@utilities/timestamp';
+
 export interface User {
 	nickname: string;
 	domain: string;
-	createdAt: any;
+	createdAt: Timestamp;
 	color: string;
 }

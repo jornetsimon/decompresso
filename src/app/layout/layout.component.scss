@@ -64,12 +64,45 @@
 	padding-left: 5px;
 }
 
-.nickname {
-	font-style: oblique;
-	font-weight: bolder;
-	/*margin-bottom: 5px;*/
-}
-
 ::ng-deep .user-infos .ant-card-body {
 	padding: 10px;
+}
+
+#user-drawer-button {
+	position: fixed;
+	top: 20px;
+	left: 10px;
+	transition: width 0.3s;
+	width: 46px;
+
+	.button-text {
+		display: none;
+		margin-left: 0.5em;
+	}
+}
+#user-drawer-button:hover {
+	width: 130px;
+}
+#user-drawer-button:hover .button-text {
+	display: block;
+	animation: fadein 0.3s ease-out;
+}
+
+@keyframes fadein {
+	0% {
+		display: none;
+		opacity: 0;
+	}
+	1% {
+		display: block;
+		opacity: 0;
+	}
+	50% {
+		display: block;
+		opacity: 0.25;
+	}
+	100% {
+		display: block;
+		opacity: 1;
+	}
 }

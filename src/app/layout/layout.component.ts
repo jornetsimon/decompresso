@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { NzMessageService } from 'ng-zorro-antd/message';
-import { Router } from '@angular/router';
 import { AuthService } from '@services/auth.service';
+import { LayoutService } from './layout.service';
 
 @Component({
 	selector: 'mas-layout',
@@ -11,18 +10,5 @@ import { AuthService } from '@services/auth.service';
 })
 export class LayoutComponent {
 	now = Date.now();
-	constructor(
-		public authService: AuthService,
-		private message: NzMessageService,
-		private router: Router
-	) {}
-
-	logout() {
-		this.authService.logout().subscribe({
-			next: () => {
-				this.router.navigateByUrl('/');
-				this.message.success('Vous avez bien été déconnecté');
-			},
-		});
-	}
+	constructor(public authService: AuthService, public layoutService: LayoutService) {}
 }

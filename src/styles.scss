@@ -1,5 +1,6 @@
 @import 'styles/fonts';
 @import 'styles/utilities';
+@import 'styles/colors';
 
 .firebase-emulator-warning {
 	display: none;
@@ -7,5 +8,5 @@
 
 ::selection {
 	color: white;
-	background: #23201f;
+	background: $main-color;
 }

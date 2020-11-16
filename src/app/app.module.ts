@@ -9,7 +9,6 @@ import { fr_FR, NZ_I18N } from 'ng-zorro-antd/i18n';
 import { registerLocaleData } from '@angular/common';
 import fr from '@angular/common/locales/fr';
 import { NzIconModule } from 'ng-zorro-antd/icon';
-import { LayoutComponent } from './layout/layout.component';
 import { SharedModule } from './shared/shared.module';
 import { AngularFireModule } from '@angular/fire';
 import {
@@ -25,11 +24,12 @@ import { AngularFireAuthModule, USE_EMULATOR as USE_AUTH_EMULATOR } from '@angul
 import { WelcomeComponent } from './welcome/welcome.component';
 import { CheckCircleFill, CommentOutline } from '@ant-design/icons-angular/icons';
 import { ServiceWorkerModule } from '@angular/service-worker';
+import { LayoutModule } from './layout/layout.module';
 
 registerLocaleData(fr);
 
 @NgModule({
-	declarations: [AppComponent, LayoutComponent, WelcomeComponent],
+	declarations: [AppComponent, WelcomeComponent],
 	imports: [
 		BrowserModule,
 		AppRoutingModule,
@@ -43,6 +43,7 @@ registerLocaleData(fr);
 		AngularFireFunctionsModule,
 		AngularFireAuthModule,
 		ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
+		LayoutModule,
 	],
 	providers: [
 		{ provide: NZ_I18N, useValue: fr_FR },

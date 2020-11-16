@@ -20,11 +20,14 @@ import { RoughNotationModule } from 'ng-rough-notation';
 import { NzResultModule } from 'ng-zorro-antd/result';
 import { NzTypographyModule } from 'ng-zorro-antd/typography';
 import { NgxVibrationModule } from 'ngx-vibration';
+import { NzDrawerModule } from 'ng-zorro-antd/drawer';
+import { NzAffixModule } from 'ng-zorro-antd/affix';
+import { TimestampToDatePipe } from './pipes/timestamp-to-date.pipe';
 
 // tslint:disable-next-line:readonly-array
 const icons: IconDefinition[] = [QuestionCircleOutline];
 
-const components: ReadonlyArray<any> = [];
+const components: ReadonlyArray<any> = [TimestampToDatePipe];
 
 const modules: ReadonlyArray<any> = [
 	CommonModule,
@@ -44,10 +47,12 @@ const modules: ReadonlyArray<any> = [
 	NzSpinModule,
 	NzResultModule,
 	NzTypographyModule,
+	NzDrawerModule,
+	NzAffixModule,
 	RoughNotationModule,
 	NgxVibrationModule.forRoot({
-		defaultPattern: [25]
-	})
+		defaultPattern: [25],
+	}),
 ];
 
 @NgModule({

@@ -1,5 +1,18 @@
+<ng-container *ngIf="authService.isAuthenticated$ | async">
+	<button
+		id="user-drawer-button"
+		nz-button
+		(click)="layoutService.showUserDrawer = !layoutService.showUserDrawer"
+		fxLayoutAlign="center center"
+	>
+		<i nz-icon nzType="menu" nzTheme="outline"></i>
+		<span class="button-text">Mon compte</span>
+	</button>
+
+	<mas-user-drawer [visible]="layoutService.showUserDrawer"></mas-user-drawer>
+</ng-container>
 <div style="min-height: 100%" fxLayout="column" fxLayoutAlign="start center">
-	<a id="header" class="eyes-only" fxFlex="none" [ngxVibration]="[25, 50, 25]">
+	<a id="header" routerLink="/" fxFlex="none" [ngxVibration]="[25, 50, 25]">
 		<img src="assets/logo.svg" alt="Logo" id="logo" />
 		<div id="title">Mascarade</div>
 	</a>
@@ -12,18 +25,4 @@
 			<div class="copyright">© 2020-{{ now | date: 'yyyy' }}</div>
 		</div>
 	</div>
-	<nz-card class="user-infos" *ngIf="authService.user$ | async as user">
-		<div class="nickname" [style.color]="user.color">{{ user.nickname }}</div>
-		<div>
-			<button
-				nz-button
-				nzSize="small"
-				nzType="link"
-				style="padding: 0 !important; font-size: smaller"
-				(click)="logout()"
-			>
-				Déconnexion
-			</button>
-		</div>
-	</nz-card>
 </div>

@@ -1,0 +1,15 @@
+.nickname {
+	margin: 0;
+}
+
+::ng-deep .ant-drawer-body section:not(:last-child) {
+	margin-bottom: 1em;
+}
+label {
+	font-size: small;
+}
+
+.value {
+	font-size: medium;
+	font-weight: 600;
+}
