@@ -45,6 +45,7 @@ $card-radius: 10px;
 }
 
 @media (min-width: 768px) {
+	//noinspection CssUnusedSymbol
 	::ng-deep .labelTooltip {
 		min-width: 500px;
 	}

@@ -1,8 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LayoutComponent } from './layout/layout.component';
-import { AngularFireAuthGuard, redirectLoggedInTo } from '@angular/fire/auth-guard';
+import { AngularFireAuthGuard, redirectUnauthorizedTo } from '@angular/fire/auth-guard';
 import { WelcomeComponent } from './welcome/welcome.component';
+import { HomeGuard } from './home/home.guard';
 
 const routes: Routes = [
 	{
@@ -12,12 +13,17 @@ const routes: Routes = [
 			{
 				path: '',
 				loadChildren: () => import('./home/home.module').then((m) => m.HomeModule),
-				canActivate: [AngularFireAuthGuard],
-				data: { authGuardPipe: () => redirectLoggedInTo(['welcome']) },
+				canActivate: [HomeGuard],
 			},
 			{
 				path: 'welcome',
 				component: WelcomeComponent,
+			},
+			{
+				path: 'room',
+				loadChildren: () => import('./room/room.module').then((m) => m.RoomModule),
+				canActivate: [AngularFireAuthGuard],
+				data: { authGuardPipe: () => redirectUnauthorizedTo(['/']) },
 			},
 		],
 	},

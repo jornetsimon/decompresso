@@ -17,7 +17,8 @@
 			"@services/*": ["shared/services/*"],
 			"@model/*": ["shared/model/*"],
 			"@utilities/*": ["shared/utilities/*"]
-		}
+		},
+		"strictNullChecks": true
 	},
 	"angularCompilerOptions": {
 		"strictTemplates": true,

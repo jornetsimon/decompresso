@@ -2,20 +2,31 @@ rules_version = '2';
 service cloud.firestore {
 	match /databases/{database}/documents {
 		match /users/{userId} {
-			allow read: if true;
+			// Only if own doc or the user is from the same room
+			allow read: if authUidMatches(userId) || get(/databases/$(database)/documents/users/$(request.auth.uid)).data.domain == resource.data.domain;
 			allow create: if authUidMatches(userId);
 			allow update: if authUidMatchesResourceUid();
 		}
 		match /user_personal_data/{userId} {
-			allow read, update: if authUidMatchesResourceUid();
+			allow get, update: if authUidMatchesResourceUid();
 			allow create: if authUidMatches(userId);
+		}
+		match /rooms/{domain} {
+			allow get: if isMyRoom(domain);
+
+			match /members/{userId} {
+				allow read: if isMyRoom(domain);
+			}
 		}
 
 		function authUidMatches(uid) {
 			return request.auth != null && request.auth.uid == uid;
 		}
 		function authUidMatchesResourceUid() {
-		  return resource != null && authUidMatches(resource.id);
+		  	return resource != null && authUidMatches(resource.id);
+		}
+		function isMyRoom(domain) {
+			return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.domain == domain;
 		}
 	}
 }

@@ -1,0 +1,37 @@
+<ng-container *ngIf="roomService.members$ | async as members; else loadingTpl">
+	<nz-list nzBordered nzSize="small" class="members-list">
+		<nz-list-header class="center">
+			<strong>
+				{{ members.length }}
+				{{ members.length | i18nPlural: { '=1': 'membre', other: 'membres' } }}
+			</strong>
+		</nz-list-header>
+		<nz-list-item *ngFor="let member of members; trackBy: trackByMemberFn">
+			<div>
+				<ng-container *ngIf="member.nickname === (userService.user$ | async)?.nickname">
+					<i
+						nz-icon
+						nzType="smile"
+						nzTheme="twotone"
+						nz-tooltip="C'est moi !"
+						nzTooltipColor="blue"
+					></i>
+				</ng-container>
+			</div>
+			<span [style.color]="member.color">{{ member.nickname }}</span>
+		</nz-list-item>
+	</nz-list>
+</ng-container>
+
+<ng-template #loadingTpl>
+	<nz-list nzBordered nzSize="small" class="members-list">
+		<nz-list-item *ngFor="let x of [1, 2, 3]">
+			<nz-skeleton-element
+				nzType="input"
+				[nzActive]="true"
+				nzSize="small"
+				style="width: 100%"
+			></nz-skeleton-element>
+		</nz-list-item>
+	</nz-list>
+</ng-template>

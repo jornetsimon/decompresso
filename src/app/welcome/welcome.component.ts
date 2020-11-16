@@ -16,7 +16,7 @@ import { ErrorWithCode } from '@utilities/errors';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WelcomeComponent {
-	$loginOrCreateAccount = this.authService.loginOrCreateAccount().pipe(
+	loginOrCreateAccount$ = this.authService.loginOrCreateAccount().pipe(
 		untilDestroyed(this),
 		tap({
 			next: (authResult) => {
@@ -25,7 +25,7 @@ export class WelcomeComponent {
 						/*this.message.success('Votre compte a bien été créé');*/
 						break;
 					case AuthType.LoggedIn:
-						this.message.success('Connecté');
+						this.message.success(`Connecté à ${authResult.user.domain}`);
 						break;
 				}
 			},
@@ -37,6 +37,11 @@ export class WelcomeComponent {
 							nzContent: 'Le compte associé à cette adresse email a été désactivé.',
 							nzOkText: 'Compris',
 						});
+						break;
+					case 'auth/user-token-expired':
+						this.message.error(
+							'Le lien que vous venez de cliquer a expiré. Avez-vous bien cliqué sur le dernier reçu ?'
+						);
 						break;
 				}
 				switch (err.message) {
@@ -66,10 +71,9 @@ export class WelcomeComponent {
 		private router: Router
 	) {
 		// Redirect to room if the user was simply logged in
-		this.$loginOrCreateAccount
+		this.loginOrCreateAccount$
 			.pipe(filter((authResult) => authResult.authType === AuthType.LoggedIn))
 			.subscribe((authResult) => {
-				// TODO: redirect to room
 				this.router.navigateByUrl(`/room/${authResult.user.domain}`);
 			});
 	}

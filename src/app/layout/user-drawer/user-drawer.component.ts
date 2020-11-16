@@ -4,6 +4,7 @@ import { AuthService } from '@services/auth.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { Router } from '@angular/router';
 import { LayoutService } from '../layout.service';
+import { UserService } from '@services/user.service';
 
 @Component({
 	selector: 'mas-user-drawer',
@@ -15,10 +16,11 @@ export class UserDrawerComponent {
 	@Input() visible: boolean;
 	placement: NzDrawerPlacement = 'left';
 
-	user$ = this.authService.user$;
+	user$ = this.userService.user$;
 
 	constructor(
-		public authService: AuthService,
+		private authService: AuthService,
+		private userService: UserService,
 		public layoutService: LayoutService,
 		private message: NzMessageService,
 		private router: Router

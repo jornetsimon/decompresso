@@ -11,7 +11,12 @@
 
 	<mas-user-drawer [visible]="layoutService.showUserDrawer"></mas-user-drawer>
 </ng-container>
-<div style="min-height: 100%" fxLayout="column" fxLayoutAlign="start center">
+<div
+	style="min-height: 100%"
+	fxLayout="column"
+	fxLayoutAlign="start center"
+	[class.compact]="enableCompactMode$ | async"
+>
 	<a id="header" routerLink="/" fxFlex="none" [ngxVibration]="[25, 50, 25]">
 		<img src="assets/logo.svg" alt="Logo" id="logo" />
 		<div id="title">Mascarade</div>

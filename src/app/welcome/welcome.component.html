@@ -4,10 +4,10 @@
 		nzSize="large"
 		nzTip="Authentification en cours..."
 		[nzIndicator]="indicatorTemplate"
-		*ngIf="!($loginOrCreateAccount | async)"
+		*ngIf="!(loginOrCreateAccount$ | async)"
 	></nz-spin>
 	<ng-template #indicatorTemplate><i nz-icon nzType="loading" class="spinner"></i></ng-template>
-	<ng-container *ngIf="$loginOrCreateAccount | async as authResult">
+	<ng-container *ngIf="loginOrCreateAccount$ | async as authResult">
 		<ng-container *ngIf="authResult?.authType === 'created'">
 			<div fxLayout="column" fxLayoutAlign="center center" class="result">
 				<i nz-icon nzType="check-circle" nzTheme="fill" id="check-icon"></i>

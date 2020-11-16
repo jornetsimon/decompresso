@@ -7,6 +7,7 @@ import {
 	catchError,
 	delay,
 	distinctUntilChanged,
+	filter,
 	first,
 	map,
 	retryWhen,
@@ -22,12 +23,12 @@ import { DataService } from './data.service';
 import firebase from 'firebase';
 import { ErrorWithCode } from '@utilities/errors';
 
-type FirebaseUser = firebase.User;
-type FirebaseUserCredential = firebase.auth.UserCredential;
+export type FirebaseUser = firebase.User;
+export type FirebaseUserCredential = firebase.auth.UserCredential;
 
 interface StoreState {
 	auth_credential: Serialized<FirebaseUser> | null | undefined;
-	user: User | null;
+	user: User | null | undefined;
 }
 
 export enum AuthType {
@@ -46,8 +47,13 @@ export class AuthService extends ObservableStore<StoreState> {
 	/**
 	 * Has the authentication been checked?
 	 */
-	authChecked$ = this.globalStateChanged.pipe(
-		map((state) => state.auth_credential !== undefined)
+	isAuthChecked$ = this.stateChanged.pipe(map((state) => state.auth_credential !== undefined));
+	/**
+	 * Emits when the authentication has been checked
+	 */
+	waitForAuthChecked$ = this.isAuthChecked$.pipe(
+		filter((checked) => checked),
+		first()
 	);
 	/**
 	 * The Firebase Auth user credential
@@ -57,11 +63,13 @@ export class AuthService extends ObservableStore<StoreState> {
 	 * Is the user authenticated
 	 */
 	isAuthenticated$: Observable<boolean> = this.auth.user.pipe(map((user) => !!user));
+
 	/**
 	 * The connected user data
 	 */
 	user$: Observable<User | null> = this.globalStateChanged.pipe(
-		map((state: StoreState) => state.user),
+		filter((state) => state.user !== undefined),
+		map((state: StoreState) => state.user as User | null),
 		distinctUntilChanged()
 	);
 
@@ -73,7 +81,7 @@ export class AuthService extends ObservableStore<StoreState> {
 		super({});
 
 		// Initialize auth state
-		this.setState({ auth_credential: undefined, user: null }, 'INIT_AUTH_STATE');
+		this.setState({ auth_credential: undefined, user: undefined }, 'INIT_AUTH_STATE');
 
 		// When the authenticated user changes, update state
 		// This is triggered by automatic auth process, login and logout
