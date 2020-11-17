@@ -58,3 +58,36 @@ export const createUser = functions.https.onCall(async (data, context) => {
 	const userSnap = await db.doc(`${Endpoints.Users}/${uid}`).get();
 	return userSnap.data();
 });
+
+export const deleteUser = functions.https.onCall(async (data, context) => {
+	// Checking that the user is authenticated.
+	if (!context.auth) {
+		// Throwing an HttpsError so that the client gets the error details.
+		throw new functions.https.HttpsError('failed-precondition', 'not_authenticated');
+	}
+	const uid = context.auth.uid;
+	const user = (await db.doc(`/users/${uid}`).get()).data();
+	if (!user) {
+		throw new functions.https.HttpsError('invalid-argument', 'user_does_not_exist');
+	}
+	const batch = db.batch();
+	// Setting the room member as deleted
+	batch.update(db.doc(`${Endpoints.Rooms}/${user.domain}/members/${uid}`), { deleted: true });
+	// Decrement the room member count
+	batch.update(
+		db.doc(`${Endpoints.Rooms}/${user.domain}`),
+		'member_count',
+		FieldValue.increment(-1)
+	);
+	// Set the deletedAt timestamp in UserPersonalData
+	batch.update(db.doc(`${Endpoints.UserPersonalData}/${uid}`), {
+		deletedAt: admin.firestore.FieldValue.serverTimestamp(),
+	});
+	// Delete the document in Users
+	batch.delete(db.doc(`${Endpoints.Users}/${uid}`));
+
+	return batch.commit().then(() => {
+		// Delete the user in Firebase Auth
+		return auth.deleteUser(uid);
+	});
+});

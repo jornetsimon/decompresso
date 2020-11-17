@@ -5,4 +5,5 @@ export interface User {
 	domain: string;
 	createdAt: Timestamp;
 	color: string;
+	deleted?: boolean;
 }

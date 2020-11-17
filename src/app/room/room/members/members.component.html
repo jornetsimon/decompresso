@@ -18,7 +18,14 @@
 					></i>
 				</ng-container>
 			</div>
-			<span [style.color]="member.color">{{ member.nickname }}</span>
+			<span
+				[style.color]="member.color"
+				[class.strikethrough]="member.deleted"
+				[nz-tooltip]="memberTooltip(member)"
+				[nzTooltipColor]="tooltipConfig.color"
+			>
+				{{ member.nickname }}
+			</span>
 		</nz-list-item>
 	</nz-list>
 </ng-container>
@@ -34,4 +41,11 @@
 			></nz-skeleton-element>
 		</nz-list-item>
 	</nz-list>
+</ng-template>
+
+<ng-template #deleteAccountTooltip>
+	Le compte de cet utilisateur a été clôturé.
+	<span class="help">
+		<i nz-icon nzType="question-circle" nzTheme="fill" routerLink="/help#deleted-account"></i>
+	</span>
 </ng-template>

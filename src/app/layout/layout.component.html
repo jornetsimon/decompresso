@@ -9,7 +9,10 @@
 		<span class="button-text">Mon compte</span>
 	</button>
 
-	<mas-user-drawer [visible]="layoutService.showUserDrawer"></mas-user-drawer>
+	<mas-user-drawer
+		[visible]="layoutService.showUserDrawer"
+		(closed)="layoutService.showUserDrawer = false"
+	></mas-user-drawer>
 </ng-container>
 <div
 	style="min-height: 100%"

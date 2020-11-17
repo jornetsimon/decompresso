@@ -17,3 +17,11 @@
 	align-items: flex-end;
 	padding: 0 40px;
 }
+
+.ant-tooltip-inner:has(.help) {
+	white-space: pre-wrap;
+}
+.ant-tooltip .help {
+	float: right;
+	cursor: pointer;
+}

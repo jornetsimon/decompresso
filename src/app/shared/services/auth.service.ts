@@ -239,4 +239,14 @@ export class AuthService extends ObservableStore<StoreState> {
 		const callable = this.fns.httpsCallable('createUser');
 		return callable({});
 	}
+
+	/**
+	 * Delete a user account
+	 *
+	 * Removes their data in db and delete their auth account
+	 */
+	deleteUser() {
+		const callable = this.fns.httpsCallable('deleteUser');
+		return callable({});
+	}
 }
