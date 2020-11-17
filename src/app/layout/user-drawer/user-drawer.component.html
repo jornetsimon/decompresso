@@ -1,9 +1,10 @@
 <ng-container *ngIf="user$ | async as user">
 	<nz-drawer
-		[nzVisible]="layoutService.showUserDrawer"
+		[nzVisible]="visible"
 		[nzPlacement]="placement"
 		[nzTitle]="titleTpl"
-		(nzOnClose)="layoutService.showUserDrawer = false"
+		(nzOnClose)="closeDrawer()"
+		nzCloseIcon=""
 	>
 		<div fxFlex="grow" fxLayout="column">
 			<div fxFlex="grow">
@@ -21,10 +22,24 @@
 				</section>
 			</div>
 			<div fxFlex="none">
-				<div fxLayoutAlign="center">
-					<button nz-button nzType="default" nzDanger (click)="logout()">
+				<div fxLayout="column" fxLayoutAlign="center center">
+					<button
+						nz-button
+						nzType="default"
+						nzDanger
+						(click)="logout()"
+						class="logout-button"
+					>
 						<i nz-icon nzType="logout" nzTheme="outline"></i>
 						Déconnexion
+					</button>
+					<button
+						nz-button
+						nzType="text"
+						(click)="deleteAccount()"
+						class="delete-account-button"
+					>
+						Supprimer mon compte
 					</button>
 				</div>
 			</div>
@@ -32,6 +47,6 @@
 	</nz-drawer>
 
 	<ng-template #titleTpl>
-		<h3 nz-typography class="nickname" [style.color]="user.color">{{ user.nickname }}</h3>
+		<div nz-typography class="nickname" [style.color]="user.color">{{ user.nickname }}</div>
 	</ng-template>
 </ng-container>

@@ -34,6 +34,13 @@ export class RoomService extends ObservableStore<StoreState> {
 	}
 
 	private static memberSortFn(a: User, b: User, connectedUser: User): -1 | 0 | 1 {
+		// Put deleted at bottom
+		if (a.deleted) {
+			return 1;
+		}
+		if (b.deleted) {
+			return -1;
+		}
 		const aNick = a.nickname;
 		const bNick = b.nickname;
 		const connectedUserNick = connectedUser.nickname;
