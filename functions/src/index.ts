@@ -1,4 +1,4 @@
-import { createUser } from './auth';
+import { createUser, deleteUser } from './auth';
 
 export enum Endpoints {
 	Users = '/users',
@@ -9,3 +9,4 @@ export enum Endpoints {
 }
 
 exports.createUser = createUser;
+exports.deleteUser = deleteUser;
