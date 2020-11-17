@@ -2,6 +2,9 @@
 	nz-input
 	[formControl]="control"
 	type="email"
+	autocomplete="email"
 	[placeholder]="emailPlaceholder"
 	nzSize="large"
+	(focusin)="onInputFocus(true)"
+	(focusout)="onInputFocus(false)"
 />

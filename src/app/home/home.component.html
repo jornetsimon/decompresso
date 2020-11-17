@@ -2,13 +2,22 @@
 	<div fxFlex="0 0 20%" fxLayout="column" fxLayoutAlign="center">
 		<div id="intro">
 			<div id="headline">
-				<span [roughNotation]="headlineAnnotationConfig">
+				<span
+					[roughNotation]="headlineAnnotationConfig"
+					[show]="(showAnnotations$ | async)!"
+				>
 					Et&nbsp;si on réinventait la pause&#x2011;café&nbsp;?
 				</span>
 			</div>
 			<div id="sub">
 				Venez tchatter
-				<span id="anon" [roughNotation]="anonAnnotationConfig">anonymement</span>
+				<span
+					id="anon"
+					[roughNotation]="anonAnnotationConfig"
+					[show]="(showAnnotations$ | async)!"
+				>
+					anonymement
+				</span>
 				avec
 				<span class="nowrap"
 					>vos&nbsp;collègues <i nz-icon nzType="comment" nzTheme="outline"></i

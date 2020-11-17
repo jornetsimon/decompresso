@@ -3,6 +3,7 @@ import { BaseControlValueAccessor } from '@utilities/base-control-value-accessor
 import { FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validators } from '@angular/forms';
 import { PrivateDomainEmailService } from './private-domain-email.service';
 import { generateEmailPlaceholder } from './email-placeholder';
+import { LayoutService } from '../../layout/layout.service';
 
 @Component({
 	selector: 'mas-private-domain-email',
@@ -32,12 +33,16 @@ export class PrivateDomainEmailComponent extends BaseControlValueAccessor<string
 	control = new FormControl(undefined, [Validators.required]);
 	emailPlaceholder: string;
 
-	constructor() {
+	constructor(private layoutService: LayoutService) {
 		super();
 		this.control.valueChanges.subscribe((value) => {
 			this.sweetChange(value);
 		});
 
 		this.emailPlaceholder = generateEmailPlaceholder();
+	}
+
+	onInputFocus(focus: boolean) {
+		this.layoutService.inputFocusSubject.next(focus);
 	}
 }
