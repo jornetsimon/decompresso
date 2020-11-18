@@ -41,10 +41,9 @@ export class UserDrawerComponent {
 			},
 		});
 	}
-
 	deleteAccount() {
 		let deletionLoading = false;
-		this.modalService.confirm({
+		const modal = this.modalService.confirm({
 			nzTitle: 'Suppression de compte',
 			nzContent: `<b>Êtes-vous certain de vouloir supprimer définitivement votre compte ?</b>`,
 			nzClassName: 'delete-account-modal',
@@ -58,6 +57,11 @@ export class UserDrawerComponent {
 				return this.authService
 					.deleteUser()
 					.pipe(
+						tap({
+							next: () => {
+								modal.close();
+							},
+						}),
 						switchMap(() => this.authService.logout()),
 						switchMap(() => this.router.navigateByUrl('/')),
 						finalize(() => {
