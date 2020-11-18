@@ -4,14 +4,30 @@ import { LayoutComponent } from './layout.component';
 import { SharedModule } from '../shared/shared.module';
 import { UserDrawerComponent } from './user-drawer/user-drawer.component';
 import { NzIconModule } from 'ng-zorro-antd/icon';
-import { LogoutOutline, MenuOutline, WarningOutline } from '@ant-design/icons-angular/icons';
+import {
+	HomeOutline,
+	LogoutOutline,
+	MenuOutline,
+	MessageOutline,
+	QuestionCircleOutline,
+	UserOutline,
+	WarningOutline,
+} from '@ant-design/icons-angular/icons';
 
 @NgModule({
 	declarations: [LayoutComponent, UserDrawerComponent],
 	imports: [
 		CommonModule,
 		SharedModule,
-		NzIconModule.forChild([MenuOutline, LogoutOutline, WarningOutline]),
+		NzIconModule.forChild([
+			MenuOutline,
+			LogoutOutline,
+			WarningOutline,
+			UserOutline,
+			QuestionCircleOutline,
+			MessageOutline,
+			HomeOutline,
+		]),
 	],
 })
 export class LayoutModule {}

@@ -1,0 +1,26 @@
+::ng-deep mas-help > section,
+::ng-deep mas-help > .page-container > section {
+	margin-bottom: 2em;
+	& > *:first-child {
+		font-weight: bold;
+
+		&:before {
+			padding-right: 4px;
+			content: '👉';
+		}
+		@media (min-width: 425px) {
+			&:before {
+				float: left;
+				margin-left: -1.5em;
+			}
+		}
+	}
+	& section {
+		margin: 1em 0;
+	}
+}
+
+.callout {
+	padding-left: 1.25em;
+	border-left: 2px solid #1890ff;
+}

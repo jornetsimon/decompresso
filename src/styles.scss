@@ -25,3 +25,35 @@
 	float: right;
 	cursor: pointer;
 }
+
+.page-title {
+	border-bottom: 1px solid #f0f0f0;
+	padding-bottom: 0.2em;
+	letter-spacing: 3px;
+	margin-bottom: 0.5em;
+	font-weight: 600;
+	font-size: 38px;
+	line-height: 1.23;
+}
+
+@media (max-width: 424px) {
+	.page-title {
+		font-size: 32px;
+	}
+}
+
+.page-container {
+	padding: 0 20px;
+}
+
+q {
+	quotes: '“' '”';
+	font-style: italic;
+
+	&:before {
+		padding-right: 5px;
+	}
+	&:after {
+		padding-left: 5px;
+	}
+}
