@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { from, Observable, of } from 'rxjs';
+import { combineLatest, from, Observable, of } from 'rxjs';
 import { ObservableStore } from '@codewithdan/observable-store';
 import {
 	catchError,
@@ -192,10 +192,13 @@ export class AuthService extends ObservableStore<StoreState> {
 	}
 
 	/**
-	 * Log the user out
+	 * Log the user out and wait for the state to be propagated
 	 */
 	logout() {
-		return from(this.auth.signOut());
+		// Adding isAuthenticated$ in the mix to ensure subsequent uses can have a properly updated state
+		return combineLatest([from(this.auth.signOut()), this.isAuthenticated$]).pipe(
+			filter(([signOut, isAuthenticated]) => !isAuthenticated)
+		);
 	}
 
 	/**
