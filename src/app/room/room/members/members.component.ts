@@ -1,4 +1,10 @@
-import { Component, TemplateRef, TrackByFunction, ViewChild } from '@angular/core';
+import {
+	ChangeDetectionStrategy,
+	Component,
+	TemplateRef,
+	TrackByFunction,
+	ViewChild,
+} from '@angular/core';
 import { User } from '@model/user';
 import { UserService } from '@services/user.service';
 import { RoomService } from '@services/room.service';
@@ -7,6 +13,7 @@ import { RoomService } from '@services/room.service';
 	selector: 'mas-members',
 	templateUrl: './members.component.html',
 	styleUrls: ['./members.component.scss'],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MembersComponent {
 	tooltipConfig = {
