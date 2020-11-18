@@ -229,9 +229,9 @@
     tslib "^2.0.0"
 
 "@angular/fire@^6.1.0-rc.2":
-  version "6.1.0-rc.3"
-  resolved "https://registry.yarnpkg.com/@angular/fire/-/fire-6.1.0-rc.3.tgz#0095062c048fec4b4d97962fbd6443e9587877c0"
-  integrity sha512-M37LrKwrIlGs5laAEQyAXzttwuTZknMytPFfQLRLm/wGQAytpihzjJG9Bev/iNQi2cXsC4acMkeULwmUgl/95g==
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/@angular/fire/-/fire-6.1.0.tgz#1082c0a57178ce67d36a7c4cfb0633129bbac01c"
+  integrity sha512-YDuLB6/J8XOuOEB0nuG0gQ+xuFnx0n58GwExR9VacDqTDkSO93zlu2zT7nhtNttVOrpblNAbpTQe87Rlu7HBpA==
   dependencies:
     tslib "^2.0.0"
 
@@ -1697,7 +1697,12 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-14.14.7.tgz#8ea1e8f8eae2430cf440564b98c6dfce1ec5945d"
   integrity sha512-Zw1vhUSQZYw+7u5dAwNbIA9TuTotpzY/OF7sJM9FqPOF3SPjKnxrjoTktXDZgUjybf4cWVBP7O8wvKdSaGHweg==
 
-"@types/node@^12.11.1", "@types/node@^12.12.47":
+"@types/node@^12.11.1":
+  version "12.19.5"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-12.19.5.tgz#9be3946136e818597c71c62d04240d0602c645d4"
+  integrity sha512-Wgdl27uw/jUYUFyajUGKSjDNGxmJrZi9sjeG6UJImgUtKbJoO9aldx+1XODN1EpNDX9DirvbvHHmTsNlb8GwMA==
+
+"@types/node@^12.12.47":
   version "12.19.4"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-12.19.4.tgz#cdfbb62e26c7435ed9aab9c941393cc3598e9b46"
   integrity sha512-o3oj1bETk8kBwzz1WlO6JWL/AfAA3Vm6J1B3C9CsdxHYp7XgPiH7OEXPUbZTndHlRaIElrANkQfe6ZmfJb3H2w==
@@ -7910,9 +7915,9 @@ ng-rough-notation@^1.1.2:
     tslib "^2.0.1"
 
 ng-zorro-antd@^10.1.0:
-  version "10.1.1"
-  resolved "https://registry.yarnpkg.com/ng-zorro-antd/-/ng-zorro-antd-10.1.1.tgz#0f274b16a1331a41522d6c9309c44779c94dcdc0"
-  integrity sha512-C9WHcsfSSU+5YSfzqBuF+zGcxBrcW3a0lL7wt2TfLYnrFTTZ4EaI9dhzZHv4NuDoFQ0WM8syzzRa+Yh93v0HyQ==
+  version "10.1.2"
+  resolved "https://registry.yarnpkg.com/ng-zorro-antd/-/ng-zorro-antd-10.1.2.tgz#43ff5359a2a9a89f97f1344cece4f6b279ae2953"
+  integrity sha512-T6ph9ITeTS0ohX+VsyZaVrls53fgyTMJ0RFddJCK2WyQgg+BTznlSw24fJWgdTcocoIuPSBuVO27ecyZwN6Hhw==
   dependencies:
     "@angular/cdk" "^10.2.4"
     "@ant-design/icons-angular" "^10.0.0"
