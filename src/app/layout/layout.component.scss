@@ -11,8 +11,8 @@
 }
 #logo {
 	height: 100px;
-	transition: filter 0.5s, height 0.5s cubic-bezier(0.2, 0.7, 0.32, 1),
-		width 0.5s cubic-bezier(0.2, 0.7, 0.32, 1);
+	transition: filter 0.5s, height 0.35s cubic-bezier(0.2, 0.7, 0.32, 1),
+		width 0.35s cubic-bezier(0.2, 0.7, 0.32, 1);
 	margin: 0 1em;
 }
 #header:hover #logo {
@@ -34,37 +34,59 @@
 }
 
 #title {
+	display: flex;
+	flex-direction: column;
+	width: 130%;
+	justify-content: center;
 	font-size: 40px;
-	font-family: 'Carter One', cursive;
-	transition: all 0.5s ease-out;
+	transition: all 0.35s cubic-bezier(0.2, 0.7, 0.32, 1), color 0s;
+
+	#app-name {
+		font-family: 'Carter One', serif;
+		line-height: 1;
+		margin-top: 0.3em;
+	}
+	#room-name {
+		font-size: 0.75em;
+		font-family: 'Carter One', serif;
+		line-height: 1;
+		color: dodgerblue;
+		align-self: flex-end;
+
+		animation: fadeInFromTop 500ms 0ms forwards;
+	}
 }
 
 /* When the height is limited, compact the layout */
+@mixin compact {
+	#header {
+		flex-direction: row;
+		align-items: flex-end;
+	}
+	#logo {
+		height: 40px;
+	}
+	#title {
+		width: inherit;
+		font-size: 30px;
+		#app-name {
+			margin-top: 0;
+		}
+		#room-name {
+			/*font-size: clamp(12px, 2vw, 0.75em);*/
+			align-self: inherit;
+			white-space: nowrap;
+			margin-left: 20%;
+		}
+	}
+}
 @media (max-height: 600px) {
-	#header {
-		flex-direction: row;
-		align-items: flex-start;
-	}
-	#logo {
-		height: 40px;
-	}
-	#title {
-		font-size: 30px;
-	}
+	@include compact;
 }
-/* Or when the compact mode is explicitly set */
 .compact {
-	#header {
-		flex-direction: row;
-		align-items: flex-start;
-	}
-	#logo {
-		height: 40px;
-	}
-	#title {
-		font-size: 30px;
-	}
+	@include compact;
 }
+/****/
 
 .main-container {
 	width: 100%;
@@ -96,6 +118,10 @@
 	animation: fadein 0.3s ease-out;
 }
 
+.flag svg {
+	vertical-align: middle;
+}
+
 @keyframes fadein {
 	0% {
 		display: none;
@@ -114,7 +140,16 @@
 		opacity: 1;
 	}
 }
-
-.flag svg {
-	vertical-align: middle;
+@keyframes fadeInFromTop {
+	0% {
+		transform: translateY(-30px);
+		opacity: 0;
+	}
+	25% {
+		opacity: 0;
+	}
+	100% {
+		transform: translateY(0);
+		opacity: 1;
+	}
 }

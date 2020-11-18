@@ -20,9 +20,26 @@
 	fxLayoutAlign="start center"
 	[class.compact]="enableCompactMode$ | async"
 >
-	<a id="header" routerLink="/" fxFlex="none" [ngxVibration]="[25, 50, 25]">
-		<img src="assets/logo.svg" alt="Logo" id="logo" />
-		<div id="title">Mascarade</div>
+	<a
+		id="header"
+		routerLink="/"
+		fxFlex="none"
+		[ngxVibration]="[25, 50, 25]"
+		[style.align-items]="(domain$ | async) ? 'center' : undefined"
+	>
+		<img src="assets/logo.svg" alt="Logo" title="Al Puccino & Pierre Colateur" id="logo" />
+		<div id="title">
+			<div id="app-name" [style.align-self]="(domain$ | async) ? 'flex-start' : 'center'">
+				Mascarade
+			</div>
+			<div
+				id="room-name"
+				*ngIf="domain$ | async as domain"
+				[style.font-size.px]="domainFontSize$ | async"
+			>
+				{{ domain }}
+			</div>
+		</div>
 	</a>
 	<div class="main-container" fxFlex="grow" fxLayout="column">
 		<router-outlet></router-outlet>

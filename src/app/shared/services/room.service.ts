@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ObservableStore } from '@codewithdan/observable-store';
 import { Room } from '@model/room';
-import { map, share, switchMap } from 'rxjs/operators';
+import { map, share, shareReplay, switchMap } from 'rxjs/operators';
 import { UserService } from '@services/user.service';
 import { DataService, expectData } from '@services/data.service';
 import { Observable } from 'rxjs';
@@ -18,7 +18,8 @@ export class RoomService extends ObservableStore<StoreState> {
 	 * Long-lived room data
 	 */
 	room$: Observable<Room> = this.userService.user$.pipe(
-		switchMap((user) => this.dataService.room$(user.domain).pipe(expectData))
+		switchMap((user) => this.dataService.room$(user.domain).pipe(expectData)),
+		shareReplay()
 	);
 	members$: Observable<ReadonlyArray<User>> = this.userService.user$.pipe(
 		switchMap((user) =>

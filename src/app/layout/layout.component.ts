@@ -4,6 +4,7 @@ import { LayoutService } from './layout.service';
 import { NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { filter, map, startWith } from 'rxjs/operators';
+import { RoomService } from '@services/room.service';
 
 @Component({
 	selector: 'mas-layout',
@@ -21,10 +22,29 @@ export class LayoutComponent {
 	 * Defines if the compact layout should be used based on the current route
 	 */
 	enableCompactMode$: Observable<boolean>;
+	domain$ = this.roomService.room$.pipe(map((room) => room.domain));
+	domainFontSize$ = this.domain$.pipe(
+		map((domain) => {
+			const length = domain.length;
+			const magicRatio = 25;
+			// Sizes in px
+			const maxSize = 22;
+			const minSize = 9;
+			const estimate = maxSize * 1.5 - (length * maxSize) / magicRatio;
+			if (estimate < minSize) {
+				return minSize;
+			}
+			if (estimate > maxSize) {
+				return maxSize;
+			}
+			return Math.round(estimate);
+		})
+	);
 	constructor(
 		public authService: AuthService,
 		public layoutService: LayoutService,
-		public router: Router
+		public router: Router,
+		public roomService: RoomService
 	) {
 		this.enableCompactMode$ = this.router.events.pipe(
 			filter((event) => event instanceof NavigationEnd),
