@@ -6,6 +6,7 @@ export enum Endpoints {
 	PublicEmailDomains = '/public_email_domains',
 	Rooms = '/rooms',
 	RoomMembers = 'members',
+	Chats = '/chats',
 }
 
 exports.createUser = createUser;

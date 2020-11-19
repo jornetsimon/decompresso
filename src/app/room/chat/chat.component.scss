@@ -1,0 +1,77 @@
+::ng-deep .ant-card {
+	box-shadow: 1px 2px 12px 0 #e4e4e4;
+}
+::ng-deep .ant-empty-description {
+	font-weight: 500;
+	font-size: 15px;
+}
+#chat-content {
+	overflow-y: scroll;
+}
+.top-reached {
+	font-size: 10px;
+	color: darkgrey;
+	text-align: center;
+}
+.entry {
+	display: flex;
+	justify-content: flex-start;
+	align-items: baseline;
+	margin-bottom: 10px;
+
+	.infos {
+		display: flex;
+		flex-direction: column;
+	}
+	&.mine {
+		flex-direction: row-reverse;
+		.infos {
+			align-items: flex-end;
+		}
+	}
+	&.others {
+		flex-direction: row;
+		.infos {
+			align-items: flex-start;
+		}
+	}
+}
+
+.author {
+	padding: 0.25em 0.5em;
+	font-size: 85%;
+	background: rgb(216 216 216 / 10%);
+	border: 1px solid rgb(216 216 216 / 20%);
+	border-radius: 3px;
+
+	.entry.mine & {
+		margin-left: 10px;
+	}
+	.entry.others & {
+		margin-right: 10px;
+		&:after {
+			content: ':';
+		}
+	}
+}
+.bubble {
+	padding: 0.35em 1em;
+	overflow: hidden;
+	border-radius: 20px;
+
+	.entry.others & {
+		/*background: #ededed;
+		color: #53535f;*/
+		color: white; /**/
+	}
+	.entry.mine & {
+		background-color: rgba(63, 135, 245, 0.1);
+		color: #3f87f5;
+	}
+}
+
+.timestamp {
+	font-size: 10px;
+	color: grey;
+	padding: 0 0.75em;
+}

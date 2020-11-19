@@ -12,11 +12,14 @@ service cloud.firestore {
 			allow create: if authUidMatches(userId);
 		}
 		match /rooms/{domain} {
-			allow get: if isMyRoom(domain);
+			allow get: if isMyDomain(domain);
 
 			match /members/{userId} {
-				allow read: if isMyRoom(domain);
+				allow read: if isMyDomain(domain);
 			}
+		}
+		match /chats/{domain} {
+			allow get, update: if isMyDomain(domain);
 		}
 
 		function authUidMatches(uid) {
@@ -25,7 +28,7 @@ service cloud.firestore {
 		function authUidMatchesResourceUid() {
 		  	return resource != null && authUidMatches(resource.id);
 		}
-		function isMyRoom(domain) {
+		function isMyDomain(domain) {
 			return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.domain == domain;
 		}
 	}

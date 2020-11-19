@@ -2,7 +2,7 @@ import * as functions from 'firebase-functions';
 import { Endpoints } from './index';
 import { auth, db } from './init';
 import { pickNickname } from './nickname';
-import { createRoom } from './room';
+import { createChat, createRoom } from './room';
 import * as admin from 'firebase-admin';
 import FieldValue = admin.firestore.FieldValue;
 
@@ -34,6 +34,8 @@ export const createUser = functions.https.onCall(async (data, context) => {
 
 	// Create the room in case it does not exist
 	await createRoom(domain);
+	// Create the chat in case it does not exist
+	await createChat(domain);
 
 	const nickname = await pickNickname(domain);
 	const color = randomColor({

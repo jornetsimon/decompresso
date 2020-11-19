@@ -1,3 +1,11 @@
+::ng-deep .ant-list {
+	background-color: white;
+}
+::ng-deep .ant-list-header {
+	background-color: dodgerblue;
+	color: white;
+	border-radius: 4px 4px 0 0;
+}
 .ant-list-item > *:not(:first-child) {
 	margin-left: 1em;
 }

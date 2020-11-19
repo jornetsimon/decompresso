@@ -229,9 +229,9 @@
     tslib "^2.0.0"
 
 "@angular/fire@^6.1.0-rc.2":
-  version "6.1.0"
-  resolved "https://registry.yarnpkg.com/@angular/fire/-/fire-6.1.0.tgz#1082c0a57178ce67d36a7c4cfb0633129bbac01c"
-  integrity sha512-YDuLB6/J8XOuOEB0nuG0gQ+xuFnx0n58GwExR9VacDqTDkSO93zlu2zT7nhtNttVOrpblNAbpTQe87Rlu7HBpA==
+  version "6.1.1"
+  resolved "https://registry.yarnpkg.com/@angular/fire/-/fire-6.1.1.tgz#61adaeb8988d5be43fca92471cd8b0ff4fed4833"
+  integrity sha512-61DZz26ikDl2+YpFOTndKcR9TjeWnFGMv1q1Mn0Xe/kDF7gYvhkq7i05W/wiMx2854pzsLvuyxqaG9V1y/5ttA==
   dependencies:
     tslib "^2.0.0"
 

@@ -12,3 +12,11 @@ export function createRoom(domain: string) {
 		})
 		.catch(() => null);
 }
+export function createChat(domain: string) {
+	return db
+		.doc(`${Endpoints.Chats}/${domain}`)
+		.create({
+			messages: [],
+		})
+		.catch(() => null);
+}
