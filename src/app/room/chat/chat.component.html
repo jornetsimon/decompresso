@@ -1,37 +1,45 @@
 <nz-card>
 	<div id="chat-content" #chatContent>
-		<ng-container *ngIf="messagesWithUsers$ | async as messages">
+		<ng-container *ngIf="groupedMessages$ | async as groupedMessages">
 			<ng-container *ngIf="!(isUserAlone$ | async); else memberAloneTpl">
-				<ng-container *ngIf="messages.length; else noMessageTpl">
+				<ng-container *ngIf="groupedMessages.length; else noMessageTpl">
 					<div class="top-reached">Vous avez atteint la limite de l'historique 🔭</div>
-					<ng-container *ngFor="let message of messages">
+					<ng-container
+						*ngFor="let group of groupedMessages; trackBy: trackByMessageGroupFn"
+					>
 						<div
 							class="entry"
-							[class.is-last]="message.isLast"
-							[fxLayout]="message.isMine ? 'row-reverse' : 'row'"
-							[ngClass]="{ mine: message.isMine, others: !message.isMine }"
+							[class.is-last]="group.isLast"
+							[fxLayout]="group.isMine ? 'row-reverse' : 'row'"
+							[ngClass]="{ mine: group.isMine, others: !group.isMine }"
 						>
 							<div class="infos">
 								<div class="author">
 									<span
 										[style.color]="
-											message.isMine ? undefined : message.authorUser?.color
+											group.isMine ? undefined : group.authorUser?.color
 										"
 									>
-										{{ message.isMine ? 'Moi' : message.authorUser?.nickname }}
+										{{ group.isMine ? 'Moi' : group.authorUser?.nickname }}
 									</span>
 								</div>
 								<div class="timestamp">
-									{{ message.createdAt | timestampToDate: "EEE à HH'h'mm" }}
+									{{ group.timestamp | timestampToDate: "EEE à HH'h'mm" }}
 								</div>
 							</div>
-							<div
-								class="bubble"
-								[style.background-color]="
-									message.isMine ? undefined : message.authorUser?.color
-								"
-							>
-								{{ message.content }}
+							<div class="bubble-group">
+								<div
+									class="bubble"
+									*ngFor="
+										let message of group.messages;
+										trackBy: trackByMessageFn
+									"
+									[style.background-color]="
+										group.isMine ? undefined : group.authorUser?.color
+									"
+									[textContent]="message.content"
+									[class.solo-emoji]="containsOnlyEmojis(message.content)"
+								></div>
 							</div>
 						</div>
 					</ng-container>

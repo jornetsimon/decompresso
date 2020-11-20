@@ -4,6 +4,7 @@ import {
 	ChangeDetectionStrategy,
 	Component,
 	ElementRef,
+	TrackByFunction,
 	ViewChild,
 } from '@angular/core';
 import { RoomService } from '@services/room.service';
@@ -13,6 +14,8 @@ import { combineLatest, fromEvent, Observable, Subject } from 'rxjs';
 import { debounceTime, first, map, pairwise, share, startWith } from 'rxjs/operators';
 import { UserService } from '@services/user.service';
 import { scrollParentToChild } from '@utilities/scroll-parent-to-child';
+import { Message } from '@model/message';
+import { MessageGroup } from '@model/message-group';
 
 @Component({
 	selector: 'mas-chat',
@@ -41,6 +44,26 @@ export class ChatComponent implements AfterViewInit, AfterViewChecked {
 		}),
 		share()
 	);
+	groupedMessages$ = combineLatest([
+		this.roomService.messages$,
+		this.roomService.members$,
+		this.userService.userUid$,
+	]).pipe(
+		map(([messages, members, userUid]) => {
+			return messages
+				.reduce(ChatService.groupMessagesByDateAndAuthor, [])
+				.map((messageGroup, index) => {
+					return {
+						...messageGroup,
+						authorUser: members.find((m) => m.uid === messageGroup.author),
+						isMine: messageGroup.author === userUid,
+						isLast: index === messages.length - 1,
+					};
+				});
+		}),
+		share()
+	);
+
 	newMessageForm = new FormGroup({
 		message: new FormControl(undefined, [Validators.required]),
 	});
@@ -52,6 +75,9 @@ export class ChatComponent implements AfterViewInit, AfterViewChecked {
 
 	private chatScrollingState$: Observable<readonly [number, number, number]>;
 	stickToChatBottom$: Observable<boolean>;
+	trackByMessageGroupFn: TrackByFunction<MessageGroup> = (index, item) =>
+		item.timestamp.seconds + item.author;
+	trackByMessageFn: TrackByFunction<Message> = (index, item) => item.uid;
 	constructor(
 		private chatService: ChatService,
 		public roomService: RoomService,
@@ -110,18 +136,30 @@ export class ChatComponent implements AfterViewInit, AfterViewChecked {
 		scrollParentToChild(this.chatContentRef.nativeElement, messageElement);
 	}
 
-	scrollToBottomOfChat() {
-		this.chatContentRef.nativeElement.scrollTop = this.chatContentRef.nativeElement.scrollHeight;
+	scrollToBottomOfChat(behavior?: ScrollBehavior) {
+		this.chatContentRef.nativeElement.scrollTo({
+			top: this.chatContentRef.nativeElement.scrollHeight,
+			behavior,
+		});
 	}
 
 	sendMessage() {
-		const content = this.newMessageForm.value.message.trim();
+		const content = this.newMessageForm.value.message?.trim();
 		if (!content) {
 			return;
 		}
 		this.chatService.sendMessage(content).then(() => {
 			this.newMessageForm.reset();
-			this.scrollToBottomOfChat();
+			this.scrollToBottomOfChat('smooth');
 		});
+	}
+
+	/**
+	 * Determines is a string consists of only emojis
+	 */
+	containsOnlyEmojis(text: string) {
+		const onlyEmojis = text.replace(new RegExp('[\u0000-\u1eeff]', 'g'), '');
+		const visibleChars = text.replace(new RegExp('[\n\rs]+|( )+', 'g'), '');
+		return onlyEmojis.length === visibleChars.length;
 	}
 }
