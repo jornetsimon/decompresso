@@ -27,6 +27,7 @@ import { NzListModule } from 'ng-zorro-antd/list';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { NzEmptyModule } from 'ng-zorro-antd/empty';
 import { NzBadgeModule } from 'ng-zorro-antd/badge';
+import { NzPopoverModule } from 'ng-zorro-antd/popover';
 
 // tslint:disable-next-line:readonly-array
 const icons: IconDefinition[] = [QuestionCircleOutline];
@@ -57,6 +58,7 @@ const modules: ReadonlyArray<any> = [
 	NzMenuModule,
 	NzEmptyModule,
 	NzBadgeModule,
+	NzPopoverModule,
 	RoughNotationModule,
 	NgxVibrationModule.forRoot({
 		defaultPattern: [25],

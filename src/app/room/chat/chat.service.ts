@@ -8,6 +8,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { Message } from '@model/message';
 import firebase from 'firebase/app';
 import { MessageGroup } from '@model/message-group';
+import { Reaction, ReactionType } from '@model/reaction';
 import firestore = firebase.firestore;
 
 const FieldValue = firestore.FieldValue;
@@ -69,14 +70,45 @@ export class ChatService {
 						createdAt: new Date(),
 						author: userUid,
 						content,
-						reactions: {
-							likes: [],
-							dislikes: [],
-						},
 					};
 					return this.dataService
 						.chatDoc(room.domain)
 						.update({ messages: FieldValue.arrayUnion(message) as any });
+				})
+			)
+			.toPromise();
+	}
+
+	toggleReaction(message: Message, reactionType: ReactionType) {
+		return combineLatest([
+			this.userService.userUid$.pipe(first()),
+			this.roomService.room$.pipe(first()),
+			this.roomService.reactions$.pipe(first()),
+		])
+			.pipe(
+				switchMap(([userUid, room, reactions]) => {
+					const existingReactions = (reactions || []).filter(
+						(m) => m.message === message.uid
+					);
+					const isAlreadySet = existingReactions.find(
+						(r) => r.user === userUid && r.type === reactionType
+					);
+					const reaction: Reaction = {
+						message: message.uid,
+						user: userUid,
+						type: reactionType,
+					};
+					if (isAlreadySet) {
+						// Remove the reaction from the array
+						return this.dataService.chatDoc(room.domain).update({
+							reactions: FieldValue.arrayRemove(reaction) as any,
+						});
+					} else {
+						// Add the reaction to the array
+						return this.dataService.chatDoc(room.domain).update({
+							reactions: FieldValue.arrayUnion(reaction) as any,
+						});
+					}
 				})
 			)
 			.toPromise();

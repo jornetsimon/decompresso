@@ -24,6 +24,7 @@ import { scrollParentToChild } from '@utilities/scroll-parent-to-child';
 import { Message } from '@model/message';
 import { MessageGroup } from '@model/message-group';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { ReactionType } from '@model/reaction';
 
 @UntilDestroy()
 @Component({
@@ -38,14 +39,47 @@ export class ChatComponent implements AfterViewInit {
 	chatContentResized$ = this.chatContentResizedSubject.asObservable();
 	@ViewChild('newMessageInput') newMessageInputRef: ElementRef<HTMLDivElement>;
 	loadCount = 0;
-	roomHasMultipleMembers$ = this.roomService.members$.pipe(map((members) => members.length >= 2));
+	roomHasMultipleMembers$ = this.roomService.members$.pipe(
+		map((members) => members.length >= 2),
+		tap((roomHasMultipleMembers) => {
+			const control = this.newMessageForm.get('message');
+			if (control) {
+				if (roomHasMultipleMembers) {
+					control.enable();
+				} else {
+					control.disable();
+				}
+			}
+		})
+	);
 	groupedMessages$ = combineLatest([
 		this.roomService.messages$,
 		this.roomService.members$,
+		this.roomService.reactions$,
 		this.userService.userUid$,
 	]).pipe(
-		map(([messages, members, userUid]) => {
+		map(([messages, members, reactions, userUid]) => {
 			return messages
+				.map((message) => {
+					return {
+						...message,
+						reactions: (reactions || [])
+							.filter((r) => r.message === message.uid)
+							.map((r) => {
+								return {
+									...r,
+									nickname: members.find((m) => m.uid === r.user)?.nickname,
+								};
+							})
+							.reduce((acc, reaction) => {
+								const type = reaction.type;
+								return {
+									...acc,
+									[type]: [...(acc[type] || []), reaction],
+								};
+							}, {}),
+					};
+				})
 				.reduce(ChatService.groupMessagesByDateAndAuthor, [])
 				.map((messageGroup, index) => {
 					return {
@@ -151,5 +185,9 @@ export class ChatComponent implements AfterViewInit {
 		const onlyEmojis = text.replace(new RegExp('[\u0000-\u1eeff]', 'g'), '');
 		const visibleChars = text.replace(new RegExp('[\n\rs]+|( )+', 'g'), '');
 		return onlyEmojis.length === visibleChars.length;
+	}
+
+	toggleReaction(message: Message, reaction: ReactionType) {
+		this.chatService.toggleReaction(message, reaction);
 	}
 }

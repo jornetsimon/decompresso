@@ -30,18 +30,67 @@
 							</div>
 							<div class="bubble-group">
 								<div
-									class="bubble"
-									[class.animate]="group.isFresh"
+									class="bubble-container"
 									*ngFor="
 										let message of group.messages;
 										trackBy: trackByMessageFn
 									"
-									[style.background-color]="
-										group.isMine ? undefined : group.authorUser?.color
+									[class.has-reactions]="
+										message.reactions.like || message.reactions.dislike
 									"
-									[textContent]="message.content"
-									[class.solo-emoji]="containsOnlyEmojis(message.content)"
-								></div>
+								>
+									<div
+										class="bubble"
+										[class.animate]="group.isFresh"
+										[style.background-color]="
+											group.isMine ? undefined : group.authorUser?.color
+										"
+										[class.solo-emoji]="containsOnlyEmojis(message.content)"
+										nz-popover
+										[nzPopoverContent]="reactionsPopoverTpl"
+										nzPopoverTrigger="hover"
+										nzPopoverOverlayClassName="reactions-popover"
+									>
+										<div [textContent]="message.content"></div>
+										<ng-template #reactionsPopoverTpl>
+											<div class="reactions">
+												<div
+													class="reaction"
+													(click)="toggleReaction(message, 'like')"
+												>
+													👍
+												</div>
+												<div
+													class="reaction"
+													(click)="toggleReaction(message, 'dislike')"
+												>
+													👎
+												</div>
+											</div>
+										</ng-template>
+									</div>
+									<div class="reaction-icons-container">
+										<div
+											class="reaction-icon"
+											*ngIf="message.reactions.like as reactions"
+										>
+											👍
+											<div class="multiplier" *ngIf="reactions.length > 1">
+												{{ reactions.length }}
+											</div>
+										</div>
+
+										<div
+											class="reaction-icon"
+											*ngIf="message.reactions.dislike as reactions"
+										>
+											👎
+											<div class="multiplier" *ngIf="reactions.length > 1">
+												{{ reactions.length }}
+											</div>
+										</div>
+									</div>
+								</div>
 							</div>
 						</div>
 					</ng-container>
@@ -81,7 +130,6 @@
 					type="text"
 					placeholder="Message"
 					formControlName="message"
-					[disabled]="(roomHasMultipleMembers$ | async) === false"
 					nzAutosize
 					(keydown.enter)="$event.preventDefault(); sendMessage()"
 				></textarea>

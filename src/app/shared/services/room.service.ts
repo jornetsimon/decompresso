@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ObservableStore } from '@codewithdan/observable-store';
 import { Room } from '@model/room';
-import { map, shareReplay, switchMap } from 'rxjs/operators';
+import { distinctUntilChanged, map, shareReplay, switchMap } from 'rxjs/operators';
 import { UserService } from '@services/user.service';
 import { DataService, expectData } from '@services/data.service';
 import { Observable } from 'rxjs';
@@ -10,6 +10,9 @@ import { Chat } from '@model/chat';
 import { Message } from '@model/message';
 import { timestampToDate } from '@utilities/timestamp';
 import { isBefore } from 'date-fns/esm';
+import { Reaction } from '@model/reaction';
+
+const hash = require('object-hash');
 
 interface StoreState {
 	room: Room;
@@ -39,7 +42,15 @@ export class RoomService extends ObservableStore<StoreState> {
 		expectData
 	);
 	messages$: Observable<ReadonlyArray<Message>> = this.chat$.pipe(
-		map((chat) => [...chat.messages].sort(RoomService.messageSortFn))
+		map((chat) => chat.messages),
+		distinctUntilChanged((a, b) => hash(a || {}) === hash(b || {})),
+		map((messages) => [...messages].sort(RoomService.messageSortFn))
+	);
+	reactions$: Observable<ReadonlyArray<Reaction> | undefined> = this.chat$.pipe(
+		map((chat) => chat.reactions),
+		distinctUntilChanged((a, b) => {
+			return hash(a || {}) === hash(b || {});
+		})
 	);
 
 	constructor(private userService: UserService, private dataService: DataService) {

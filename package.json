@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve --host 0.0.0.0",
     "start-hmr": "ng serve --hmr",
     "emulators:start": "firebase emulators:start --import .firebase/seed",
     "emulators:export": "firebase emulators:export .firebase/seed --force",
@@ -44,6 +44,7 @@
     "ng-rough-notation": "^1.1.2",
     "ng-zorro-antd": "^10.1.0",
     "ngx-vibration": "^1.1.0",
+    "object-hash": "^2.0.3",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",
     "uuid": "^8.3.1",

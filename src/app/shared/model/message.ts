@@ -5,8 +5,4 @@ export interface Message {
 	createdAt: Timestamp;
 	author: string;
 	content: string;
-	reactions: {
-		likes: ReadonlyArray<string>;
-		dislikes: ReadonlyArray<string>;
-	};
 }
