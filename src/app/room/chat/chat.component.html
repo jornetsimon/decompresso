@@ -1,7 +1,7 @@
 <nz-card id="chat-card">
 	<div id="chat-content" #chatContent>
 		<ng-container *ngIf="groupedMessages$ | async as groupedMessages">
-			<ng-container *ngIf="!(isUserAlone$ | async); else memberAloneTpl">
+			<ng-container *ngIf="(roomHasMultipleMembers$ | async) === true; else memberAloneTpl">
 				<ng-container *ngIf="groupedMessages.length; else noMessageTpl">
 					<div class="top-reached" [class.hidden-opacity]="groupedMessages.length < 10">
 						Vous avez atteint la limite de l'historique 🔭
@@ -81,10 +81,18 @@
 					type="text"
 					placeholder="Message"
 					formControlName="message"
+					[disabled]="(roomHasMultipleMembers$ | async) === false"
 					nzAutosize
 					(keydown.enter)="$event.preventDefault(); sendMessage()"
 				></textarea>
-				<button type="submit" nz-button nzSize="large" nzType="primary" id="send-button">
+				<button
+					type="submit"
+					nz-button
+					nzSize="large"
+					nzType="primary"
+					id="send-button"
+					[disabled]="(roomHasMultipleMembers$ | async) === false"
+				>
 					<i nz-icon nzType="send" nzTheme="outline"></i>
 					Envoyer
 				</button>

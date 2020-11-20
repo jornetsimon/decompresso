@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ObservableStore } from '@codewithdan/observable-store';
 import { Room } from '@model/room';
-import { map, share, shareReplay, switchMap } from 'rxjs/operators';
+import { map, shareReplay, switchMap } from 'rxjs/operators';
 import { UserService } from '@services/user.service';
 import { DataService, expectData } from '@services/data.service';
 import { Observable } from 'rxjs';
@@ -32,7 +32,7 @@ export class RoomService extends ObservableStore<StoreState> {
 				map((members) => members.sort((a, b) => RoomService.memberSortFn(a, b, user)))
 			)
 		),
-		share()
+		shareReplay()
 	);
 	chat$: Observable<Chat> = this.room$.pipe(
 		switchMap((room) => this.dataService.chat$(room.domain)),

@@ -38,7 +38,7 @@ export class ChatComponent implements AfterViewInit {
 	chatContentResized$ = this.chatContentResizedSubject.asObservable();
 	@ViewChild('newMessageInput') newMessageInputRef: ElementRef<HTMLDivElement>;
 	loadCount = 0;
-	isUserAlone$ = this.roomService.members$.pipe(map((members) => members.length < 2));
+	roomHasMultipleMembers$ = this.roomService.members$.pipe(map((members) => members.length >= 2));
 	groupedMessages$ = combineLatest([
 		this.roomService.messages$,
 		this.roomService.members$,
@@ -69,9 +69,9 @@ export class ChatComponent implements AfterViewInit {
 
 	private chatScrollingState$: Observable<readonly [number, number, number]>;
 	stickToChatBottom$: Observable<boolean>;
-	trackByMessageGroupFn: TrackByFunction<MessageGroup> = (index, item) =>
+	trackByMessageGroupFn: TrackByFunction<MessageGroup & any> = (index, item) =>
 		item.timestamp.seconds + item.author;
-	trackByMessageFn: TrackByFunction<Message> = (index, item) => item.uid;
+	trackByMessageFn: TrackByFunction<Message & any> = (index, item) => item.uid;
 
 	constructor(
 		private chatService: ChatService,

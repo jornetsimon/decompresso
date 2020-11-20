@@ -11,6 +11,10 @@
 	background: $main-color;
 }
 
+.rough-annotation {
+	z-index: -1;
+}
+
 .ant-message {
 	display: flex;
 	flex-direction: column;
