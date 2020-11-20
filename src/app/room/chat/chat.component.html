@@ -1,16 +1,17 @@
-<nz-card>
+<nz-card id="chat-card">
 	<div id="chat-content" #chatContent>
 		<ng-container *ngIf="groupedMessages$ | async as groupedMessages">
 			<ng-container *ngIf="!(isUserAlone$ | async); else memberAloneTpl">
 				<ng-container *ngIf="groupedMessages.length; else noMessageTpl">
-					<div class="top-reached">Vous avez atteint la limite de l'historique 🔭</div>
+					<div class="top-reached" [class.hidden-opacity]="groupedMessages.length < 10">
+						Vous avez atteint la limite de l'historique 🔭
+					</div>
 					<ng-container
 						*ngFor="let group of groupedMessages; trackBy: trackByMessageGroupFn"
 					>
 						<div
 							class="entry"
 							[class.is-last]="group.isLast"
-							[fxLayout]="group.isMine ? 'row-reverse' : 'row'"
 							[ngClass]="{ mine: group.isMine, others: !group.isMine }"
 						>
 							<div class="infos">
@@ -30,6 +31,7 @@
 							<div class="bubble-group">
 								<div
 									class="bubble"
+									[class.animate]="group.isFresh"
 									*ngFor="
 										let message of group.messages;
 										trackBy: trackByMessageFn
@@ -43,11 +45,6 @@
 							</div>
 						</div>
 					</ng-container>
-					<nz-badge
-						*ngIf="stickToChatBottom$ | async"
-						nzStatus="processing"
-						id="stick-chat"
-					></nz-badge>
 				</ng-container>
 				<ng-template #noMessageTpl>
 					<div class="p2">
@@ -69,7 +66,12 @@
 			</ng-template>
 		</ng-container>
 	</div>
-	<div>
+	<div style="position: relative">
+		<nz-badge
+			*ngIf="stickToChatBottom$ | async"
+			nzStatus="processing"
+			id="stick-chat"
+		></nz-badge>
 		<form [formGroup]="newMessageForm" (ngSubmit)="sendMessage()">
 			<div fxLayout="row">
 				<textarea

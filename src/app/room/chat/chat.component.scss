@@ -1,13 +1,35 @@
 ::ng-deep .ant-card {
 	box-shadow: 1px 2px 12px 0 #e4e4e4;
 }
+@media (max-width: 424px) {
+	::ng-deep .ant-card,
+	::ng-deep .ant-card-body {
+		border-radius: 0;
+	}
+}
+::ng-deep #chat-card .ant-card-body {
+	max-height: 65vh;
+	display: flex;
+	flex-direction: column;
+}
+
+@media (min-width: 425px) {
+	::ng-deep #chat-card .ant-card {
+		width: min(800px, 80vw);
+	}
+}
+@media (max-width: 425px) {
+	::ng-deep #chat-card .ant-card-body {
+		width: 100vw;
+	}
+}
 ::ng-deep .ant-empty-description {
 	font-weight: 500;
 	font-size: 15px;
 }
 #chat-content {
 	overflow-y: scroll;
-	max-height: 300px;
+	transition: all 0.5s;
 }
 .top-reached {
 	font-size: 10px;
@@ -20,6 +42,7 @@
 	justify-content: flex-start;
 	align-items: baseline;
 	margin-bottom: 10px;
+	transition: all 0.5s;
 
 	.infos {
 		display: flex;
@@ -40,6 +63,36 @@
 
 	.bubble:not(:last-child) {
 		margin-bottom: 2px;
+	}
+}
+
+@media (max-width: 424px) {
+	.entry {
+		.infos {
+			margin-bottom: 5px;
+
+			.timestamp {
+				display: none;
+			}
+			&:hover {
+				.timestamp {
+					display: block;
+				}
+			}
+		}
+		&.mine {
+			flex-direction: column;
+			align-items: flex-end;
+			.infos {
+				align-items: flex-end;
+			}
+		}
+		&.others {
+			flex-direction: column;
+			.infos {
+				align-items: flex-start;
+			}
+		}
 	}
 }
 
@@ -65,7 +118,10 @@
 	overflow: hidden;
 	border-radius: 20px;
 	white-space: pre-wrap;
-	animation: 0.5s cubic-bezier(0.2, 1.82, 0.44, 0.82) bubbleAnimation;
+
+	&.animate {
+		animation: 0.5s cubic-bezier(0.2, 1.82, 0.44, 0.82) bubbleAnimation;
+	}
 
 	.entry.others & {
 		/*background: #ededed;
@@ -103,18 +159,27 @@
 }
 
 #stick-chat {
-	animation: fadeIn 1s 0ms forwards;
+	position: absolute;
+	top: -15px;
+	left: -15px;
+	animation: stickChatAnimation 8s 0ms forwards;
 }
 
-@keyframes fadeIn {
+@keyframes stickChatAnimation {
 	0% {
 		opacity: 0;
 	}
-	50% {
+	10% {
 		opacity: 0;
 	}
-	100% {
+	20% {
 		opacity: 1;
+	}
+	80% {
+		opacity: 1;
+	}
+	100% {
+		opacity: 0;
 	}
 }
 @keyframes bubbleAnimation {

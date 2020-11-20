@@ -1,5 +1,4 @@
 import {
-	AfterViewChecked,
 	AfterViewInit,
 	ChangeDetectionStrategy,
 	Component,
@@ -11,39 +10,35 @@ import { RoomService } from '@services/room.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ChatService } from './chat.service';
 import { combineLatest, fromEvent, Observable, Subject } from 'rxjs';
-import { debounceTime, first, map, pairwise, share, startWith } from 'rxjs/operators';
+import {
+	distinctUntilChanged,
+	filter,
+	map,
+	share,
+	startWith,
+	tap,
+	withLatestFrom,
+} from 'rxjs/operators';
 import { UserService } from '@services/user.service';
 import { scrollParentToChild } from '@utilities/scroll-parent-to-child';
 import { Message } from '@model/message';
 import { MessageGroup } from '@model/message-group';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
+@UntilDestroy()
 @Component({
 	selector: 'mas-chat',
 	templateUrl: './chat.component.html',
 	styleUrls: ['./chat.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ChatComponent implements AfterViewInit, AfterViewChecked {
+export class ChatComponent implements AfterViewInit {
 	@ViewChild('chatContent') chatContentRef: ElementRef<HTMLDivElement>;
+	private chatContentResizedSubject = new Subject<number>();
+	chatContentResized$ = this.chatContentResizedSubject.asObservable();
 	@ViewChild('newMessageInput') newMessageInputRef: ElementRef<HTMLDivElement>;
+	loadCount = 0;
 	isUserAlone$ = this.roomService.members$.pipe(map((members) => members.length < 2));
-	messagesWithUsers$ = combineLatest([
-		this.roomService.messages$,
-		this.roomService.members$,
-		this.userService.userUid$,
-	]).pipe(
-		map(([messages, members, userUid]) => {
-			return messages.map((message, index) => {
-				return {
-					...message,
-					authorUser: members.find((m) => m.uid === message.author),
-					isMine: message.author === userUid,
-					isLast: index === messages.length - 1,
-				};
-			});
-		}),
-		share()
-	);
 	groupedMessages$ = combineLatest([
 		this.roomService.messages$,
 		this.roomService.members$,
@@ -58,8 +53,12 @@ export class ChatComponent implements AfterViewInit, AfterViewChecked {
 						authorUser: members.find((m) => m.uid === messageGroup.author),
 						isMine: messageGroup.author === userUid,
 						isLast: index === messages.length - 1,
+						isFresh: this.loadCount !== 0,
 					};
 				});
+		}),
+		tap(() => {
+			this.loadCount++;
 		}),
 		share()
 	);
@@ -67,46 +66,18 @@ export class ChatComponent implements AfterViewInit, AfterViewChecked {
 	newMessageForm = new FormGroup({
 		message: new FormControl(undefined, [Validators.required]),
 	});
-	private contentCheckedSubject = new Subject<void>();
-	/**
-	 * Hooks onto AfterViewChecked
-	 */
-	private contentChecked$ = this.contentCheckedSubject.asObservable();
 
 	private chatScrollingState$: Observable<readonly [number, number, number]>;
 	stickToChatBottom$: Observable<boolean>;
 	trackByMessageGroupFn: TrackByFunction<MessageGroup> = (index, item) =>
 		item.timestamp.seconds + item.author;
 	trackByMessageFn: TrackByFunction<Message> = (index, item) => item.uid;
+
 	constructor(
 		private chatService: ChatService,
 		public roomService: RoomService,
 		private userService: UserService
-	) {
-		/*const lastMessageRendered$ = of(document.getElementsByClassName('is-last')).pipe(
-			map((elements) => {
-				if (!elements.length) {
-					throw new Error('not_found');
-				}
-				return elements[0];
-			}),
-			retryWhen((error) => error.pipe(delay(200), take(100)))
-		);
-		// Wait for the last message to be rendered and then scroll to the bottom of the chat
-		lastMessageRendered$.subscribe((element) => this.scrollToMessage(element));*/
-
-		// Wait for the chat content to be rendered and stable to scroll to the bottom of the chat
-		this.contentChecked$
-			.pipe(
-				map(() => this.chatContentRef?.nativeElement?.scrollHeight),
-				pairwise(),
-				debounceTime(500),
-				first(([previous, current]) => previous < current)
-			)
-			.subscribe(() => {
-				this.scrollToBottomOfChat();
-			});
-	}
+	) {}
 
 	ngAfterViewInit() {
 		// Focus the new message input
@@ -124,12 +95,31 @@ export class ChatComponent implements AfterViewInit, AfterViewChecked {
 		);
 
 		this.stickToChatBottom$ = this.chatScrollingState$.pipe(
-			map(([current, max, percent]) => max - current <= 20),
+			map(([current, max, percent]) => max - current <= 50),
+			distinctUntilChanged(),
 			startWith(true)
 		);
-	}
-	ngAfterViewChecked() {
-		this.contentCheckedSubject.next();
+
+		// Observe the chat content element and update a subject with the new scrollHeight
+		new MutationObserver((entries) => {
+			this.chatContentResizedSubject.next(this.chatContentRef.nativeElement.scrollHeight);
+		}).observe(this.chatContentRef.nativeElement, {
+			attributes: true,
+			subtree: true,
+		});
+
+		// When the chat content scrollHeight changes
+		this.chatContentResized$
+			.pipe(
+				withLatestFrom(this.stickToChatBottom$),
+				// if the current scroll is stuck to the bottom
+				filter(([scrollHeight, stickToChatBottom]) => !!stickToChatBottom),
+				untilDestroyed(this)
+			)
+			.subscribe(() => {
+				// scroll to the bottom
+				this.scrollToBottomOfChat(this.loadCount > 1 ? 'smooth' : 'auto');
+			});
 	}
 
 	scrollToMessage(messageElement: Element) {
@@ -150,7 +140,7 @@ export class ChatComponent implements AfterViewInit, AfterViewChecked {
 		}
 		this.chatService.sendMessage(content).then(() => {
 			this.newMessageForm.reset();
-			this.scrollToBottomOfChat('smooth');
+			this.scrollToBottomOfChat('auto');
 		});
 	}
 
