@@ -4,10 +4,12 @@ import { UserService } from '@services/user.service';
 import { first, switchMap } from 'rxjs/operators';
 import { DataService } from '@services/data.service';
 import { combineLatest } from 'rxjs';
-import firebase from 'firebase';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Message } from '@model/message';
-import FieldValue = firebase.firestore.FieldValue;
+import firebase from 'firebase/app';
+import firestore = firebase.firestore;
+
+const FieldValue = firestore.FieldValue;
 
 @Injectable({
 	providedIn: 'root',

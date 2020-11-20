@@ -1,44 +1,59 @@
 <nz-card>
 	<div id="chat-content" #chatContent>
 		<ng-container *ngIf="messagesWithUsers$ | async as messages">
-			<ng-container *ngIf="messages.length; else noMessageTpl">
-				<div class="top-reached">Vous avez atteint la limite de l'historique 🔭</div>
-				<ng-container *ngFor="let message of messages">
-					<div
-						class="entry"
-						[class.is-last]="message.isLast"
-						[fxLayout]="message.isMine ? 'row-reverse' : 'row'"
-						[ngClass]="{ mine: message.isMine, others: !message.isMine }"
-					>
-						<div class="infos">
-							<div class="author">
-								<span
-									[style.color]="
-										message.isMine ? undefined : message.authorUser?.color
-									"
-								>
-									{{ message.isMine ? 'Moi' : message.authorUser?.nickname }}
-								</span>
-							</div>
-							<div class="timestamp">
-								{{ message.createdAt | timestampToDate: "EEE à HH'h'mm" }}
-							</div>
-						</div>
+			<ng-container *ngIf="!(isUserAlone$ | async); else memberAloneTpl">
+				<ng-container *ngIf="messages.length; else noMessageTpl">
+					<div class="top-reached">Vous avez atteint la limite de l'historique 🔭</div>
+					<ng-container *ngFor="let message of messages">
 						<div
-							class="bubble"
-							[style.background-color]="
-								message.isMine ? undefined : message.authorUser?.color
-							"
+							class="entry"
+							[class.is-last]="message.isLast"
+							[fxLayout]="message.isMine ? 'row-reverse' : 'row'"
+							[ngClass]="{ mine: message.isMine, others: !message.isMine }"
 						>
-							{{ message.content }}
+							<div class="infos">
+								<div class="author">
+									<span
+										[style.color]="
+											message.isMine ? undefined : message.authorUser?.color
+										"
+									>
+										{{ message.isMine ? 'Moi' : message.authorUser?.nickname }}
+									</span>
+								</div>
+								<div class="timestamp">
+									{{ message.createdAt | timestampToDate: "EEE à HH'h'mm" }}
+								</div>
+							</div>
+							<div
+								class="bubble"
+								[style.background-color]="
+									message.isMine ? undefined : message.authorUser?.color
+								"
+							>
+								{{ message.content }}
+							</div>
 						</div>
-					</div>
+					</ng-container>
+					<nz-badge
+						*ngIf="stickToChatBottom$ | async"
+						nzStatus="processing"
+						id="stick-chat"
+					></nz-badge>
 				</ng-container>
+				<ng-template #noMessageTpl>
+					<div class="p2">
+						<nz-empty
+							nzNotFoundContent="Le premier message n'attend que vous 🤗"
+						></nz-empty>
+					</div>
+				</ng-template>
 			</ng-container>
-			<ng-template #noMessageTpl>
+			<ng-template #memberAloneTpl>
 				<div class="p2">
 					<nz-empty
 						nzNotFoundContent="On se sent un peu seul ici, non ? 🙁"
+						nzNotFoundImage="simple"
 						[nzNotFoundFooter]="invitationsTpl"
 					></nz-empty>
 					<ng-template #invitationsTpl>INVITATIONS</ng-template>
@@ -49,21 +64,20 @@
 	<div>
 		<form [formGroup]="newMessageForm" (ngSubmit)="sendMessage()">
 			<div fxLayout="row">
-				<nz-input-group nzSearch nzSize="large" [nzAddOnAfter]="suffixButton">
-					<input
-						#newMessageInput
-						nz-input
-						type="text"
-						placeholder="Message"
-						formControlName="message"
-					/>
-				</nz-input-group>
-				<ng-template #suffixButton>
-					<button type="submit" nz-button nzSize="large" nzType="primary">
-						<i nz-icon nzType="send" nzTheme="outline"></i>
-						Envoyer
-					</button>
-				</ng-template>
+				<textarea
+					#newMessageInput
+					nz-input
+					nzSize="large"
+					type="text"
+					placeholder="Message"
+					formControlName="message"
+					nzAutosize
+					(keydown.enter)="$event.preventDefault(); sendMessage()"
+				></textarea>
+				<button type="submit" nz-button nzSize="large" nzType="primary" id="send-button">
+					<i nz-icon nzType="send" nzTheme="outline"></i>
+					Envoyer
+				</button>
 			</div>
 		</form>
 	</div>

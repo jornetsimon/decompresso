@@ -75,3 +75,23 @@
 	color: grey;
 	padding: 0 0.75em;
 }
+
+#stick-chat {
+	animation: fadeIn 500ms 0ms forwards;
+}
+
+@keyframes fadeIn {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+
+::ng-deep textarea.ant-input {
+	min-height: 40px;
+}
+#send-button {
+	margin-left: 0.5em;
+}

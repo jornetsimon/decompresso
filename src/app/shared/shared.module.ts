@@ -26,6 +26,7 @@ import { TimestampToDatePipe } from './pipes/timestamp-to-date.pipe';
 import { NzListModule } from 'ng-zorro-antd/list';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { NzEmptyModule } from 'ng-zorro-antd/empty';
+import { NzBadgeModule } from 'ng-zorro-antd/badge';
 
 // tslint:disable-next-line:readonly-array
 const icons: IconDefinition[] = [QuestionCircleOutline];
@@ -55,6 +56,7 @@ const modules: ReadonlyArray<any> = [
 	NzListModule,
 	NzMenuModule,
 	NzEmptyModule,
+	NzBadgeModule,
 	RoughNotationModule,
 	NgxVibrationModule.forRoot({
 		defaultPattern: [25],
