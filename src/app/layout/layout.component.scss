@@ -118,6 +118,10 @@
 	animation: fadein 0.3s ease-out;
 }
 
+::ng-deep .menu .ant-menu-item {
+	margin: 0 clamp(10px, 2vw, 20px) !important;
+	font-size: clamp(10px, 3vw, 14px) !important;
+}
 .flag svg {
 	vertical-align: middle;
 }

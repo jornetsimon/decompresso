@@ -21,6 +21,7 @@
 @media (max-width: 424px) {
 	::ng-deep #chat-card .ant-card-body {
 		width: 100vw;
+		max-height: calc(100vh - 135px);
 		padding: 0;
 
 		#chat-content {
