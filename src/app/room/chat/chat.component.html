@@ -47,8 +47,13 @@
 										"
 										[class.solo-emoji]="containsOnlyEmojis(message.content)"
 										nz-popover
-										[nzPopoverContent]="reactionsPopoverTpl"
+										[nzPopoverContent]="
+											message.myReactions.like || message.myReactions.dislike
+												? undefined
+												: reactionsPopoverTpl
+										"
 										nzPopoverTrigger="hover"
+										[nzPopoverPlacement]="group.isMine ? 'left' : 'right'"
 										nzPopoverOverlayClassName="reactions-popover"
 									>
 										<div [textContent]="message.content"></div>
@@ -56,12 +61,14 @@
 											<div class="reactions">
 												<div
 													class="reaction"
+													*ngIf="!message.myReactions.dislike"
 													(click)="toggleReaction(message, 'like')"
 												>
 													👍
 												</div>
 												<div
 													class="reaction"
+													*ngIf="!message.myReactions.like"
 													(click)="toggleReaction(message, 'dislike')"
 												>
 													👎
@@ -73,21 +80,55 @@
 										<div
 											class="reaction-icon"
 											*ngIf="message.reactions.like as reactions"
+											[nz-tooltip]="reactionTooltipTpl"
+											nzTooltipOverlayClassName="reaction-tooltip"
+											[class.i-did]="message.myReactions.like"
+											(click)="
+												message.myReactions.like
+													? toggleReaction(message, 'like')
+													: undefined
+											"
 										>
 											👍
 											<div class="multiplier" *ngIf="reactions.length > 1">
 												{{ reactions.length }}
 											</div>
+											<ng-template #reactionTooltipTpl>
+												<span class="nowrap">
+													<span style="padding-right: 3px"> 👍 </span>
+													par
+												</span>
+												<span>
+													{{ printReactionsNicknames(reactions) | async }}
+												</span>
+											</ng-template>
 										</div>
 
 										<div
 											class="reaction-icon"
 											*ngIf="message.reactions.dislike as reactions"
+											[nz-tooltip]="reactionTooltipTpl"
+											nzTooltipOverlayClassName="reaction-tooltip"
+											[class.i-did]="message.myReactions.dislike"
+											(click)="
+												message.myReactions.dislike
+													? toggleReaction(message, 'dislike')
+													: undefined
+											"
 										>
 											👎
 											<div class="multiplier" *ngIf="reactions.length > 1">
 												{{ reactions.length }}
 											</div>
+											<ng-template #reactionTooltipTpl>
+												<span class="nowrap">
+													<span style="padding-right: 3px"> 👎 </span>
+													par
+												</span>
+												<span>
+													{{ printReactionsNicknames(reactions) | async }}
+												</span>
+											</ng-template>
 										</div>
 									</div>
 								</div>

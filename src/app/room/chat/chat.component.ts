@@ -24,7 +24,7 @@ import { scrollParentToChild } from '@utilities/scroll-parent-to-child';
 import { Message } from '@model/message';
 import { MessageGroup } from '@model/message-group';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { ReactionType } from '@model/reaction';
+import { Reaction, ReactionType } from '@model/reaction';
 
 @UntilDestroy()
 @Component({
@@ -61,23 +61,35 @@ export class ChatComponent implements AfterViewInit {
 		map(([messages, members, reactions, userUid]) => {
 			return messages
 				.map((message) => {
+					const messageReactions: Partial<Record<
+						ReactionType,
+						ReadonlyArray<Reaction & { nickname: string }>
+					>> = (reactions || [])
+						.filter((r) => r.message === message.uid)
+						.map((r) => {
+							return {
+								...r,
+								nickname: members.find((m) => m.uid === r.user)?.nickname,
+							};
+						})
+						.reduce((acc, reaction) => {
+							const type = reaction.type;
+							return {
+								...acc,
+								[type]: [...(acc[type] || []), reaction],
+							};
+						}, {});
 					return {
 						...message,
-						reactions: (reactions || [])
-							.filter((r) => r.message === message.uid)
-							.map((r) => {
-								return {
-									...r,
-									nickname: members.find((m) => m.uid === r.user)?.nickname,
-								};
-							})
-							.reduce((acc, reaction) => {
-								const type = reaction.type;
-								return {
-									...acc,
-									[type]: [...(acc[type] || []), reaction],
-								};
-							}, {}),
+						reactions: messageReactions,
+						myReactions: {
+							like:
+								messageReactions.like?.filter((r) => r.user === userUid).length ||
+								false,
+							dislike:
+								messageReactions.dislike?.filter((r) => r.user === userUid)
+									.length || false,
+						},
 					};
 				})
 				.reduce(ChatService.groupMessagesByDateAndAuthor, [])
@@ -189,5 +201,34 @@ export class ChatComponent implements AfterViewInit {
 
 	toggleReaction(message: Message, reaction: ReactionType) {
 		this.chatService.toggleReaction(message, reaction);
+	}
+
+	/**
+	 * Lists the nicknames of the users who put a reaction
+	 */
+	printReactionsNicknames(
+		reactions: ReadonlyArray<Reaction & { nickname: string }>,
+		maxDisplayed = 3
+	): Observable<string> {
+		return this.userService.userUid$.pipe(
+			map((userUid) => {
+				const join = reactions.reduce((str, reaction, index) => {
+					if (index < maxDisplayed) {
+						return (
+							(str ? str + ', ' : '') +
+							(reaction.user === userUid ? 'moi' : reaction.nickname)
+						);
+					} else {
+						return str;
+					}
+				}, '');
+
+				const diff = reactions.length - maxDisplayed;
+				if (reactions.length >= maxDisplayed && diff > 0) {
+					return `${join} et ${diff} autre${diff > 1 ? 's' : ''}`;
+				}
+				return join;
+			})
+		);
 	}
 }
