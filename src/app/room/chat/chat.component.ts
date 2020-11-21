@@ -26,6 +26,7 @@ import { Message } from '@model/message';
 import { MessageGroup } from '@model/message-group';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Reaction, ReactionType } from '@model/reaction';
+import { DeviceDetectorService } from 'ngx-device-detector';
 
 @UntilDestroy()
 @Component({
@@ -124,12 +125,15 @@ export class ChatComponent implements AfterViewInit {
 	constructor(
 		private chatService: ChatService,
 		public roomService: RoomService,
-		private userService: UserService
+		private userService: UserService,
+		private deviceService: DeviceDetectorService
 	) {}
 
 	ngAfterViewInit() {
-		// Focus the new message input
-		this.newMessageInputRef.nativeElement.focus();
+		// Focus the new message input, only on desktop
+		if (this.deviceService.isDesktop()) {
+			this.newMessageInputRef.nativeElement.focus();
+		}
 
 		this.chatScrollingState$ = fromEvent(this.chatContentRef.nativeElement, 'scroll').pipe(
 			map(() => {

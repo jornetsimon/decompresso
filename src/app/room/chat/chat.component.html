@@ -173,8 +173,8 @@
 			"
 			nzTooltipColor="blue"
 		></nz-badge>
-		<form [formGroup]="newMessageForm" (ngSubmit)="sendMessage()">
-			<div fxLayout="row">
+		<form id="message-form" [formGroup]="newMessageForm" (ngSubmit)="sendMessage()">
+			<div fxLayout="row" fxLayoutAlign="center flex-end">
 				<textarea
 					#newMessageInput
 					nz-input
