@@ -5,7 +5,12 @@ import { RoomComponent } from './room/room.component';
 import { RoomGuard } from './room.guard';
 import { SharedModule } from '../shared/shared.module';
 import { NzIconModule } from 'ng-zorro-antd/icon';
-import { QuestionCircleFill, SendOutline, SmileTwoTone } from '@ant-design/icons-angular/icons';
+import {
+	QuestionCircleFill,
+	SendOutline,
+	SmileTwoTone,
+	TeamOutline,
+} from '@ant-design/icons-angular/icons';
 import { MembersComponent } from './room/members/members.component';
 import { ChatModule } from './chat/chat.module';
 
@@ -24,7 +29,7 @@ const roomRoutes: Routes = [
 		CommonModule,
 		SharedModule,
 		RouterModule.forChild(roomRoutes),
-		NzIconModule.forChild([SmileTwoTone, QuestionCircleFill, SendOutline]),
+		NzIconModule.forChild([SmileTwoTone, QuestionCircleFill, SendOutline, TeamOutline]),
 		ChatModule,
 	],
 })

@@ -3,3 +3,9 @@
 		min-width: 200px;
 	}
 }
+
+@media (min-width: 1280px) {
+	.members-drawer-button {
+		display: none;
+	}
+}

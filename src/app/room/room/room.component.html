@@ -1,16 +1,29 @@
-<div class="">
-	<div class="page-title">Le salon 🛋</div>
+<div>
+	<div fxLayout="row" fxLayoutAlign="space-between baseline" class="px1">
+		<div fxFlex="grow" class="page-title nowrap mr2" style="padding: 0">Le salon 🛋</div>
+		<button nz-button class="members-drawer-button" (click)="membersDrawer.open()">
+			<i nz-icon nzType="team" nzTheme="outline"></i>
+			Membres
+		</button>
+	</div>
 </div>
-<div
-	fxLayout
-	fxLayoutGap="1em"
-	fxLayout.lt-md="column-reverse"
-	fxLayoutAlign.lt-md="center stretch"
->
-	<div fxFlex="0 0 200px" fxFlex.lt-md="none" id="member-list-container">
+<div fxLayout fxLayoutGap="20px">
+	<div fxFlex="0 0 200px" fxFlex.lt-md="none" id="member-list-container" fxHide.lt-lg>
 		<mas-members></mas-members>
 	</div>
 	<div fxFlex="grow">
 		<mas-chat></mas-chat>
 	</div>
 </div>
+
+<nz-drawer
+	#membersDrawer
+	nzPlacement="right"
+	nzTitle="Membres"
+	[nzMaskClosable]="true"
+	(nzOnClose)="membersDrawer.close()"
+>
+	<div fxFlex="grow" fxLayout="column">
+		<mas-members></mas-members>
+	</div>
+</nz-drawer>
