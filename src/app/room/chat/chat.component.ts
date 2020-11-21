@@ -9,12 +9,13 @@ import {
 import { RoomService } from '@services/room.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ChatService } from './chat.service';
-import { combineLatest, fromEvent, Observable, Subject } from 'rxjs';
+import { combineLatest, fromEvent, merge, Observable, Subject } from 'rxjs';
 import {
 	distinctUntilChanged,
 	filter,
 	map,
 	share,
+	skip,
 	startWith,
 	tap,
 	withLatestFrom,
@@ -115,6 +116,7 @@ export class ChatComponent implements AfterViewInit {
 
 	private chatScrollingState$: Observable<readonly [number, number, number]>;
 	stickToChatBottom$: Observable<boolean>;
+	showNewMessageTag$: Observable<boolean>;
 	trackByMessageGroupFn: TrackByFunction<MessageGroup & any> = (index, item) =>
 		item.timestamp.seconds + item.author;
 	trackByMessageFn: TrackByFunction<Message & any> = (index, item) => item.uid;
@@ -140,13 +142,34 @@ export class ChatComponent implements AfterViewInit {
 			})
 		);
 
+		/**
+		 * Determines if the scroll position in the chat is considered as stuck to bottom
+		 */
 		this.stickToChatBottom$ = this.chatScrollingState$.pipe(
 			map(([current, max, percent]) => max - current <= 50),
 			distinctUntilChanged(),
 			startWith(true)
 		);
 
-		// Observe the chat content element and update a subject with the new scrollHeight
+		/**
+		 * Determines when the "new message" tag should appear
+		 */
+		this.showNewMessageTag$ = merge(
+			// When the messages are updated
+			this.roomService.messages$.pipe(
+				skip(1),
+				withLatestFrom(this.stickToChatBottom$),
+				// if the current scroll is NOT stuck to the bottom
+				filter(([scrollHeight, stickToChatBottom]) => !stickToChatBottom),
+				map(() => true)
+			),
+			// When stuck to bottom, make it disappear
+			this.stickToChatBottom$.pipe(map(() => false))
+		);
+
+		/**
+		 * Observe the chat content element and update a subject with the new scrollHeight
+		 */
 		new MutationObserver((entries) => {
 			this.chatContentResizedSubject.next(this.chatContentRef.nativeElement.scrollHeight);
 		}).observe(this.chatContentRef.nativeElement, {
@@ -172,7 +195,7 @@ export class ChatComponent implements AfterViewInit {
 		scrollParentToChild(this.chatContentRef.nativeElement, messageElement);
 	}
 
-	scrollToBottomOfChat(behavior?: ScrollBehavior) {
+	scrollToBottomOfChat(behavior: ScrollBehavior = 'smooth') {
 		this.chatContentRef.nativeElement.scrollTo({
 			top: this.chatContentRef.nativeElement.scrollHeight,
 			behavior,

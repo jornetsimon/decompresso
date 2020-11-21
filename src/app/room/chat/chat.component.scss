@@ -242,7 +242,7 @@
 	position: absolute;
 	top: -15px;
 	left: -15px;
-	animation: stickChatAnimation 8s 0ms forwards;
+	animation: stickChatAnimation 5s 0ms forwards;
 }
 
 @keyframes stickChatAnimation {
@@ -255,7 +255,7 @@
 	20% {
 		opacity: 1;
 	}
-	80% {
+	85% {
 		opacity: 1;
 	}
 	100% {
@@ -280,6 +280,36 @@
 	to {
 		transform: scale(1);
 		opacity: 1;
+	}
+}
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+@keyframes newMessageBadgeAnimation {
+	0% {
+		transform: translateY(30px);
+		opacity: 0;
+	}
+	10% {
+		transform: translateY(30px);
+		opacity: 0;
+	}
+	20% {
+		transform: translateY(0);
+		opacity: 1;
+	}
+	80% {
+		transform: translateY(0);
+		opacity: 1;
+	}
+	100% {
+		transform: translateY(30px);
+		opacity: 0;
 	}
 }
 
@@ -337,4 +367,23 @@
 }
 ::ng-deep .reaction-tooltip {
 	font-size: 10px;
+}
+
+.new-message-badge-container {
+	position: absolute;
+	height: 35px;
+	top: -35px;
+	width: 100%;
+
+	& .ant-tag {
+		margin: 0;
+		border-radius: 20px;
+		cursor: pointer;
+		box-shadow: 0 0 5px 0 #ffffff7a;
+		animation: 0.25s ease-out bubbleAnimation;
+
+		&:hover {
+			opacity: 1;
+		}
+	}
 }

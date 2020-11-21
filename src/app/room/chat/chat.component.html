@@ -157,10 +157,21 @@
 		</ng-container>
 	</div>
 	<div style="position: relative">
+		<div
+			fxLayoutAlign="center center"
+			class="new-message-badge-container"
+			*ngIf="showNewMessageTag$ | async"
+		>
+			<nz-tag [nzColor]="'#f50'" (click)="scrollToBottomOfChat()"> nouveaux messages </nz-tag>
+		</div>
 		<nz-badge
-			*ngIf="stickToChatBottom$ | async"
+			*ngIf="stickToChatBottom$ | async as stickToChatBottom"
 			nzStatus="processing"
 			id="stick-chat"
+			[nz-tooltip]="
+				stickToChatBottom ? 'Les derniers messages s\'affichent à la suite' : undefined
+			"
+			nzTooltipColor="blue"
 		></nz-badge>
 		<form [formGroup]="newMessageForm" (ngSubmit)="sendMessage()">
 			<div fxLayout="row">
