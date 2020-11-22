@@ -21,11 +21,13 @@
 @media (max-width: 424px) {
 	::ng-deep #chat-card .ant-card-body {
 		width: 100vw;
+		height: calc(100vh - 135px);
 		max-height: calc(100vh - 135px);
 		padding: 0;
 
 		#chat-content {
 			padding: 15px;
+			flex-grow: 1;
 		}
 	}
 	#message-form {
@@ -39,6 +41,7 @@
 #chat-content {
 	overflow-y: scroll;
 	transition: all 0.5s;
+	font-size: 16px;
 }
 .top-reached {
 	font-size: 10px;
@@ -75,17 +78,10 @@
 	}
 }
 
-::ng-deep textarea.ant-input {
-	min-height: 40px;
-}
-#send-button {
-	margin-left: 0.5em;
-}
-
 .new-message-badge-container {
 	position: absolute;
-	height: 35px;
-	top: -35px;
+	height: 45px;
+	top: -45px;
 	width: 100%;
 
 	& .ant-tag {
@@ -98,5 +94,18 @@
 		&:hover {
 			opacity: 1;
 		}
+	}
+}
+
+#chat-footer {
+	position: relative;
+	margin-top: 5px;
+	box-shadow: 0px -5px 5px 5px #ffffff;
+
+	::ng-deep textarea.ant-input {
+		min-height: 40px;
+	}
+	#send-button {
+		margin-left: 0.5em;
 	}
 }

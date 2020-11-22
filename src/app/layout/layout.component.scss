@@ -118,6 +118,12 @@
 	animation: fadein 0.3s ease-out;
 }
 
+@media (max-width: 424px) {
+	#user-drawer-button {
+		left: -5px;
+	}
+}
+
 ::ng-deep .menu .ant-menu-item {
 	margin: 0 clamp(10px, 2vw, 20px) !important;
 	font-size: clamp(10px, 3vw, 14px) !important;
