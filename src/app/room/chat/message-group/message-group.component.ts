@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input, TrackByFunction } from '@angular/core';
-import { MappedMessage, MessageFeedEntry } from '../chat.service';
+import { MappedMessage, MessageFeedEntry } from '../model';
 
 @Component({
 	selector: 'mas-message-group',

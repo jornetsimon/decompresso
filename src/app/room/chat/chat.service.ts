@@ -8,33 +8,10 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { Message } from '@model/message';
 import firebase from 'firebase/app';
 import { Reaction, ReactionType } from '@model/reaction';
-import { User } from '@model/user';
+import { MappedMessage, MessageFeed, MessageGroup, MessageReactions } from './model';
 import firestore = firebase.firestore;
 
 const FieldValue = firestore.FieldValue;
-
-export type MessageFeed = ReadonlyArray<MessageFeedEntry>;
-export type MessageFeedEntry = {
-	timestamp: Message['createdAt'];
-	author: Message['author'];
-	messages: ReadonlyArray<MappedMessage>;
-	authorUser: (User & { uid: string }) | undefined;
-	isMine: boolean;
-	isLast: boolean;
-	isFresh: boolean;
-};
-export type MessageReactions = Partial<
-	Record<ReactionType, ReadonlyArray<Reaction & { nickname: string }>>
->;
-export type MappedMessage = Message & {
-	reactions: MessageReactions;
-	myReactions: Partial<Record<ReactionType, boolean>>;
-};
-export interface MessageGroup<T extends Message> {
-	timestamp: Message['createdAt'];
-	author: Message['author'];
-	messages: ReadonlyArray<T>;
-}
 
 @Injectable({
 	providedIn: 'root',

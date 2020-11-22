@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { RoomService } from '@services/room.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ChatService, MessageFeedEntry } from './chat.service';
+import { ChatService } from './chat.service';
 import { fromEvent, merge, Observable, Subject } from 'rxjs';
 import {
 	distinctUntilChanged,
@@ -23,6 +23,7 @@ import { UserService } from '@services/user.service';
 import { scrollParentToChild } from '@utilities/scroll-parent-to-child';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { DeviceDetectorService } from 'ngx-device-detector';
+import { MessageFeedEntry } from './model';
 
 @UntilDestroy()
 @Component({

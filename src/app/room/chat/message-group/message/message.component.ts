@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { ChatService, MappedMessage } from '../../chat.service';
+import { ChatService } from '../../chat.service';
 import { Message } from '@model/message';
 import { Reaction, ReactionType } from '@model/reaction';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { UserService } from '@services/user.service';
+import { MappedMessage } from '../../model';
 
 @Component({
 	selector: 'mas-message',
