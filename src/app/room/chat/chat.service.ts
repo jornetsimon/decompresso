@@ -9,6 +9,9 @@ import { Message } from '@model/message';
 import firebase from 'firebase/app';
 import { Reaction, ReactionType } from '@model/reaction';
 import { MappedMessage, MessageFeed, MessageGroup, MessageReactions } from './model';
+import { differenceInMinutes } from 'date-fns/esm';
+import { timestampToDate } from '@utilities/timestamp';
+import { GLOBAL_CONFIG } from '../../global-config';
 import firestore = firebase.firestore;
 
 const FieldValue = firestore.FieldValue;
@@ -109,6 +112,24 @@ export class ChatService {
 			// This message belongs to the previous group since it has the same author
 			const lastGroupIndex = groupedMessages.length - 1;
 			const lastGroup = groupedMessages[lastGroupIndex];
+
+			// Checking if a new group should be created based on the time difference with the last message
+			const lastMessageOfLastGroup = lastGroup.messages[lastGroup.messages.length - 1];
+			const differenceInMinutesWithLastMessage = differenceInMinutes(
+				timestampToDate(currentMessage.createdAt),
+				timestampToDate(lastMessageOfLastGroup.createdAt)
+			);
+			if (
+				differenceInMinutesWithLastMessage > GLOBAL_CONFIG.chat.groupMessagesWithinMinutes
+			) {
+				const newGroup: MessageGroup<T> = {
+					timestamp: currentMessage.createdAt,
+					author: currentMessage.author,
+					messages: [currentMessage],
+				};
+				return [...groupedMessages, newGroup];
+			}
+
 			const updatedLastGroup: MessageGroup<T> = {
 				...groupedMessages[lastGroupIndex],
 				messages: [...lastGroup.messages, currentMessage],
