@@ -211,8 +211,8 @@ export class ChatComponent implements AfterViewInit {
 		if (!content) {
 			return;
 		}
+		this.newMessageForm.reset();
 		this.chatService.sendMessage(content).then(() => {
-			this.newMessageForm.reset();
 			this.scrollToBottomOfChat('auto');
 		});
 	}
