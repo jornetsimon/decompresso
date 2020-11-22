@@ -4,9 +4,10 @@ import { ChatComponent } from './chat.component';
 import { SharedModule } from '../../shared/shared.module';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { MessageGroupComponent } from './message-group/message-group.component';
+import { MessageComponent } from './message-group/message/message.component';
 
 @NgModule({
-	declarations: [ChatComponent, MessageGroupComponent],
+	declarations: [ChatComponent, MessageGroupComponent, MessageComponent],
 	imports: [CommonModule, SharedModule, NzIconModule.forChild([])],
 	exports: [ChatComponent],
 })
