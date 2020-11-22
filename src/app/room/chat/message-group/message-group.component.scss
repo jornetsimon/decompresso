@@ -23,19 +23,10 @@
 	}
 }
 
-@media (max-width: 424px) {
+@media (max-width: 767px) {
 	.entry {
 		.infos {
 			margin-bottom: 5px;
-
-			.timestamp {
-				display: none;
-			}
-			&:hover {
-				.timestamp {
-					display: block;
-				}
-			}
 		}
 		&.mine {
 			flex-direction: column;
@@ -48,6 +39,18 @@
 			flex-direction: column;
 			.infos {
 				align-items: flex-start;
+			}
+		}
+	}
+}
+@media (max-width: 424px) {
+	.entry .infos {
+		.timestamp {
+			display: none;
+		}
+		&:hover {
+			.timestamp {
+				display: block;
 			}
 		}
 	}
@@ -81,11 +84,18 @@
 	display: flex;
 	flex-direction: column;
 	justify-content: flex-start;
+	max-width: 80%;
 
 	.entry.others & {
 		align-items: flex-start;
 	}
 	.entry.mine & {
 		align-items: flex-end;
+	}
+}
+
+@media (min-width: 768px) {
+	.bubble-group {
+		max-width: 60%;
 	}
 }
