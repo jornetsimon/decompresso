@@ -137,7 +137,7 @@ export class ChatComponent implements AfterViewInit {
 			),
 			// When stuck to bottom, make it disappear
 			this.stickToChatBottom$.pipe(map(() => false))
-		);
+		).pipe(debounceTime(1000));
 
 		/**
 		 * Observe the chat content element and update a subject with the new scrollHeight
