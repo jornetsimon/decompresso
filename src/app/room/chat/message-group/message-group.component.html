@@ -1,0 +1,25 @@
+<div
+	class="entry"
+	[class.is-last]="group.isLast"
+	[ngClass]="{ mine: group.isMine, others: !group.isMine }"
+>
+	<div class="infos">
+		<div class="author">
+			<span [style.color]="group.isMine ? undefined : group.authorUser?.color">
+				{{ group.isMine ? 'Moi' : group.authorUser?.nickname }}
+			</span>
+		</div>
+		<div class="timestamp">
+			{{ group.timestamp | timestampToDate: "EEE à HH'h'mm" }}
+		</div>
+	</div>
+	<div class="bubble-group">
+		<mas-message
+			*ngFor="let message of group.messages; trackBy: trackByMessageFn"
+			[message]="message"
+			[isFresh]="group.isFresh"
+			[isMine]="group.isMine"
+			[color]="group.authorUser?.color"
+		></mas-message>
+	</div>
+</div>
