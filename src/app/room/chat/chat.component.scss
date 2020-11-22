@@ -30,9 +30,6 @@
 			flex-grow: 1;
 		}
 	}
-	#message-form {
-		padding: 0 10px 15px;
-	}
 }
 ::ng-deep .ant-empty-description {
 	font-weight: 500;
@@ -60,24 +57,6 @@
 	animation: stickChatAnimation 5s 0ms forwards;
 }
 
-@keyframes stickChatAnimation {
-	0% {
-		opacity: 0;
-	}
-	10% {
-		opacity: 0;
-	}
-	20% {
-		opacity: 1;
-	}
-	85% {
-		opacity: 1;
-	}
-	100% {
-		opacity: 0;
-	}
-}
-
 .new-message-badge-container {
 	position: absolute;
 	height: 45px;
@@ -100,11 +79,22 @@
 #chat-footer {
 	position: relative;
 	box-shadow: 0px -5px 5px 5px #ffffff;
+}
 
-	::ng-deep textarea.ant-input {
-		min-height: 40px;
+@keyframes stickChatAnimation {
+	0% {
+		opacity: 0;
 	}
-	#send-button {
-		margin-left: 0.5em;
+	10% {
+		opacity: 0;
+	}
+	20% {
+		opacity: 1;
+	}
+	85% {
+		opacity: 1;
+	}
+	100% {
+		opacity: 0;
 	}
 }

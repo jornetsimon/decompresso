@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { RoomService } from '@services/room.service';
 import { UserService } from '@services/user.service';
-import { first, map, share, switchMap, tap } from 'rxjs/operators';
+import { first, map, share, shareReplay, switchMap, tap } from 'rxjs/operators';
 import { DataService } from '@services/data.service';
 import { combineLatest, Observable } from 'rxjs';
 import { AngularFirestore } from '@angular/fire/firestore';
@@ -85,6 +85,13 @@ export class ChatService {
 			this.feedLoadCount++;
 		}),
 		share()
+	);
+	/**
+	 * Checks if there is more than two members in the room
+	 */
+	roomHasMultipleMembers$ = this.roomService.members$.pipe(
+		map((members) => members.length >= 2),
+		shareReplay()
 	);
 	constructor(
 		private roomService: RoomService,

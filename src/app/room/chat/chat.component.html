@@ -48,31 +48,6 @@
 			"
 			nzTooltipColor="blue"
 		></nz-badge>
-		<form id="message-form" [formGroup]="newMessageForm" (ngSubmit)="sendMessage()">
-			<div fxLayout="row" fxLayoutAlign="center flex-end">
-				<textarea
-					#newMessageInput
-					nz-input
-					nzSize="large"
-					type="text"
-					placeholder="Message"
-					formControlName="message"
-					nzAutosize
-					(keydown.enter)="$event.preventDefault(); sendMessage()"
-				></textarea>
-				<button
-					type="submit"
-					nz-button
-					nzSize="large"
-					nzType="primary"
-					id="send-button"
-					[disabled]="(roomHasMultipleMembers$ | async) === false"
-					[ngxVibration]="vibrationConfig.soft"
-				>
-					<i nz-icon nzType="send" nzTheme="outline"></i>
-					Envoyer
-				</button>
-			</div>
-		</form>
+		<mas-message-form (messageSent)="onNewMessageSent()"></mas-message-form>
 	</div>
 </nz-card>

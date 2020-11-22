@@ -7,7 +7,6 @@ import {
 	ViewChild,
 } from '@angular/core';
 import { RoomService } from '@services/room.service';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ChatService } from './chat.service';
 import { fromEvent, merge, Observable, Subject } from 'rxjs';
 import {
@@ -18,15 +17,12 @@ import {
 	pairwise,
 	skip,
 	startWith,
-	tap,
 	withLatestFrom,
 } from 'rxjs/operators';
-import { UserService } from '@services/user.service';
 import { scrollParentToChild } from '@utilities/scroll-parent-to-child';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { MessageFeedEntry } from './model';
-import { GLOBAL_CONFIG } from '../../global-config';
 
 @UntilDestroy()
 @Component({
@@ -36,7 +32,6 @@ import { GLOBAL_CONFIG } from '../../global-config';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChatComponent implements AfterViewInit {
-	@ViewChild('newMessageInput') newMessageInputRef: ElementRef<HTMLDivElement>;
 	@ViewChild('chatContent') chatContentRef: ElementRef<HTMLDivElement>;
 	private chatContentResizedSubject = new Subject<number>();
 	/**
@@ -44,27 +39,8 @@ export class ChatComponent implements AfterViewInit {
 	 */
 	chatContentResized$ = this.chatContentResizedSubject.asObservable();
 
-	/**
-	 * Checks if there is more than two members in the room
-	 */
-	roomHasMultipleMembers$ = this.roomService.members$.pipe(
-		map((members) => members.length >= 2),
-		tap((roomHasMultipleMembers) => {
-			const control = this.newMessageForm.get('message');
-			if (control) {
-				if (roomHasMultipleMembers) {
-					control.enable();
-				} else {
-					control.disable();
-				}
-			}
-		})
-	);
+	roomHasMultipleMembers$ = this.chatService.roomHasMultipleMembers$;
 	messageFeed$ = this.chatService.messageFeed$;
-	newMessageForm = new FormGroup({
-		message: new FormControl(undefined, [Validators.required]),
-	});
-	vibrationConfig = GLOBAL_CONFIG.vibration;
 
 	/**
 	 * Detects the opening of a virtual keyboard
@@ -80,16 +56,10 @@ export class ChatComponent implements AfterViewInit {
 	constructor(
 		private chatService: ChatService,
 		private roomService: RoomService,
-		private userService: UserService,
 		private deviceService: DeviceDetectorService
 	) {}
 
 	ngAfterViewInit() {
-		// Focus the new message input, only on desktop
-		if (this.deviceService.isDesktop()) {
-			this.newMessageInputRef.nativeElement.focus();
-		}
-
 		/**
 		 * The current scroll position of the chat content
 		 */
@@ -178,14 +148,7 @@ export class ChatComponent implements AfterViewInit {
 		});
 	}
 
-	sendMessage() {
-		const content = this.newMessageForm.value.message?.trim();
-		if (!content) {
-			return;
-		}
-		this.newMessageForm.reset();
-		this.chatService.sendMessage(content).then(() => {
-			this.scrollToBottomOfChat('auto');
-		});
+	onNewMessageSent() {
+		this.scrollToBottomOfChat('auto');
 	}
 }

@@ -1,0 +1,27 @@
+<form id="message-form" [formGroup]="newMessageForm" #form="ngForm" (ngSubmit)="sendMessage()">
+	<div fxLayout="row" fxLayoutAlign="center flex-end">
+		<textarea
+			#newMessageInput
+			nz-input
+			nzSize="large"
+			type="text"
+			placeholder="Message"
+			formControlName="message"
+			nzAutosize
+			id="message-input"
+			(keydown.enter)="$event.preventDefault(); form.ngSubmit.emit()"
+		></textarea>
+		<button
+			type="submit"
+			nz-button
+			nzSize="large"
+			nzType="primary"
+			id="send-button"
+			[disabled]="(roomHasMultipleMembers$ | async) === false"
+			[ngxVibration]="vibrationConfig.soft"
+		>
+			<i nz-icon nzType="send" nzTheme="outline"></i>
+			Envoyer
+		</button>
+	</div>
+</form>

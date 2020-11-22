@@ -1,0 +1,12 @@
+@media (max-width: 424px) {
+	#message-form {
+		padding: 0 10px 15px;
+	}
+}
+
+::ng-deep #message-input.ant-input {
+	min-height: 40px;
+}
+#send-button {
+	margin-left: 0.5em;
+}
