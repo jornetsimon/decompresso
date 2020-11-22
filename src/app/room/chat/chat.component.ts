@@ -8,13 +8,12 @@ import {
 } from '@angular/core';
 import { RoomService } from '@services/room.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ChatService } from './chat.service';
-import { combineLatest, fromEvent, merge, Observable, Subject } from 'rxjs';
+import { ChatService, MappedMessage, MessageGroup } from './chat.service';
+import { fromEvent, merge, Observable, Subject } from 'rxjs';
 import {
 	distinctUntilChanged,
 	filter,
 	map,
-	share,
 	skip,
 	startWith,
 	tap,
@@ -23,7 +22,6 @@ import {
 import { UserService } from '@services/user.service';
 import { scrollParentToChild } from '@utilities/scroll-parent-to-child';
 import { Message } from '@model/message';
-import { MessageGroup } from '@model/message-group';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Reaction, ReactionType } from '@model/reaction';
 import { DeviceDetectorService } from 'ngx-device-detector';
@@ -36,11 +34,17 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChatComponent implements AfterViewInit {
+	@ViewChild('newMessageInput') newMessageInputRef: ElementRef<HTMLDivElement>;
 	@ViewChild('chatContent') chatContentRef: ElementRef<HTMLDivElement>;
 	private chatContentResizedSubject = new Subject<number>();
+	/**
+	 * Emits when the height of the chat content changes
+	 */
 	chatContentResized$ = this.chatContentResizedSubject.asObservable();
-	@ViewChild('newMessageInput') newMessageInputRef: ElementRef<HTMLDivElement>;
-	loadCount = 0;
+
+	/**
+	 * Checks if there is more than two members in the room
+	 */
 	roomHasMultipleMembers$ = this.roomService.members$.pipe(
 		map((members) => members.length >= 2),
 		tap((roomHasMultipleMembers) => {
@@ -54,63 +58,7 @@ export class ChatComponent implements AfterViewInit {
 			}
 		})
 	);
-	groupedMessages$ = combineLatest([
-		this.roomService.messages$,
-		this.roomService.members$,
-		this.roomService.reactions$,
-		this.userService.userUid$,
-	]).pipe(
-		map(([messages, members, reactions, userUid]) => {
-			return messages
-				.map((message) => {
-					const messageReactions: Partial<Record<
-						ReactionType,
-						ReadonlyArray<Reaction & { nickname: string }>
-					>> = (reactions || [])
-						.filter((r) => r.message === message.uid)
-						.map((r) => {
-							return {
-								...r,
-								nickname: members.find((m) => m.uid === r.user)?.nickname,
-							};
-						})
-						.reduce((acc, reaction) => {
-							const type = reaction.type;
-							return {
-								...acc,
-								[type]: [...(acc[type] || []), reaction],
-							};
-						}, {});
-					return {
-						...message,
-						reactions: messageReactions,
-						myReactions: {
-							like:
-								messageReactions.like?.filter((r) => r.user === userUid).length ||
-								false,
-							dislike:
-								messageReactions.dislike?.filter((r) => r.user === userUid)
-									.length || false,
-						},
-					};
-				})
-				.reduce(ChatService.groupMessagesByDateAndAuthor, [])
-				.map((messageGroup, index) => {
-					return {
-						...messageGroup,
-						authorUser: members.find((m) => m.uid === messageGroup.author),
-						isMine: messageGroup.author === userUid,
-						isLast: index === messages.length - 1,
-						isFresh: this.loadCount !== 0,
-					};
-				});
-		}),
-		tap(() => {
-			this.loadCount++;
-		}),
-		share()
-	);
-
+	messageFeed$ = this.chatService.messageFeed$;
 	newMessageForm = new FormGroup({
 		message: new FormControl(undefined, [Validators.required]),
 	});
@@ -118,13 +66,14 @@ export class ChatComponent implements AfterViewInit {
 	private chatScrollingState$: Observable<readonly [number, number, number]>;
 	stickToChatBottom$: Observable<boolean>;
 	showNewMessageTag$: Observable<boolean>;
-	trackByMessageGroupFn: TrackByFunction<MessageGroup & any> = (index, item) =>
+
+	trackByMessageGroupFn: TrackByFunction<MessageGroup<MappedMessage>> = (index, item) =>
 		item.timestamp.seconds + item.author;
-	trackByMessageFn: TrackByFunction<Message & any> = (index, item) => item.uid;
+	trackByMessageFn: TrackByFunction<MappedMessage> = (index, item) => item.uid;
 
 	constructor(
 		private chatService: ChatService,
-		public roomService: RoomService,
+		private roomService: RoomService,
 		private userService: UserService,
 		private deviceService: DeviceDetectorService
 	) {}
@@ -135,6 +84,9 @@ export class ChatComponent implements AfterViewInit {
 			this.newMessageInputRef.nativeElement.focus();
 		}
 
+		/**
+		 * The current scroll position of the chat content
+		 */
 		this.chatScrollingState$ = fromEvent(this.chatContentRef.nativeElement, 'scroll').pipe(
 			map(() => {
 				const current = this.chatContentRef.nativeElement.scrollTop;
@@ -189,16 +141,15 @@ export class ChatComponent implements AfterViewInit {
 				filter(([scrollHeight, stickToChatBottom]) => !!stickToChatBottom),
 				untilDestroyed(this)
 			)
-			.subscribe(() => {
+			.subscribe((loadCount) => {
 				// scroll to the bottom
-				this.scrollToBottomOfChat(this.loadCount > 1 ? 'smooth' : 'auto');
+				this.scrollToBottomOfChat(this.chatService.feedLoadCount > 1 ? 'smooth' : 'auto');
 			});
 	}
 
 	scrollToMessage(messageElement: Element) {
 		scrollParentToChild(this.chatContentRef.nativeElement, messageElement);
 	}
-
 	scrollToBottomOfChat(behavior: ScrollBehavior = 'smooth') {
 		this.chatContentRef.nativeElement.scrollTo({
 			top: this.chatContentRef.nativeElement.scrollHeight,
@@ -216,6 +167,9 @@ export class ChatComponent implements AfterViewInit {
 			this.scrollToBottomOfChat('auto');
 		});
 	}
+	toggleReaction(message: Message, reaction: ReactionType) {
+		this.chatService.toggleReaction(message, reaction);
+	}
 
 	/**
 	 * Determines is a string consists of only emojis
@@ -224,10 +178,6 @@ export class ChatComponent implements AfterViewInit {
 		const onlyEmojis = text.replace(new RegExp('[\u0000-\u1eeff]', 'g'), '');
 		const visibleChars = text.replace(new RegExp('[\n\rs]+|( )+', 'g'), '');
 		return onlyEmojis.length === visibleChars.length;
-	}
-
-	toggleReaction(message: Message, reaction: ReactionType) {
-		this.chatService.toggleReaction(message, reaction);
 	}
 
 	/**

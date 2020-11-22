@@ -1,6 +1,6 @@
 <nz-card id="chat-card">
 	<div id="chat-content" #chatContent>
-		<ng-container *ngIf="groupedMessages$ | async as groupedMessages">
+		<ng-container *ngIf="messageFeed$ | async as groupedMessages">
 			<ng-container *ngIf="(roomHasMultipleMembers$ | async) === true; else memberAloneTpl">
 				<ng-container *ngIf="groupedMessages.length; else noMessageTpl">
 					<div class="top-reached" [class.hidden-opacity]="groupedMessages.length < 10">
