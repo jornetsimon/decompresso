@@ -11,9 +11,11 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ChatService } from './chat.service';
 import { fromEvent, merge, Observable, Subject } from 'rxjs';
 import {
+	debounceTime,
 	distinctUntilChanged,
 	filter,
 	map,
+	pairwise,
 	skip,
 	startWith,
 	tap,
@@ -64,6 +66,10 @@ export class ChatComponent implements AfterViewInit {
 	});
 	vibrationConfig = GLOBAL_CONFIG.vibration;
 
+	/**
+	 * Detects the opening of a virtual keyboard
+	 */
+	private virtualKeyboardOpeningDetected$: Observable<number>;
 	private chatScrollingState$: Observable<readonly [number, number, number]>;
 	stickToChatBottom$: Observable<boolean>;
 	showNewMessageTag$: Observable<boolean>;
@@ -96,6 +102,16 @@ export class ChatComponent implements AfterViewInit {
 				const percent = (current * 100) / max;
 				return [current, max, percent];
 			})
+		);
+
+		this.virtualKeyboardOpeningDetected$ = fromEvent(window.visualViewport, 'resize').pipe(
+			filter(() => this.deviceService.isMobile() || this.deviceService.isDesktop()),
+			debounceTime(100),
+			map((event) => (event.target as VisualViewport).height),
+			startWith(window.visualViewport.height),
+			pairwise(),
+			map(([prev, curr]) => ((prev - curr) * 100) / prev),
+			filter((shrinkPct) => shrinkPct > 20)
 		);
 
 		/**
@@ -141,10 +157,15 @@ export class ChatComponent implements AfterViewInit {
 				filter(([scrollHeight, stickToChatBottom]) => !!stickToChatBottom),
 				untilDestroyed(this)
 			)
-			.subscribe((loadCount) => {
+			.subscribe(() => {
 				// scroll to the bottom
 				this.scrollToBottomOfChat(this.chatService.feedLoadCount > 1 ? 'smooth' : 'auto');
 			});
+
+		// The the virtual keyboard opens, scroll to the bottom of the chat
+		this.virtualKeyboardOpeningDetected$.pipe(untilDestroyed(this)).subscribe(() => {
+			this.scrollToBottomOfChat('auto');
+		});
 	}
 
 	scrollToMessage(messageElement: Element) {
