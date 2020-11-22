@@ -24,6 +24,7 @@ import { scrollParentToChild } from '@utilities/scroll-parent-to-child';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { MessageFeedEntry } from './model';
+import { GLOBAL_CONFIG } from '../../global-config';
 
 @UntilDestroy()
 @Component({
@@ -61,6 +62,7 @@ export class ChatComponent implements AfterViewInit {
 	newMessageForm = new FormGroup({
 		message: new FormControl(undefined, [Validators.required]),
 	});
+	vibrationConfig = GLOBAL_CONFIG.vibration;
 
 	private chatScrollingState$: Observable<readonly [number, number, number]>;
 	stickToChatBottom$: Observable<boolean>;

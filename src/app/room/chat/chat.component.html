@@ -67,6 +67,7 @@
 					nzType="primary"
 					id="send-button"
 					[disabled]="(roomHasMultipleMembers$ | async) === false"
+					[ngxVibration]="vibrationConfig.soft"
 				>
 					<i nz-icon nzType="send" nzTheme="outline"></i>
 					Envoyer

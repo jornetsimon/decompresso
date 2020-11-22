@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { UserService } from '@services/user.service';
 import { MappedMessage } from '../../model';
+import { GLOBAL_CONFIG } from '../../../../global-config';
 
 @Component({
 	selector: 'mas-message',
@@ -18,6 +19,8 @@ export class MessageComponent {
 	@Input() isFresh: boolean;
 	@Input() isMine: boolean;
 	@Input() color: string | undefined;
+
+	vibrationConfig = GLOBAL_CONFIG.vibration;
 	constructor(private chatService: ChatService, private userService: UserService) {}
 
 	toggleReaction(message: Message, reaction: ReactionType) {

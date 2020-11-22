@@ -16,6 +16,7 @@
 		nzPopoverTrigger="hover"
 		[nzPopoverPlacement]="isMine ? 'left' : 'right'"
 		nzPopoverOverlayClassName="reactions-popover"
+		[ngxVibration]="vibrationConfig.soft"
 	>
 		<div [textContent]="message.content"></div>
 		<ng-template #reactionsPopoverTpl>
@@ -24,6 +25,7 @@
 					class="reaction"
 					*ngIf="!message.myReactions.dislike"
 					(click)="toggleReaction(message, 'like')"
+					[ngxVibration]="vibrationConfig.strong"
 				>
 					👍
 				</div>
@@ -31,6 +33,7 @@
 					class="reaction"
 					*ngIf="!message.myReactions.like"
 					(click)="toggleReaction(message, 'dislike')"
+					[ngxVibration]="vibrationConfig.strong"
 				>
 					👎
 				</div>
@@ -45,6 +48,7 @@
 			nzTooltipOverlayClassName="reaction-tooltip"
 			[class.i-did]="message.myReactions.like"
 			(click)="message.myReactions.like ? toggleReaction(message, 'like') : undefined"
+			[ngxVibration]="vibrationConfig.normal"
 		>
 			👍
 			<div class="multiplier" *ngIf="reactions.length > 1">
@@ -68,6 +72,7 @@
 			nzTooltipOverlayClassName="reaction-tooltip"
 			[class.i-did]="message.myReactions.dislike"
 			(click)="message.myReactions.dislike ? toggleReaction(message, 'dislike') : undefined"
+			[ngxVibration]="vibrationConfig.normal"
 		>
 			👎
 			<div class="multiplier" *ngIf="reactions.length > 1">
