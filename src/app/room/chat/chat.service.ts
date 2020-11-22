@@ -13,7 +13,8 @@ import firestore = firebase.firestore;
 
 const FieldValue = firestore.FieldValue;
 
-export type MessageFeed = ReadonlyArray<{
+export type MessageFeed = ReadonlyArray<MessageFeedEntry>;
+export type MessageFeedEntry = {
 	timestamp: Message['createdAt'];
 	author: Message['author'];
 	messages: ReadonlyArray<MappedMessage>;
@@ -21,7 +22,7 @@ export type MessageFeed = ReadonlyArray<{
 	isMine: boolean;
 	isLast: boolean;
 	isFresh: boolean;
-}>;
+};
 export type MessageReactions = Partial<
 	Record<ReactionType, ReadonlyArray<Reaction & { nickname: string }>>
 >;

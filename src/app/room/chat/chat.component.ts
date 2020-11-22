@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { RoomService } from '@services/room.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ChatService, MappedMessage, MessageGroup } from './chat.service';
+import { ChatService, MessageFeedEntry } from './chat.service';
 import { fromEvent, merge, Observable, Subject } from 'rxjs';
 import {
 	distinctUntilChanged,
@@ -21,9 +21,7 @@ import {
 } from 'rxjs/operators';
 import { UserService } from '@services/user.service';
 import { scrollParentToChild } from '@utilities/scroll-parent-to-child';
-import { Message } from '@model/message';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { Reaction, ReactionType } from '@model/reaction';
 import { DeviceDetectorService } from 'ngx-device-detector';
 
 @UntilDestroy()
@@ -67,9 +65,8 @@ export class ChatComponent implements AfterViewInit {
 	stickToChatBottom$: Observable<boolean>;
 	showNewMessageTag$: Observable<boolean>;
 
-	trackByMessageGroupFn: TrackByFunction<MessageGroup<MappedMessage>> = (index, item) =>
+	trackByFeedEntryFn: TrackByFunction<MessageFeedEntry> = (index, item) =>
 		item.timestamp.seconds + item.author;
-	trackByMessageFn: TrackByFunction<MappedMessage> = (index, item) => item.uid;
 
 	constructor(
 		private chatService: ChatService,
@@ -166,46 +163,5 @@ export class ChatComponent implements AfterViewInit {
 		this.chatService.sendMessage(content).then(() => {
 			this.scrollToBottomOfChat('auto');
 		});
-	}
-	toggleReaction(message: Message, reaction: ReactionType) {
-		this.chatService.toggleReaction(message, reaction);
-	}
-
-	/**
-	 * Determines is a string consists of only emojis
-	 */
-	containsOnlyEmojis(text: string) {
-		const onlyEmojis = text.replace(new RegExp('[\u0000-\u1eeff]', 'g'), '');
-		const visibleChars = text.replace(new RegExp('[\n\rs]+|( )+', 'g'), '');
-		return onlyEmojis.length === visibleChars.length;
-	}
-
-	/**
-	 * Lists the nicknames of the users who put a reaction
-	 */
-	printReactionsNicknames(
-		reactions: ReadonlyArray<Reaction & { nickname: string }>,
-		maxDisplayed = 3
-	): Observable<string> {
-		return this.userService.userUid$.pipe(
-			map((userUid) => {
-				const join = reactions.reduce((str, reaction, index) => {
-					if (index < maxDisplayed) {
-						return (
-							(str ? str + ', ' : '') +
-							(reaction.user === userUid ? 'moi' : reaction.nickname)
-						);
-					} else {
-						return str;
-					}
-				}, '');
-
-				const diff = reactions.length - maxDisplayed;
-				if (reactions.length >= maxDisplayed && diff > 0) {
-					return `${join} et ${diff} autre${diff > 1 ? 's' : ''}`;
-				}
-				return join;
-			})
-		);
 	}
 }

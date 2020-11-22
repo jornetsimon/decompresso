@@ -1,140 +1,15 @@
 <nz-card id="chat-card">
 	<div id="chat-content" #chatContent>
-		<ng-container *ngIf="messageFeed$ | async as groupedMessages">
+		<ng-container *ngIf="messageFeed$ | async as feed">
 			<ng-container *ngIf="(roomHasMultipleMembers$ | async) === true; else memberAloneTpl">
-				<ng-container *ngIf="groupedMessages.length; else noMessageTpl">
-					<div class="top-reached" [class.hidden-opacity]="groupedMessages.length < 10">
+				<ng-container *ngIf="feed.length; else noMessageTpl">
+					<div class="top-reached" [class.hidden-opacity]="feed.length < 10">
 						Vous avez atteint la limite de l'historique 🔭
 					</div>
-					<ng-container
-						*ngFor="let group of groupedMessages; trackBy: trackByMessageGroupFn"
-					>
-						<div
-							class="entry"
-							[class.is-last]="group.isLast"
-							[ngClass]="{ mine: group.isMine, others: !group.isMine }"
-						>
-							<div class="infos">
-								<div class="author">
-									<span
-										[style.color]="
-											group.isMine ? undefined : group.authorUser?.color
-										"
-									>
-										{{ group.isMine ? 'Moi' : group.authorUser?.nickname }}
-									</span>
-								</div>
-								<div class="timestamp">
-									{{ group.timestamp | timestampToDate: "EEE à HH'h'mm" }}
-								</div>
-							</div>
-							<div class="bubble-group">
-								<div
-									class="bubble-container"
-									*ngFor="
-										let message of group.messages;
-										trackBy: trackByMessageFn
-									"
-									[class.has-reactions]="
-										message.reactions.like || message.reactions.dislike
-									"
-								>
-									<div
-										class="bubble"
-										[class.animate]="group.isFresh"
-										[style.background-color]="
-											group.isMine ? undefined : group.authorUser?.color
-										"
-										[class.solo-emoji]="containsOnlyEmojis(message.content)"
-										nz-popover
-										[nzPopoverContent]="
-											message.myReactions.like || message.myReactions.dislike
-												? undefined
-												: reactionsPopoverTpl
-										"
-										nzPopoverTrigger="hover"
-										[nzPopoverPlacement]="group.isMine ? 'left' : 'right'"
-										nzPopoverOverlayClassName="reactions-popover"
-									>
-										<div [textContent]="message.content"></div>
-										<ng-template #reactionsPopoverTpl>
-											<div class="reactions">
-												<div
-													class="reaction"
-													*ngIf="!message.myReactions.dislike"
-													(click)="toggleReaction(message, 'like')"
-												>
-													👍
-												</div>
-												<div
-													class="reaction"
-													*ngIf="!message.myReactions.like"
-													(click)="toggleReaction(message, 'dislike')"
-												>
-													👎
-												</div>
-											</div>
-										</ng-template>
-									</div>
-									<div class="reaction-icons-container">
-										<div
-											class="reaction-icon"
-											*ngIf="message.reactions.like as reactions"
-											[nz-tooltip]="reactionTooltipTpl"
-											nzTooltipOverlayClassName="reaction-tooltip"
-											[class.i-did]="message.myReactions.like"
-											(click)="
-												message.myReactions.like
-													? toggleReaction(message, 'like')
-													: undefined
-											"
-										>
-											👍
-											<div class="multiplier" *ngIf="reactions.length > 1">
-												{{ reactions.length }}
-											</div>
-											<ng-template #reactionTooltipTpl>
-												<span class="nowrap">
-													<span style="padding-right: 3px"> 👍 </span>
-													par
-												</span>
-												<span>
-													{{ printReactionsNicknames(reactions) | async }}
-												</span>
-											</ng-template>
-										</div>
-
-										<div
-											class="reaction-icon"
-											*ngIf="message.reactions.dislike as reactions"
-											[nz-tooltip]="reactionTooltipTpl"
-											nzTooltipOverlayClassName="reaction-tooltip"
-											[class.i-did]="message.myReactions.dislike"
-											(click)="
-												message.myReactions.dislike
-													? toggleReaction(message, 'dislike')
-													: undefined
-											"
-										>
-											👎
-											<div class="multiplier" *ngIf="reactions.length > 1">
-												{{ reactions.length }}
-											</div>
-											<ng-template #reactionTooltipTpl>
-												<span class="nowrap">
-													<span style="padding-right: 3px"> 👎 </span>
-													par
-												</span>
-												<span>
-													{{ printReactionsNicknames(reactions) | async }}
-												</span>
-											</ng-template>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</ng-container>
+					<mas-message-group
+						*ngFor="let entry of feed; trackBy: trackByFeedEntryFn"
+						[group]="entry"
+					></mas-message-group>
 				</ng-container>
 				<ng-template #noMessageTpl>
 					<div class="p2">
