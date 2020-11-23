@@ -2,7 +2,7 @@
 	position: relative;
 
 	&.has-reactions {
-		margin-bottom: 10px;
+		margin-bottom: 13px;
 	}
 
 	.bubble {
@@ -11,6 +11,7 @@
 		border-radius: 20px;
 		white-space: pre-wrap;
 		transition: box-shadow 0.25s, filter 0.25s;
+		color: white;
 
 		&:hover {
 			box-shadow: 1px 2px 6px 0 #cacaca;
@@ -22,11 +23,9 @@
 		}
 
 		::ng-deep .entry.others & {
-			color: white;
 		}
 		::ng-deep .entry.mine & {
-			background-color: rgba(63, 135, 245, 0.1);
-			color: #3f87f5;
+			background-color: dodgerblue;
 		}
 
 		&.solo-emoji {
@@ -41,7 +40,7 @@
 	.reaction-icons-container {
 		position: absolute;
 		font-size: 12px;
-		bottom: -0.75em;
+		bottom: -1.2em;
 		left: 0;
 		width: auto;
 		display: flex;
@@ -61,8 +60,8 @@
 		.reaction-icon {
 			border-radius: 100%;
 			background-color: #f2faff;
-			width: 20px;
-			height: 20px;
+			width: 23px;
+			height: 23px;
 			display: flex;
 			justify-content: center;
 			align-items: center;
@@ -75,6 +74,11 @@
 			&.i-did {
 				background-color: dodgerblue;
 				cursor: pointer;
+				filter: saturate(2);
+			}
+
+			::ng-deep .entry.mine &.i-did {
+				border: 1px solid white;
 			}
 
 			.multiplier {
