@@ -1,19 +1,22 @@
-<div>
-	<div fxLayout="row" fxLayoutAlign="space-between baseline" class="px1">
-		<div
-			fxFlex="grow"
-			fxLayoutAlign="start center"
-			class="page-title nowrap mr2"
-			style="padding: 0"
-		>
-			<span class="mr1">Le salon</span>
-			<span style="line-height: 0.8em">🛋</span>
-		</div>
-		<button nz-button class="members-drawer-button" (click)="membersDrawer.open()">
-			<i nz-icon nzType="team" nzTheme="outline"></i>
-			Membres
-		</button>
+<div
+	fxLayout="row"
+	fxLayoutAlign="space-between baseline"
+	class="page-header px1"
+	[class.fixed-page-header]="layoutService.chatLayout$ | async"
+>
+	<div
+		fxFlex="grow"
+		fxLayoutAlign="start center"
+		class="page-title nowrap mr2"
+		style="padding: 0"
+	>
+		<span class="mr1">Le salon</span>
+		<span style="line-height: 0.8em">🛋</span>
 	</div>
+	<button nz-button class="members-drawer-button" (click)="membersDrawer.open()">
+		<i nz-icon nzType="team" nzTheme="outline"></i>
+		Membres
+	</button>
 </div>
 <div fxLayout fxLayoutGap="20px">
 	<div fxFlex="0 0 200px" fxFlex.lt-md="none" id="member-list-container" fxHide.lt-lg>

@@ -9,4 +9,5 @@ export const GLOBAL_CONFIG = {
 		strong: [50],
 		error: [25, 50, 25],
 	},
+	virtualKeyboardDetectionPct: 20,
 };

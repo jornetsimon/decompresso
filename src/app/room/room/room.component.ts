@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { UserService } from '@services/user.service';
 import { RoomService } from '@services/room.service';
+import { LayoutService } from '../../layout/layout.service';
 
 @Component({
 	selector: 'mas-room',
@@ -9,5 +10,9 @@ import { RoomService } from '@services/room.service';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RoomComponent {
-	constructor(public userService: UserService, public roomService: RoomService) {}
+	constructor(
+		public userService: UserService,
+		public roomService: RoomService,
+		public layoutService: LayoutService
+	) {}
 }

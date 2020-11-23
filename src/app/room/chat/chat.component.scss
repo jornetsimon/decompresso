@@ -1,16 +1,23 @@
 ::ng-deep .ant-card {
 	box-shadow: 1px 2px 12px 0 #e4e4e4;
 }
-@media (max-width: 424px) {
-	::ng-deep .ant-card,
-	::ng-deep .ant-card-body {
-		border-radius: 0;
-	}
-}
 ::ng-deep #chat-card .ant-card-body {
-	max-height: 65vh;
 	display: flex;
 	flex-direction: column;
+
+	#chat-content {
+		max-height: 45vh;
+		@media (min-height: 800px) and (max-height: 1000px) {
+			& {
+				max-height: 55vh;
+			}
+		}
+		@media (min-height: 1000px) {
+			& {
+				max-height: 60vh;
+			}
+		}
+	}
 }
 
 @media (min-width: 425px) {
@@ -19,13 +26,31 @@
 	}
 }
 @media (max-width: 424px) {
+	$headerHeight: 90px;
+	$pageHeaderHeight: 50px;
+	$chatFooterHeight: 55px;
+	$viewportHeight: calc(var(--vh, 1vh) * 100);
+	$chatContentHeight: calc(
+		#{$viewportHeight} - #{$headerHeight} - #{$pageHeaderHeight} - #{$chatFooterHeight}
+	);
+	::ng-deep .fixed-header {
+		height: $headerHeight;
+		margin: 0 !important;
+	}
+	::ng-deep .fixed-page-header {
+		height: $pageHeaderHeight;
+	}
+	::ng-deep .ant-card,
+	::ng-deep .ant-card-body {
+		border-radius: 0;
+	}
 	::ng-deep #chat-card .ant-card-body {
 		width: 100vw;
-		height: calc(100vh - 135px);
-		max-height: calc(100vh - 135px);
 		padding: 0;
 
 		#chat-content {
+			height: $chatContentHeight;
+			max-height: $chatContentHeight;
 			padding: 15px;
 			flex-grow: 1;
 		}

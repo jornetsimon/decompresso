@@ -97,6 +97,13 @@
 		padding-right: 7.5vw;
 	}
 }
+@media (min-width: 1600px) {
+	.main-container {
+		width: 1600px;
+		padding: 0 120px;
+		margin: auto;
+	}
+}
 
 #user-drawer-button {
 	position: fixed;

@@ -15,7 +15,6 @@ import {
 	distinctUntilChanged,
 	filter,
 	map,
-	pairwise,
 	skip,
 	startWith,
 	take,
@@ -24,8 +23,8 @@ import {
 } from 'rxjs/operators';
 import { scrollParentToChild } from '@utilities/scroll-parent-to-child';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { DeviceDetectorService } from 'ngx-device-detector';
 import { MessageFeedEntry } from './model';
+import { LayoutService } from '../../layout/layout.service';
 
 @UntilDestroy()
 @Component({
@@ -57,10 +56,6 @@ export class ChatComponent implements AfterViewInit {
 		takeWhile((show) => show, true)
 	);
 
-	/**
-	 * Detects the opening of a virtual keyboard
-	 */
-	private virtualKeyboardOpeningDetected$: Observable<number>;
 	private chatScrollingState$: Observable<readonly [number, number, number]>;
 	stickToChatBottom$: Observable<boolean>;
 	showNewMessageTag$: Observable<boolean>;
@@ -71,7 +66,7 @@ export class ChatComponent implements AfterViewInit {
 	constructor(
 		private chatService: ChatService,
 		private roomService: RoomService,
-		private deviceService: DeviceDetectorService
+		private layoutService: LayoutService
 	) {}
 
 	ngAfterViewInit() {
@@ -87,16 +82,6 @@ export class ChatComponent implements AfterViewInit {
 				const percent = (current * 100) / max;
 				return [current, max, percent];
 			})
-		);
-
-		this.virtualKeyboardOpeningDetected$ = fromEvent(window.visualViewport, 'resize').pipe(
-			filter(() => this.deviceService.isMobile() || this.deviceService.isDesktop()),
-			debounceTime(100),
-			map((event) => (event.target as VisualViewport).height),
-			startWith(window.visualViewport.height),
-			pairwise(),
-			map(([prev, curr]) => ((prev - curr) * 100) / prev),
-			filter((shrinkPct) => shrinkPct > 20)
 		);
 
 		/**
@@ -137,6 +122,7 @@ export class ChatComponent implements AfterViewInit {
 		// When the chat content scrollHeight changes
 		this.chatContentResized$
 			.pipe(
+				debounceTime(200),
 				withLatestFrom(this.stickToChatBottom$),
 				// if the current scroll is stuck to the bottom
 				filter(([scrollHeight, stickToChatBottom]) => !!stickToChatBottom),
@@ -147,10 +133,16 @@ export class ChatComponent implements AfterViewInit {
 				this.scrollToBottomOfChat(this.chatService.feedLoadCount > 1 ? 'smooth' : 'auto');
 			});
 
-		// The the virtual keyboard opens, scroll to the bottom of the chat
-		this.virtualKeyboardOpeningDetected$.pipe(untilDestroyed(this)).subscribe(() => {
-			this.scrollToBottomOfChat('auto');
-		});
+		// When the virtual keyboard is toggle, scroll to the top or bottom of page
+		this.layoutService.virtualKeyboardToggleDetected$
+			.pipe(untilDestroyed(this))
+			.subscribe((state) => {
+				if (state === 'opened') {
+					window.scrollTo(0, document.body.scrollHeight);
+				} else {
+					window.scrollTo(0, 0);
+				}
+			});
 	}
 
 	scrollToMessage(messageElement: Element) {
