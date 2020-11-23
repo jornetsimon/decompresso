@@ -60,4 +60,12 @@ export class MessageFormComponent implements AfterViewInit {
 			this.messageSent.emit();
 		});
 	}
+
+	onEnter(event: Event) {
+		if (this.deviceService.isMobile() || this.deviceService.isTablet()) {
+			return;
+		}
+		event.preventDefault();
+		this.sendMessage();
+	}
 }

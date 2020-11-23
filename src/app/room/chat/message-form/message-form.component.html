@@ -9,7 +9,7 @@
 			formControlName="message"
 			nzAutosize
 			id="message-input"
-			(keydown.enter)="$event.preventDefault(); form.ngSubmit.emit()"
+			(keydown.enter)="onEnter($event)"
 		></textarea>
 		<button
 			type="submit"
