@@ -30,6 +30,13 @@
 				</div>
 			</ng-template>
 		</ng-container>
+		<div class="loading-container" *ngIf="showFeedLoader$ | async">
+			<nz-spin nzSimple nzSize="large" [nzIndicator]="indicatorTemplate">
+				<ng-template #indicatorTemplate>
+					<i nz-icon nzType="loading" class="spinner"></i>
+				</ng-template>
+			</nz-spin>
+		</div>
 	</div>
 	<div id="chat-footer">
 		<div

@@ -8,15 +8,18 @@ import {
 } from '@angular/core';
 import { RoomService } from '@services/room.service';
 import { ChatService } from './chat.service';
-import { fromEvent, merge, Observable, Subject } from 'rxjs';
+import { combineLatest, fromEvent, merge, Observable, of, Subject } from 'rxjs';
 import {
 	debounceTime,
+	delay,
 	distinctUntilChanged,
 	filter,
 	map,
 	pairwise,
 	skip,
 	startWith,
+	take,
+	takeWhile,
 	withLatestFrom,
 } from 'rxjs/operators';
 import { scrollParentToChild } from '@utilities/scroll-parent-to-child';
@@ -41,6 +44,18 @@ export class ChatComponent implements AfterViewInit {
 
 	roomHasMultipleMembers$ = this.chatService.roomHasMultipleMembers$;
 	messageFeed$ = this.chatService.messageFeed$;
+	showFeedLoader$ = combineLatest([
+		of(false).pipe(delay(1000)),
+		this.messageFeed$
+			.pipe(
+				map(() => true),
+				take(1)
+			)
+			.pipe(startWith(false)),
+	]).pipe(
+		map(([initial, feed]) => !feed),
+		takeWhile((show) => show, true)
+	);
 
 	/**
 	 * Detects the opening of a virtual keyboard

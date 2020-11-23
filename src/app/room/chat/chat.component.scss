@@ -81,6 +81,28 @@
 	box-shadow: 0px -5px 5px 5px #ffffff;
 }
 
+.loading-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	height: 50vh;
+
+	.spinner {
+		font-size: 48px;
+		animation: fadein 1s linear;
+	}
+}
+
+@keyframes fadein {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+
 @keyframes stickChatAnimation {
 	0% {
 		opacity: 0;
