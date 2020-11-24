@@ -21,6 +21,7 @@ export class MessageComponent {
 	@Input() color: string | undefined;
 
 	vibrationConfig = GLOBAL_CONFIG.vibration;
+	highlightForDeletion: boolean;
 	constructor(private chatService: ChatService, private userService: UserService) {}
 
 	toggleReaction(message: Message, reaction: ReactionType) {
@@ -63,5 +64,13 @@ export class MessageComponent {
 				return join;
 			})
 		);
+	}
+
+	delete() {
+		this.chatService.deleteMessage(this.message);
+	}
+
+	onDeletePopoverToggle(shown: boolean) {
+		this.highlightForDeletion = shown;
 	}
 }

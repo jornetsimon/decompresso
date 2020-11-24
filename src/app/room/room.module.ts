@@ -6,6 +6,7 @@ import { RoomGuard } from './room.guard';
 import { SharedModule } from '../shared/shared.module';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import {
+	CloseCircleTwoTone,
 	QuestionCircleFill,
 	SendOutline,
 	SmileTwoTone,
@@ -29,7 +30,13 @@ const roomRoutes: Routes = [
 		CommonModule,
 		SharedModule,
 		RouterModule.forChild(roomRoutes),
-		NzIconModule.forChild([SmileTwoTone, QuestionCircleFill, SendOutline, TeamOutline]),
+		NzIconModule.forChild([
+			SmileTwoTone,
+			QuestionCircleFill,
+			SendOutline,
+			TeamOutline,
+			CloseCircleTwoTone,
+		]),
 		ChatModule,
 	],
 })

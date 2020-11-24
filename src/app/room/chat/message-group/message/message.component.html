@@ -1,6 +1,7 @@
 <div
 	class="bubble-container"
 	[class.has-reactions]="message.reactions.like || message.reactions.dislike"
+	[class.highlight-for-deletion]="highlightForDeletion"
 >
 	<div
 		class="bubble"
@@ -40,6 +41,20 @@
 			</div>
 		</ng-template>
 	</div>
+	<i
+		nz-icon
+		nzType="close-circle"
+		nzTheme="twotone"
+		*ngIf="isMine"
+		class="delete-icon"
+		nz-popconfirm
+		nzPopconfirmTitle="Vous-vous vraiment supprimer ce message ?"
+		(nzPopconfirmVisibleChange)="onDeletePopoverToggle($event)"
+		nzOkText="Supprimer"
+		nzOkType="danger"
+		nzCancelText="Annuler"
+		(nzOnConfirm)="delete()"
+	></i>
 	<div class="reaction-icons-container">
 		<div
 			class="reaction-icon"

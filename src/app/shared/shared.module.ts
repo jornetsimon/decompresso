@@ -30,6 +30,7 @@ import { NzBadgeModule } from 'ng-zorro-antd/badge';
 import { NzPopoverModule } from 'ng-zorro-antd/popover';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { GLOBAL_CONFIG } from '../global-config';
+import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
 
 // tslint:disable-next-line:readonly-array
 const icons: IconDefinition[] = [QuestionCircleOutline];
@@ -61,6 +62,7 @@ const modules: ReadonlyArray<any> = [
 	NzEmptyModule,
 	NzBadgeModule,
 	NzPopoverModule,
+	NzPopconfirmModule,
 	NzTagModule,
 	RoughNotationModule,
 	NgxVibrationModule.forRoot({

@@ -3,7 +3,7 @@ import { RoomService } from '@services/room.service';
 import { UserService } from '@services/user.service';
 import { first, map, share, shareReplay, switchMap, tap } from 'rxjs/operators';
 import { DataService } from '@services/data.service';
-import { combineLatest, Observable } from 'rxjs';
+import { combineLatest, Observable, throwError } from 'rxjs';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Message } from '@model/message';
 import firebase from 'firebase/app';
@@ -168,6 +168,30 @@ export class ChatService {
 					return this.dataService
 						.chatDoc(room.domain)
 						.update({ messages: FieldValue.arrayUnion(message) as any });
+				})
+			)
+			.toPromise();
+	}
+
+	deleteMessage(message: MappedMessage) {
+		return combineLatest([
+			this.userService.userUid$.pipe(first()),
+			this.roomService.room$.pipe(first()),
+		])
+			.pipe(
+				switchMap(([userUid, room]) => {
+					if (userUid !== message.author) {
+						return throwError(new Error('deletion_forbidden_for_this_user'));
+					}
+					const data: Message = {
+						uid: message.uid,
+						author: message.author,
+						createdAt: message.createdAt,
+						content: message.content,
+					};
+					return this.dataService
+						.chatDoc(room.domain)
+						.update({ messages: FieldValue.arrayRemove(data) as any });
 				})
 			)
 			.toPromise();
