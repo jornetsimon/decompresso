@@ -36,9 +36,21 @@
 	::ng-deep .fixed-header {
 		height: $headerHeight;
 		margin: 0 !important;
+		padding: 0 100%;
+		position: fixed;
+		z-index: 10;
+		background-color: #f7f7f9;
 	}
 	::ng-deep .fixed-page-header {
 		height: $pageHeaderHeight;
+		position: fixed;
+		margin-top: 90px;
+		z-index: 10;
+		background-color: #f7f7f9;
+		width: 100%;
+	}
+	::ng-deep #chat-card {
+		padding-top: 140px !important;
 	}
 	::ng-deep .ant-card,
 	::ng-deep .ant-card-body {
