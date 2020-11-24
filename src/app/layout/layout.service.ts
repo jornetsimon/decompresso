@@ -7,6 +7,7 @@ import {
 	filter,
 	map,
 	pairwise,
+	shareReplay,
 	startWith,
 } from 'rxjs/operators';
 import { GLOBAL_CONFIG } from '../global-config';
@@ -22,7 +23,8 @@ export class LayoutService {
 		filter((event) => event instanceof NavigationEnd),
 		map((event: NavigationStart) => !!event.url.match(/^\/room\/.+$/)),
 		startWith(!!this.router.url.match(/^\/room\/.+$/)),
-		distinctUntilChanged()
+		distinctUntilChanged(),
+		shareReplay()
 	);
 
 	/**

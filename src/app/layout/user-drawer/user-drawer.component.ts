@@ -36,6 +36,7 @@ export class UserDrawerComponent {
 	logout() {
 		this.authService.logout().subscribe({
 			next: () => {
+				this.closeDrawer();
 				this.router.navigateByUrl('/');
 				this.message.success('Vous avez bien été déconnecté');
 			},

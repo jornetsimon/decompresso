@@ -49,7 +49,7 @@ export class WelcomeComponent {
 						this.modal.error({
 							nzTitle: 'Votre adresse email est personnelle',
 							nzContent:
-								'Merci de vous connecter avec votre adresse professionnelle.',
+								'Merci de vous authentifier avec votre adresse professionnelle.',
 							nzOkText: 'Compris',
 						});
 						break;

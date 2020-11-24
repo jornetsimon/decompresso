@@ -1,91 +1,155 @@
-<nz-alert
-	nzType="success"
-	[nzDescription]="authenticatedTpl"
-	nzShowIcon
-	*ngIf="authService.isAuthenticated$ | async; else loginCardTpl"
-></nz-alert>
-<ng-template #authenticatedTpl>
-	Connecté !
-	<br />
-	Vous pouvez maintenance fermer cette fenêtre.
-</ng-template>
-<ng-template #loginCardTpl>
-	<nz-card class="card">
-		<form nz-form nzLayout="vertical" [formGroup]="formGroup" (ngSubmit)="submitClicked()">
-			<nz-form-item>
-				<nz-form-label class="label">
-					Je rejoins mes collègues avec mon adresse pro
-					<i
-						nz-icon
-						nz-tooltip
-						[nzTooltipTitle]="labelTooltip"
-						nzTooltipOverlayClassName="labelTooltip"
-						nzType="question-circle"
-						nzTheme="outline"
-						style="margin-left: 5px"
-					></i>
-					<ng-template #labelTooltip>
-						En vous connectant avec votre email professionnel, nous vous mettons
-						directement en contact avec les collègues de votre entreprise, grâce au nom
-						de domaine.
-					</ng-template>
-				</nz-form-label>
-				<nz-form-control
-					nzHasFeedback
-					nzValidatingTip="Vérification..."
-					[nzValidateStatus]="emailControlStatus()"
-					[nzErrorTip]="emailErrorsTpl"
-				>
-					<mas-private-domain-email formControlName="email"></mas-private-domain-email>
-					<ng-template #emailErrorsTpl>
-						<ng-container
-							*ngIf="formGroup.get('email')?.hasError('emailDomainIsPublic')"
-						>
-							Les adresses email publiques ne sont pas autorisées 🙅‍♂️<br />
-						</ng-container>
-					</ng-template>
-				</nz-form-control>
-			</nz-form-item>
-			<div
-				fxLayout="column"
-				fxLayoutAlign="center center"
-				fxLayoutGap="20px"
-				class="login-button-container"
-			>
-				<button
-					nz-button
-					type="submit"
-					nzType="primary"
-					nzSize="large"
-					[disabled]="formGroup.invalid"
-					[nzLoading]="loading"
-					*ngIf="(submitState$ | async)?.status !== 'sent'; else authMailSentTpl"
-					ngxVibration
-				>
-					Connexion
-				</button>
-				<ng-container *ngIf="submitState$ | async as submitState">
-					<nz-alert
-						nzType="error"
-						nzShowIcon
-						[nzDescription]="authMailErrorMessage(submitState.message)"
-						*ngIf="submitState.status === 'error'"
-					></nz-alert>
-				</ng-container>
-				<ng-template #authMailSentTpl>
-					<nz-alert
-						nzType="info"
-						nzShowIcon
-						nzIconType="mail"
-						[nzDescription]="waitDescriptionTpl"
-					></nz-alert>
-					<ng-template #waitDescriptionTpl>
-						Un email vous a été envoyé.
-						<br />
-						Il ne vous plus reste qu'à cliquer sur le lien pour vous connecter.
-					</ng-template>
+<nz-card class="card">
+	<form nz-form nzLayout="vertical" [formGroup]="loginFormGroup" (ngSubmit)="formSubmit()">
+		<nz-form-item>
+			<nz-form-label class="label">
+				Je rejoins mes collègues avec mon adresse pro
+				<i
+					nz-icon
+					nz-tooltip
+					[nzTooltipTitle]="labelTooltip"
+					nzTooltipOverlayClassName="labelTooltip"
+					nzType="question-circle"
+					nzTheme="outline"
+					style="margin-left: 5px"
+				></i>
+				<ng-template #labelTooltip>
+					En vous connectant avec votre email professionnel, nous vous mettons directement
+					en contact avec les collègues de votre entreprise, grâce au nom de domaine.
 				</ng-template>
-			</div>
-		</form>
-	</nz-card>
-</ng-template>
+			</nz-form-label>
+			<nz-form-control
+				nzHasFeedback
+				nzValidatingTip="Vérification..."
+				[nzValidateStatus]="emailControlStatus()"
+				[nzErrorTip]="emailErrorsTpl"
+			>
+				<mas-private-domain-email formControlName="email"></mas-private-domain-email>
+				<ng-template #emailErrorsTpl>
+					<ng-container
+						*ngIf="loginFormGroup.get('email')?.hasError('emailDomainIsPublic')"
+					>
+						Les adresses email publiques ne sont pas autorisées 🙅‍♂️<br />
+					</ng-container>
+				</ng-template>
+			</nz-form-control>
+			<ng-container formGroupName="password">
+				<nz-tabset [nzSelectedIndex]="tabIndex" nzCentered>
+					<nz-tab nzTitle="Je créé mon compte" (nzSelect)="onTypeChange('signup')">
+						<ng-container formGroupName="signupPassword">
+							<nz-form-item>
+								<nz-form-control nzHasFeedback [nzExtra]="extraTpl">
+									<input
+										nz-input
+										nzSize="large"
+										type="password"
+										autocomplete="new-password"
+										placeholder="Mot de passe"
+										formControlName="password"
+										#newPassword
+									/>
+								</nz-form-control>
+								<ng-template #extraTpl>
+									<ng-container
+										*ngIf="
+											loginFormGroup
+												?.get('password')
+												?.get('signupPassword')
+												?.get('password')?.value?.length > 1 &&
+											loginFormGroup
+												?.get('password')
+												?.get('signupPassword')
+												?.get('password')
+												?.hasError('minlength')
+										"
+										[ngTemplateOutlet]="passwordProgress"
+										[ngTemplateOutletContext]="{
+											remainingChars:
+												loginFormGroup
+													?.get('password')
+													?.get('signupPassword')
+													?.get('password')
+													?.getError('minlength')?.requiredLength -
+												loginFormGroup
+													?.get('password')
+													?.get('signupPassword')
+													?.get('password')
+													?.getError('minlength')?.actualLength
+										}"
+									>
+										<ng-template
+											#passwordProgress
+											let-remainingChars="remainingChars"
+										>
+											Encore
+											{{ remainingChars }}
+											{{
+												remainingChars
+													| i18nPlural
+														: {
+																'=1': 'caractère',
+																other: 'caractères'
+														  }
+											}}, et c'est bon 😉
+										</ng-template>
+									</ng-container>
+								</ng-template>
+							</nz-form-item>
+							<nz-form-item>
+								<nz-form-control
+									[nzValidateStatus]="
+										loginFormGroup.get('password')?.get('signupPassword')!
+									"
+									nzHasFeedback
+								>
+									<input
+										nz-input
+										nzSize="large"
+										type="password"
+										autocomplete="new-password"
+										placeholder="Confirmer le mot de passe"
+										formControlName="passwordConfirm"
+									/>
+								</nz-form-control>
+							</nz-form-item>
+						</ng-container>
+					</nz-tab>
+					<nz-tab nzTitle="Connexion" (nzSelect)="onTypeChange('login')">
+						<nz-form-item>
+							<nz-form-control nzHasFeedback>
+								<input
+									nz-input
+									nzSize="large"
+									type="password"
+									autocomplete="current-password"
+									placeholder="Mot de passe"
+									formControlName="loginPassword"
+									#currentPassword
+								/>
+							</nz-form-control>
+						</nz-form-item>
+					</nz-tab>
+				</nz-tabset>
+			</ng-container>
+		</nz-form-item>
+
+		<div
+			fxLayout="column"
+			fxLayoutAlign="center center"
+			fxLayoutGap="20px"
+			class="login-button-container"
+		>
+			<button
+				nz-button
+				type="submit"
+				nzType="primary"
+				nzSize="large"
+				[disabled]="loginFormGroup.invalid"
+				[nzLoading]="loading"
+				ngxVibration
+			>
+				<ng-container *ngIf="type === 'signup'">Créer mon compte</ng-container>
+				<ng-container *ngIf="type === 'login'">Connexion</ng-container>
+			</button>
+		</div>
+	</form>
+</nz-card>
