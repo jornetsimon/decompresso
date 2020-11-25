@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { AuthService } from '@services/auth.service';
 import { UntilDestroy } from '@ngneat/until-destroy';
@@ -76,14 +76,12 @@ export class SigninComponent implements OnInit {
 		private userService: UserService,
 		private router: Router,
 		private message: NzMessageService,
-		private modal: NzModalService,
-		private changeDetectorRef: ChangeDetectorRef
+		private modal: NzModalService
 	) {}
 
 	ngOnInit() {
 		if (window.localStorage.getItem('is-known') === 'true') {
-			this.switchTab('login');
-			this.onTypeChange('login', false);
+			this.onTabChange(1, false);
 		}
 	}
 
@@ -151,8 +149,7 @@ export class SigninComponent implements OnInit {
 							this.message.error(
 								'Un compte existe déjà avec cette adresse email. Essayez plutôt de vous connecter 😉'
 							);
-							this.switchTab('login');
-							this.onTypeChange('login');
+							this.onTabChange(1);
 							break;
 						default:
 							this.message.error(
@@ -164,12 +161,10 @@ export class SigninComponent implements OnInit {
 		}
 	}
 
-	switchTab(type: Type) {
-		this.tabIndex = type === 'signup' ? 0 : 1;
-		this.changeDetectorRef.detectChanges();
-	}
-	onTypeChange(type: Type, focusInput = true) {
+	onTabChange(tabIndex: number, focusInput = true) {
+		const type = tabIndex === 0 ? 'signup' : 'login';
 		this.type = type;
+		this.tabIndex = tabIndex;
 		const passwordFg = this.loginFormGroup.get('password');
 		const loginPasswordFg = passwordFg?.get('loginPassword');
 		const signupPasswordFg = passwordFg?.get('signupPassword');

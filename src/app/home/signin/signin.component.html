@@ -33,8 +33,12 @@
 				</ng-template>
 			</nz-form-control>
 			<ng-container formGroupName="password">
-				<nz-tabset [nzSelectedIndex]="tabIndex" nzCentered>
-					<nz-tab nzTitle="Je créé mon compte" (nzSelect)="onTypeChange('signup')">
+				<nz-tabset
+					[nzSelectedIndex]="tabIndex"
+					nzCentered
+					(nzSelectedIndexChange)="onTabChange($event)"
+				>
+					<nz-tab nzTitle="Je créé mon compte">
 						<ng-container formGroupName="signupPassword">
 							<nz-form-item>
 								<nz-form-control nzHasFeedback [nzExtra]="extraTpl">
@@ -113,7 +117,7 @@
 							</nz-form-item>
 						</ng-container>
 					</nz-tab>
-					<nz-tab nzTitle="Connexion" (nzSelect)="onTypeChange('login')">
+					<nz-tab nzTitle="Connexion">
 						<nz-form-item>
 							<nz-form-control nzHasFeedback>
 								<input

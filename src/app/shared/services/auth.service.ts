@@ -9,6 +9,7 @@ import {
 	filter,
 	first,
 	map,
+	retry,
 	retryWhen,
 	switchMap,
 	take,
@@ -147,7 +148,7 @@ export class AuthService extends ObservableStore<StoreState> {
 
 							// Before calling the callable function, refresh the token to get the right value for the 'email_verified' property
 							return of(authUser.getIdToken(true)).pipe(
-								switchMap(() => this.createUser()),
+								switchMap(() => this.createUser().pipe(retry(5))),
 								map((createdUser) => {
 									return {
 										authType: AuthType.Created,

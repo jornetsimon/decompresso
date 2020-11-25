@@ -62,6 +62,11 @@ export class WelcomeComponent {
 							nzOkText: 'Compris',
 						});
 						break;
+					case 'email_not_verified':
+						this.message.success(
+							'Votre adresse est maintenant validée. Vous pouvez vous connecter 🙌'
+						);
+						break;
 					default:
 						this.message.error('Authentification échouée');
 				}
