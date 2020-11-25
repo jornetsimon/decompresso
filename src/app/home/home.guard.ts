@@ -20,10 +20,13 @@ export class HomeGuard implements CanActivate {
 		state: RouterStateSnapshot
 	): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
 		return this.authService.waitForAuthChecked$.pipe(
-			switchMap(() => this.authService.isAuthenticated$),
-			switchMap((isAuthenticated) => {
-				if (!isAuthenticated) {
+			switchMap(() => this.authService.authCredential$),
+			switchMap((authUser) => {
+				if (!authUser) {
 					return of(true);
+				}
+				if (!authUser.emailVerified) {
+					return of(this.router.parseUrl('/welcome'));
 				}
 				return this.authService.user$.pipe(
 					map((user) => (user ? this.router.parseUrl(`/room/${user.domain}`) : true))

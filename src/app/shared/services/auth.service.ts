@@ -31,6 +31,7 @@ interface StoreState {
 }
 
 export enum AuthType {
+	PendingVerification = 'pendingVerification',
 	Created = 'created',
 	LoggedIn = 'loggedIn',
 }
@@ -124,36 +125,72 @@ export class AuthService extends ObservableStore<StoreState> {
 	/**
 	 * Load a user or create their account in database
 	 */
-	loginOrCreateAccount(): Observable<{ authType: AuthType; user: User }> {
+	loginOrCreateAccount(): Observable<{
+		authType: AuthType;
+		user?: User;
+		authUser: FirebaseUser;
+	}> {
 		return this.authCredential$.pipe(
 			filter((authUser) => !!authUser),
 			timeoutWith(10000, throwError(new Error('missing_auth_user'))),
-			switchMap((authUser: FirebaseUser) =>
-				this.dataService.user$(authUser.uid).pipe(
+			take(1),
+			switchMap((authUser: FirebaseUser) => {
+				if (!authUser.emailVerified) {
+					return of({ authType: AuthType.PendingVerification, authUser });
+				}
+				return this.dataService.user$(authUser.uid).pipe(
 					take(1),
 					switchMap((user) => {
 						if (!user) {
 							// No user found in database
-							return this.createUser().pipe(
+							// Lets create it
+
+							// Before calling the callable function, refresh the token to get the right value for the 'email_verified' property
+							return of(authUser.getIdToken(true)).pipe(
+								switchMap(() => this.createUser()),
 								map((createdUser) => {
 									return {
 										authType: AuthType.Created,
 										user: createdUser,
+										authUser,
 									};
 								})
 							);
 						}
-						return of({ authType: AuthType.LoggedIn, user });
+						return of({ authType: AuthType.LoggedIn, user, authUser });
+					}),
+					take(1),
+					tap({
+						next: (authResult) => {
+							this.setState({ user: authResult.user }, 'USER_LOGGED_IN');
+							window.localStorage.setItem('is-known', 'true');
+						},
+					})
+				);
+			}),
+			take(1)
+		);
+	}
+
+	sendConfirmationEmail() {
+		return this.authCredential$.pipe(
+			filter((authUser) => !!authUser),
+			take(1),
+			switchMap((authUser: FirebaseUser) =>
+				from(
+					authUser.sendEmailVerification({
+						url: `${window.location.origin}/welcome`,
+						handleCodeInApp: true,
 					})
 				)
-			),
+			)
+		);
+	}
+	isEmailVerified$(): Observable<boolean> {
+		return this.authCredential$.pipe(
+			filter((authUser) => !!authUser),
 			take(1),
-			tap({
-				next: (authResult) => {
-					this.setState({ user: authResult.user }, 'USER_LOGGED_IN');
-					window.localStorage.setItem('is-known', 'true');
-				},
-			})
+			map((authUser: FirebaseUser) => authUser.emailVerified)
 		);
 	}
 

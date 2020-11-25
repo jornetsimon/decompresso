@@ -16,6 +16,9 @@ export const createUser = functions.https.onCall(async (data, context) => {
 		// Throwing an HttpsError so that the client gets the error details.
 		throw new functions.https.HttpsError('failed-precondition', 'not_authenticated');
 	}
+	if (!context.auth.token.email_verified) {
+		throw new functions.https.HttpsError('failed-precondition', 'email_not_verified');
+	}
 	const uid = context.auth.uid;
 	const authUser = await auth.getUser(uid);
 	const email = authUser.email;

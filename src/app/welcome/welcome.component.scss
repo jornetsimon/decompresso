@@ -9,25 +9,44 @@
 
 .result {
 	max-width: 460px;
+	margin-top: 1em;
 
-	#check-icon {
+	.main-icon {
 		color: #52c41a;
 		font-size: 72px;
 		margin-bottom: 24px;
 	}
-	#welcome {
+	.welcome {
 		font-size: 18px;
 	}
-	#domain {
+	.domain {
 		white-space: nowrap;
 	}
-	#whoami {
+	.whoami {
 		text-align: center;
 		font-size: 1.1em;
-		margin-bottom: 2em;
 	}
-	#nickname {
+	.nickname {
 		font-size: 22px;
 		margin: auto 5px;
+	}
+
+	&.pending-verification {
+		.main-icon {
+			color: dodgerblue;
+		}
+		.welcome {
+			font-size: 32px;
+			font-weight: 600;
+		}
+		.notice {
+			font-size: 18px;
+			text-align: center;
+			color: dodgerblue;
+			margin: 1em 0;
+		}
+		.domain {
+			font-weight: bold;
+		}
 	}
 }
