@@ -34,6 +34,7 @@ export class UserDrawerComponent {
 	}
 
 	logout() {
+		this.closeDrawer();
 		this.authService.logout().subscribe({
 			next: () => {
 				this.router.navigateByUrl('/');

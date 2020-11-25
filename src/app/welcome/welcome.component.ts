@@ -3,10 +3,11 @@ import { AuthService, AuthType } from '@services/auth.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { DataService } from '@services/data.service';
-import { filter, share, tap } from 'rxjs/operators';
+import { delay, filter, map, retryWhen, share, switchMap, take, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { ErrorWithCode } from '@utilities/errors';
+import { of } from 'rxjs';
 
 @UntilDestroy()
 @Component({
@@ -18,6 +19,12 @@ import { ErrorWithCode } from '@utilities/errors';
 export class WelcomeComponent {
 	loginOrCreateAccount$ = this.authService.loginOrCreateAccount().pipe(
 		untilDestroyed(this),
+		switchMap((authResult) => {
+			if (!authResult.authUser.emailVerified) {
+				return this.authService.sendConfirmationEmail().pipe(map(() => authResult));
+			}
+			return of(authResult);
+		}),
 		tap({
 			next: (authResult) => {
 				switch (authResult.authType) {
@@ -25,7 +32,9 @@ export class WelcomeComponent {
 						/*this.message.success('Votre compte a bien été créé');*/
 						break;
 					case AuthType.LoggedIn:
-						this.message.success(`Connecté à ${authResult.user.domain}`);
+						if (authResult.user) {
+							this.message.success(`Connecté à ${authResult.user.domain}`);
+						}
 						break;
 				}
 			},
@@ -49,9 +58,14 @@ export class WelcomeComponent {
 						this.modal.error({
 							nzTitle: 'Votre adresse email est personnelle',
 							nzContent:
-								'Merci de vous connecter avec votre adresse professionnelle.',
+								'Merci de vous authentifier avec votre adresse professionnelle.',
 							nzOkText: 'Compris',
 						});
+						break;
+					case 'email_not_verified':
+						this.message.success(
+							'Votre adresse est maintenant validée. Vous pouvez vous connecter 🙌'
+						);
 						break;
 					default:
 						this.message.error('Authentification échouée');
@@ -60,6 +74,18 @@ export class WelcomeComponent {
 				await this.router.navigateByUrl('/');
 			},
 		}),
+		share()
+	);
+
+	isEmailVerified$ = this.authService.isEmailVerified$().pipe(
+		map((isVerified) => {
+			if (!isVerified) {
+				throw new Error('not_verified');
+			} else {
+				return isVerified;
+			}
+		}),
+		retryWhen((errors) => errors.pipe(delay(5000), take(12))),
 		share()
 	);
 
@@ -74,7 +100,17 @@ export class WelcomeComponent {
 		this.loginOrCreateAccount$
 			.pipe(filter((authResult) => authResult.authType === AuthType.LoggedIn))
 			.subscribe((authResult) => {
-				this.router.navigateByUrl(`/room/${authResult.user.domain}`);
+				if (authResult.authUser.emailVerified && authResult.user) {
+					this.router.navigateByUrl(`/room/${authResult.user.domain}`);
+				}
 			});
+	}
+
+	domainFromEmail(email: string) {
+		const split = email.split('@');
+		if (!split.length) {
+			return '';
+		}
+		return split[split.length - 1];
 	}
 }

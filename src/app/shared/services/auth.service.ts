@@ -1,19 +1,20 @@
 import { Injectable } from '@angular/core';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { combineLatest, from, Observable, of } from 'rxjs';
+import { combineLatest, from, Observable, of, throwError } from 'rxjs';
 import { ObservableStore } from '@codewithdan/observable-store';
 import {
-	catchError,
 	delay,
 	distinctUntilChanged,
 	filter,
 	first,
 	map,
+	retry,
 	retryWhen,
 	switchMap,
 	take,
 	tap,
+	timeoutWith,
 } from 'rxjs/operators';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Serialized } from '@utilities/data-transfer-object';
@@ -21,7 +22,6 @@ import { serialize } from '@utilities/serialize';
 import { User } from '@model/user';
 import { DataService } from './data.service';
 import firebase from 'firebase';
-import { ErrorWithCode } from '@utilities/errors';
 
 export type FirebaseUser = firebase.User;
 export type FirebaseUserCredential = firebase.auth.UserCredential;
@@ -32,6 +32,7 @@ interface StoreState {
 }
 
 export enum AuthType {
+	PendingVerification = 'pendingVerification',
 	Created = 'created',
 	LoggedIn = 'loggedIn',
 }
@@ -115,79 +116,82 @@ export class AuthService extends ObservableStore<StoreState> {
 			.subscribe();
 	}
 
-	/**
-	 * Send an email to a user to log in with magic link
-	 */
-	sendSignInLink(
-		email: string
-	): Observable<{
-		status: string;
-		message?: string;
-	}> {
-		const afterLoginRoute = 'welcome';
-		return from(
-			this.auth.sendSignInLinkToEmail(email, {
-				url: `${window.location.href}/${afterLoginRoute}`,
-				handleCodeInApp: true,
-			})
-		).pipe(
-			map(() => {
-				return { status: 'sent' };
-			}),
-			catchError((err: ErrorWithCode) => {
-				return of({ status: 'error', message: err.code });
-			}),
-			tap({
-				next: () => {
-					window.localStorage.setItem('emailForSignIn', email);
-				},
-			})
-		);
+	signupWithEmailPassword(email: string, password: string) {
+		return this.auth.createUserWithEmailAndPassword(email, password);
+	}
+	loginWithEmailPassword(email: string, password: string) {
+		return this.auth.signInWithEmailAndPassword(email, password);
 	}
 
 	/**
-	 * Log user in or create their account in database
+	 * Load a user or create their account in database
 	 */
-	loginOrCreateAccount(): Observable<{ authType: AuthType; user: User }> {
-		return this.isAuthenticated$.pipe(
+	loginOrCreateAccount(): Observable<{
+		authType: AuthType;
+		user?: User;
+		authUser: FirebaseUser;
+	}> {
+		return this.authCredential$.pipe(
+			filter((authUser) => !!authUser),
+			timeoutWith(10000, throwError(new Error('missing_auth_user'))),
 			take(1),
-			switchMap((isAuthenticated) => {
-				if (isAuthenticated) {
-					return this.authCredential$;
-				} else {
-					return this.signInFromEmailLink().pipe(
-						map((credential: FirebaseUserCredential) => credential.user)
-					);
-				}
-			}),
-			switchMap((authUser: FirebaseUser | null) => {
-				if (!authUser) {
-					throw new Error('missing_auth_user');
+			switchMap((authUser: FirebaseUser) => {
+				if (!authUser.emailVerified) {
+					return of({ authType: AuthType.PendingVerification, authUser });
 				}
 				return this.dataService.user$(authUser.uid).pipe(
 					take(1),
 					switchMap((user) => {
 						if (!user) {
 							// No user found in database
-							return this.createUser().pipe(
+							// Lets create it
+
+							// Before calling the callable function, refresh the token to get the right value for the 'email_verified' property
+							return of(authUser.getIdToken(true)).pipe(
+								switchMap(() => this.createUser().pipe(retry(5))),
 								map((createdUser) => {
 									return {
 										authType: AuthType.Created,
 										user: createdUser,
+										authUser,
 									};
 								})
 							);
 						}
-						return of({ authType: AuthType.LoggedIn, user });
+						return of({ authType: AuthType.LoggedIn, user, authUser });
+					}),
+					take(1),
+					tap({
+						next: (authResult) => {
+							this.setState({ user: authResult.user }, 'USER_LOGGED_IN');
+							window.localStorage.setItem('is-known', 'true');
+						},
 					})
 				);
 			}),
+			take(1)
+		);
+	}
+
+	sendConfirmationEmail() {
+		return this.authCredential$.pipe(
+			filter((authUser) => !!authUser),
 			take(1),
-			tap({
-				next: (authResult) => {
-					this.setState({ user: authResult.user }, 'USER_LOGGED_IN');
-				},
-			})
+			switchMap((authUser: FirebaseUser) =>
+				from(
+					authUser.sendEmailVerification({
+						url: `${window.location.origin}/welcome`,
+						handleCodeInApp: true,
+					})
+				)
+			)
+		);
+	}
+	isEmailVerified$(): Observable<boolean> {
+		return this.authCredential$.pipe(
+			filter((authUser) => !!authUser),
+			take(1),
+			map((authUser: FirebaseUser) => authUser.emailVerified)
 		);
 	}
 
@@ -197,40 +201,8 @@ export class AuthService extends ObservableStore<StoreState> {
 	logout() {
 		// Adding isAuthenticated$ in the mix to ensure subsequent uses can have a properly updated state
 		return combineLatest([from(this.auth.signOut()), this.isAuthenticated$]).pipe(
-			filter(([signOut, isAuthenticated]) => !isAuthenticated)
-		);
-	}
-
-	/**
-	 * Authenticates the user with the magic link
-	 */
-	private signInFromEmailLink() {
-		return from(this.auth.isSignInWithEmailLink(window.location.href)).pipe(
-			switchMap((isSignInWithEmailLink) => {
-				// Confirm the link is a sign-in with email link.
-				if (isSignInWithEmailLink) {
-					// Additional state parameters can also be passed via URL.
-					// This can be used to continue the user's intended action before triggering
-					// the sign-in operation.
-					// Get the email if available. This should be available if the user completes
-					// the flow on the same device where they started it.
-					let email = window.localStorage.getItem('emailForSignIn') as string;
-					if (!email) {
-						// User opened the link on a different device. To prevent session fixation
-						// attacks, ask the user to provide the associated email again. For example:
-						const confirmEmail = window.prompt('Merci de confirmer votre email');
-						if (!confirmEmail) {
-							throw new Error(`L'adresse email ne correspond pas au lien cliqué.`);
-						} else {
-							email = confirmEmail;
-						}
-					}
-					// The client SDK will parse the code from the link for you.
-					return from(this.auth.signInWithEmailLink(email, window.location.href));
-				} else {
-					throw new Error('sign_in_with_email_link_failed');
-				}
-			})
+			filter(([signOut, isAuthenticated]) => !isAuthenticated),
+			first()
 		);
 	}
 

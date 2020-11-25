@@ -1,4 +1,7 @@
 export const GLOBAL_CONFIG = {
+	auth: {
+		minPasswordLength: 6,
+	},
 	chat: {
 		groupMessagesWithinMinutes: 5,
 	},

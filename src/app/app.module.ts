@@ -22,7 +22,13 @@ import {
 } from '@angular/fire/functions';
 import { AngularFireAuthModule, USE_EMULATOR as USE_AUTH_EMULATOR } from '@angular/fire/auth';
 import { WelcomeComponent } from './welcome/welcome.component';
-import { CheckCircleFill, CommentOutline } from '@ant-design/icons-angular/icons';
+import {
+	CheckCircleFill,
+	CommentOutline,
+	IdcardFill,
+	MailOutline,
+	SafetyCertificateFill,
+} from '@ant-design/icons-angular/icons';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { LayoutModule } from './layout/layout.module';
 
@@ -37,7 +43,13 @@ registerLocaleData(fr);
 		HttpClientModule,
 		BrowserAnimationsModule,
 		SharedModule,
-		NzIconModule.forRoot([CommentOutline, CheckCircleFill]),
+		NzIconModule.forRoot([
+			CommentOutline,
+			CheckCircleFill,
+			MailOutline,
+			SafetyCertificateFill,
+			IdcardFill,
+		]),
 		AngularFireModule.initializeApp(environment.firebase),
 		AngularFirestoreModule,
 		AngularFireFunctionsModule,

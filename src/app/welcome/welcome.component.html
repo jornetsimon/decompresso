@@ -8,16 +8,16 @@
 	></nz-spin>
 	<ng-template #indicatorTemplate><i nz-icon nzType="loading" class="spinner"></i></ng-template>
 	<ng-container *ngIf="loginOrCreateAccount$ | async as authResult">
-		<ng-container *ngIf="authResult?.authType === 'created'">
+		<ng-container *ngIf="authResult?.authType === 'created' && authResult.user">
 			<div fxLayout="column" fxLayoutAlign="center center" class="result">
-				<i nz-icon nzType="check-circle" nzTheme="fill" id="check-icon"></i>
-				<div id="welcome">Bienvenue dans le salon</div>
-				<h1 nz-typography id="domain">{{ authResult.user.domain }}</h1>
-				<p id="whoami">
+				<i nz-icon nzType="check-circle" nzTheme="fill" class="main-icon"></i>
+				<div class="welcome">Bienvenue dans le salon</div>
+				<h1 nz-typography class="domain">{{ authResult.user.domain }}</h1>
+				<p class="whoami">
 					Retrouvez vos collègues de bureau et chattez avec eux incognito avec votre
 					super&nbsp;pseudo&nbsp;:
 					<span
-						id="nickname"
+						class="nickname"
 						[style.color]="authResult.user.color"
 						[roughNotation]="{
 							type: 'underline',
@@ -34,15 +34,57 @@
 						{{ authResult.user.nickname }}
 					</span>
 				</p>
+				<div class="px3 my3" fxFlexAlign="center center">
+					<nz-alert
+						nzType="success"
+						nzMessage="Tout est prêt pour votre arrivée !"
+						nzShowIcon
+						nzIconType="safety-certificate"
+					></nz-alert>
+				</div>
 				<button
 					nz-button
 					nzType="primary"
 					nzSize="large"
 					[routerLink]="'/room/' + authResult.user.domain"
+					*ngIf="authResult.authUser.emailVerified"
 				>
 					<i nz-icon nzType="comment" nzTheme="outline"></i>
 					Accéder au salon
 				</button>
+			</div>
+		</ng-container>
+		<ng-container *ngIf="authResult?.authType === 'pendingVerification'">
+			<div
+				fxLayout="column"
+				fxLayoutAlign="center center"
+				class="result pending-verification"
+			>
+				<i nz-icon nzType="idcard" nzTheme="fill" class="main-icon"></i>
+				<div class="welcome">Bienvenue sur Mascarade 😊</div>
+				<div class="notice">
+					Avant de pouvoir rejoindre vos collègues dans le chat, nous devons nous assurer
+					que vous faites bien partie de
+					<span class="domain">{{ domainFromEmail(authResult.authUser.email!) }}</span>
+				</div>
+				<div class="px3 my3" fxFlexAlign="center center">
+					<nz-alert
+						*ngIf="!(isEmailVerified$ | async); else verificationDoneTpl"
+						nzType="info"
+						nzMessage="Un email de vérification vous a été envoyé"
+						nzDescription="Afin de certifier votre identité, merci de cliquer dans le lien présent dans ce mail pour accéder au salon."
+						nzShowIcon
+						nzIconType="mail"
+					></nz-alert>
+					<ng-template #verificationDoneTpl>
+						<nz-alert
+							nzType="success"
+							nzMessage="Email vérifié ! 👍"
+							nzDescription="Vous pouvez fermer cette page."
+							nzShowIcon
+						></nz-alert>
+					</ng-template>
+				</div>
 			</div>
 		</ng-container>
 	</ng-container>
