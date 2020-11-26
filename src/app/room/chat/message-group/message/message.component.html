@@ -19,7 +19,7 @@
 		nzPopoverOverlayClassName="reactions-popover"
 		[ngxVibration]="vibrationConfig.soft"
 	>
-		<div [textContent]="message.content"></div>
+		<div [innerHTML]="renderedContent(message.content)"></div>
 		<ng-template #reactionsPopoverTpl>
 			<div class="reactions">
 				<div

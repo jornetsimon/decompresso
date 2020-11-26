@@ -1,16 +1,30 @@
 <form id="message-form" [formGroup]="newMessageForm" #form="ngForm" (ngSubmit)="sendMessage()">
 	<div fxLayout="row" fxLayoutAlign="center flex-end">
-		<textarea
-			#newMessageInput
-			nz-input
-			nzSize="large"
-			type="text"
-			placeholder="Message"
-			formControlName="message"
-			nzAutosize
-			id="message-input"
-			(keydown.enter)="onEnter($event)"
-		></textarea>
+		<nz-mention
+			class="width-100"
+			[nzSuggestions]="members"
+			[nzValueWith]="mentionValueMappingFn"
+			nzNotFoundContent="Aucun membre trouvé 🧐"
+			#mention="nzMention"
+			(nzOnSelect)="mentionSelectedSubject.next($event)"
+			nzPlacement="top"
+		>
+			<textarea
+				#newMessageInput
+				nz-input
+				nzSize="large"
+				type="text"
+				placeholder="Message"
+				formControlName="message"
+				nzAutosize
+				id="message-input"
+				(keydown.enter)="enterOnMessageSubject.next($event)"
+				nzMentionTrigger
+			></textarea>
+			<ng-container *nzMentionSuggestion="let member">
+				<span [style.color]="member.color">{{ member.nickname }}</span>
+			</ng-container>
+		</nz-mention>
 		<button
 			type="submit"
 			nz-button

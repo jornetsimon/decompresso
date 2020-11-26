@@ -73,4 +73,11 @@ export class MessageComponent {
 	onDeletePopoverToggle(shown: boolean) {
 		this.highlightForDeletion = shown;
 	}
+
+	renderedContent(content: string) {
+		return content.replace(
+			this.chatService.mentionRegex,
+			(match) => `<span class="mention">${match.trim()}</span>`
+		);
+	}
 }

@@ -93,6 +93,9 @@ export class ChatService {
 		map((members) => members.length >= 2),
 		shareReplay()
 	);
+
+	mentionRegex = ChatService.getRegExp('@');
+
 	constructor(
 		private roomService: RoomService,
 		private userService: UserService,
@@ -150,6 +153,16 @@ export class ChatService {
 			};
 			return [...groupedMessages, newGroup];
 		}
+	}
+
+	static getRegExp(prefix: string | readonly string[]): RegExp {
+		const prefixArray = Array.isArray(prefix) ? prefix : [prefix];
+		let prefixToken = prefixArray.join('').replace(/(\$|\^)/g, '\\$1');
+
+		if (prefixArray.length > 1) {
+			prefixToken = `[${prefixToken}]`;
+		}
+		return new RegExp(`(\\s|^)(${prefixToken})[^\\s]*`, 'g');
 	}
 
 	sendMessage(content: string) {
