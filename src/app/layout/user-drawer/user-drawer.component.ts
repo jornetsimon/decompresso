@@ -79,7 +79,7 @@ export class UserDrawerComponent {
 							error: (err) => {
 								console.error(err);
 								this.message.error(
-									'Une erreur est survenue lors de la suppression de votre compte.<br/>Merci de contacter notre support : <a href="mailto:support@mascarade.chat">support@mascarade.chat</a>.',
+									'Une erreur est survenue lors de la suppression de votre compte.<br/>Merci de contacter notre support : <a href="mailto:support@decompresso.fr">support@decompresso.fr</a>.',
 									{
 										nzDuration: 20000,
 									}
