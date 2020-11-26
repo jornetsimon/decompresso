@@ -24,7 +24,6 @@ import {
 import { scrollParentToChild } from '@utilities/scroll-parent-to-child';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { MessageFeedEntry } from './model';
-import { LayoutService } from '../../layout/layout.service';
 
 @UntilDestroy()
 @Component({
@@ -63,11 +62,7 @@ export class ChatComponent implements AfterViewInit {
 	trackByFeedEntryFn: TrackByFunction<MessageFeedEntry> = (index, item) =>
 		item.timestamp.seconds + item.author;
 
-	constructor(
-		private chatService: ChatService,
-		private roomService: RoomService,
-		private layoutService: LayoutService
-	) {}
+	constructor(private chatService: ChatService, private roomService: RoomService) {}
 
 	ngAfterViewInit() {
 		/**
@@ -131,17 +126,6 @@ export class ChatComponent implements AfterViewInit {
 			.subscribe(() => {
 				// scroll to the bottom
 				this.scrollToBottomOfChat(this.chatService.feedLoadCount > 1 ? 'smooth' : 'auto');
-			});
-
-		// When the virtual keyboard is toggle, scroll to the top or bottom of page
-		this.layoutService.virtualKeyboardToggleDetected$
-			.pipe(untilDestroyed(this))
-			.subscribe((state) => {
-				if (state === 'opened') {
-					window.scrollTo(0, document.body.scrollHeight);
-				} else {
-					window.scrollTo(0, 0);
-				}
 			});
 	}
 

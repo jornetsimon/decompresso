@@ -21,8 +21,13 @@ export class LayoutService {
 	inputFocusSubject = new BehaviorSubject<boolean>(false);
 	chatLayout$ = this.router.events.pipe(
 		filter((event) => event instanceof NavigationEnd),
-		map((event: NavigationStart) => !!event.url.match(/^\/room\/.+$/)),
-		startWith(!!this.router.url.match(/^\/room\/.+$/)),
+		map((event: NavigationStart) => {
+			if (this.deviceService.isDesktop()) {
+				return false;
+			}
+			return !!event.url.match(/^\/room\/.+$/);
+		}),
+		startWith(this.deviceService.isDesktop() ? false : !!this.router.url.match(/^\/room\/.+$/)),
 		distinctUntilChanged(),
 		shareReplay()
 	);
