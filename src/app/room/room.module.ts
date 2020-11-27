@@ -9,6 +9,7 @@ import {
 	CloseCircleTwoTone,
 	QuestionCircleFill,
 	SendOutline,
+	SmileOutline,
 	SmileTwoTone,
 	TeamOutline,
 } from '@ant-design/icons-angular/icons';
@@ -36,6 +37,7 @@ const roomRoutes: Routes = [
 			SendOutline,
 			TeamOutline,
 			CloseCircleTwoTone,
+			SmileOutline,
 		]),
 		ChatModule,
 	],

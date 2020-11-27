@@ -18,11 +18,8 @@ import { delay, filter, map, startWith, tap, withLatestFrom } from 'rxjs/operato
 import { NzMentionComponent } from 'ng-zorro-antd/mention';
 import { User } from '@model/user';
 import { UserService } from '@services/user.service';
+import { EmojiData } from '@ctrl/ngx-emoji-mart/ngx-emoji';
 
-interface MentionItem {
-	label: string;
-	value: string;
-}
 @UntilDestroy()
 @Component({
 	selector: 'mas-message-form',
@@ -50,6 +47,26 @@ export class MessageFormComponent implements AfterViewInit {
 			map(() => true)
 		)
 	).pipe(startWith(true));
+
+	emojiMartI18n = {
+		search: 'Recherche',
+		emojilist: 'Liste des emojis',
+		notfound: 'Aucun emoji trouvé',
+		clear: 'Effacer',
+		categories: {
+			search: 'Résultats de recherche',
+			recent: 'Récents',
+			people: 'Émoticônes et personnes',
+			nature: 'Animaux et nature',
+			foods: 'Alimentation et boissons',
+			activity: 'Activités',
+			places: 'Voyages et lieux',
+			objects: 'Objets',
+			symbols: 'Symboles',
+			flags: 'Drapeaux',
+			custom: 'Personnalisé',
+		},
+	};
 
 	mentionValueMappingFn = <T extends User>(value: T) => value.nickname;
 
@@ -112,10 +129,8 @@ export class MessageFormComponent implements AfterViewInit {
 		});
 	}
 
-	onEnter(event: Event) {
-		if (this.deviceService.isMobile() || this.deviceService.isTablet()) {
-			return;
-		}
-		this.sendMessage();
+	appendEmoji(emoji: EmojiData) {
+		const control = this.newMessageForm.get('message');
+		control?.patchValue((control?.value || '') + emoji.native);
 	}
 }

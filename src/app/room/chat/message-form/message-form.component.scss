@@ -7,6 +7,21 @@
 ::ng-deep #message-input.ant-input {
 	min-height: 40px;
 }
-#send-button {
+#send-button,
+#emoji-picker-button {
 	margin-left: 0.5em;
+}
+
+#emoji-picker-button {
+	color: #949494;
+	padding-left: 10px;
+	padding-right: 10px;
+
+	&:hover {
+		color: #40a9ff;
+	}
+}
+
+::ng-deep .emoji-picker-popover .ant-popover-inner-content {
+	padding: 5px 5px 0 5px;
 }

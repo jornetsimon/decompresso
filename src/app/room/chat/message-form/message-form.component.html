@@ -26,6 +26,20 @@
 			</ng-container>
 		</nz-mention>
 		<button
+			fxHide.lt-md
+			nz-button
+			type="button"
+			nzSize="large"
+			nz-popover
+			[nzPopoverContent]="emojiPickerPopoverTpl"
+			nzPopoverTrigger="click"
+			nzPopoverOverlayClassName="emoji-picker-popover"
+			id="emoji-picker-button"
+			nzGhost
+		>
+			<i nz-icon nzType="smile" nzTheme="outline"></i>
+		</button>
+		<button
 			type="submit"
 			nz-button
 			nzSize="large"
@@ -39,3 +53,15 @@
 		</button>
 	</div>
 </form>
+
+<ng-template #emojiPickerPopoverTpl>
+	<emoji-mart
+		[darkMode]="false"
+		[i18n]="emojiMartI18n"
+		[showPreview]="false"
+		[enableSearch]="false"
+		[isNative]="true"
+		set=""
+		(emojiClick)="appendEmoji($event.emoji)"
+	></emoji-mart>
+</ng-template>
