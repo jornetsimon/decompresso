@@ -24,6 +24,7 @@ import {
 import { scrollParentToChild } from '@utilities/scroll-parent-to-child';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { MessageFeedEntry } from './model';
+import { NotificationsService } from '@services/notifications.service';
 
 @UntilDestroy()
 @Component({
@@ -62,7 +63,15 @@ export class ChatComponent implements AfterViewInit {
 	trackByFeedEntryFn: TrackByFunction<MessageFeedEntry> = (index, item) =>
 		item.timestamp.seconds + item.author;
 
-	constructor(private chatService: ChatService, private roomService: RoomService) {}
+	constructor(
+		private chatService: ChatService,
+		private roomService: RoomService,
+		private notificationsService: NotificationsService
+	) {
+		this.messageFeed$.subscribe(() => {
+			this.notificationsService.notify();
+		});
+	}
 
 	ngAfterViewInit() {
 		/**
