@@ -55,4 +55,10 @@ export class UserService extends ObservableStore<StoreState> {
 			)
 			.subscribe();
 	}
+
+	updatePersonalData(data: Partial<UserPersonalData>) {
+		return this.userUid$.pipe(
+			switchMap((uid) => this.dataService.userPersonalDataDoc(uid).update(data))
+		);
+	}
 }

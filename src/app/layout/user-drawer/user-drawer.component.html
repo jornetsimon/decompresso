@@ -20,6 +20,12 @@
 						{{ user.createdAt | timestampToDate: 'dd/MM/yyyy' }}
 					</div>
 				</section>
+				<section>
+					<button nz-button nzBlock (click)="navigateTo('/settings')" routerLink="">
+						<i nz-icon nzType="setting" nzTheme="outline"></i>
+						Mes préférences
+					</button>
+				</section>
 			</div>
 			<div fxFlex="none">
 				<div fxLayout="column" fxLayoutAlign="center center">

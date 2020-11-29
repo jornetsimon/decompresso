@@ -10,6 +10,7 @@ import {
 	MenuOutline,
 	MessageOutline,
 	QuestionCircleOutline,
+	SettingOutline,
 	UserOutline,
 	WarningOutline,
 } from '@ant-design/icons-angular/icons';
@@ -27,6 +28,7 @@ import {
 			QuestionCircleOutline,
 			MessageOutline,
 			HomeOutline,
+			SettingOutline,
 		]),
 	],
 })

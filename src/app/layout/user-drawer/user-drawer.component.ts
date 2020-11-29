@@ -91,4 +91,9 @@ export class UserDrawerComponent {
 			},
 		});
 	}
+
+	navigateTo(route: string) {
+		this.closeDrawer();
+		this.router.navigateByUrl(route);
+	}
 }
