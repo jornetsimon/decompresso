@@ -1,7 +1,15 @@
 import { Injectable } from '@angular/core';
 import { ObservableStore } from '@codewithdan/observable-store';
 import { Room } from '@model/room';
-import { distinctUntilChanged, map, shareReplay, switchMap } from 'rxjs/operators';
+import {
+	distinctUntilChanged,
+	filter,
+	first,
+	map,
+	shareReplay,
+	switchMap,
+	takeUntil,
+} from 'rxjs/operators';
 import { UserService } from '@services/user.service';
 import { DataService, expectData } from '@services/data.service';
 import { Observable } from 'rxjs';
@@ -11,6 +19,7 @@ import { Message } from '@model/message';
 import { timestampToDate } from '@utilities/timestamp';
 import { isBefore } from 'date-fns/esm';
 import { Reaction } from '@model/reaction';
+import { ActivityService } from '@services/activity.service';
 
 const hash = require('object-hash');
 
@@ -25,9 +34,13 @@ export class RoomService extends ObservableStore<StoreState> {
 	 * Long-lived room data
 	 */
 	room$: Observable<Room> = this.userService.user$.pipe(
-		switchMap((user) => this.dataService.room$(user.domain).pipe(expectData)),
-		shareReplay()
+		switchMap((user) => this.dataService.room$(user.domain)),
+		expectData,
+		shareReplay(1)
 	);
+	/**
+	 * Long lives members data
+	 */
 	members$: Observable<ReadonlyArray<User & { uid: string }>> = this.userService.user$.pipe(
 		switchMap((user) =>
 			this.dataService.roomMembers$(user.domain).pipe(
@@ -35,11 +48,25 @@ export class RoomService extends ObservableStore<StoreState> {
 				map((members) => members.sort((a, b) => RoomService.memberSortFn(a, b, user)))
 			)
 		),
-		shareReplay()
+		shareReplay(1)
 	);
-	chat$: Observable<Chat> = this.room$.pipe(
-		switchMap((room) => this.dataService.chat$(room.domain)),
-		expectData
+	/**
+	 * Stream of chat data
+	 * Disconnect when the user is inactive and reconnect when they come back
+	 */
+	chat$: Observable<Chat> = this.activityService.isActive$.pipe(
+		distinctUntilChanged(),
+		filter((isActive) => isActive),
+		switchMap(() => this.room$.pipe(first())),
+		switchMap((room) =>
+			this.dataService
+				.chat$(room.domain)
+				.pipe(
+					expectData,
+					takeUntil(this.activityService.isActive$.pipe(filter((isActive) => !isActive)))
+				)
+		),
+		shareReplay(1)
 	);
 	messages$: Observable<ReadonlyArray<Message>> = this.chat$.pipe(
 		map((chat) => chat.messages),
@@ -53,7 +80,11 @@ export class RoomService extends ObservableStore<StoreState> {
 		})
 	);
 
-	constructor(private userService: UserService, private dataService: DataService) {
+	constructor(
+		private userService: UserService,
+		private dataService: DataService,
+		private activityService: ActivityService
+	) {
 		super({});
 	}
 

@@ -1,6 +1,7 @@
 import {
 	AfterViewInit,
 	ChangeDetectionStrategy,
+	ChangeDetectorRef,
 	Component,
 	ElementRef,
 	EventEmitter,
@@ -19,6 +20,7 @@ import { NzMentionComponent } from 'ng-zorro-antd/mention';
 import { User } from '@model/user';
 import { UserService } from '@services/user.service';
 import { EmojiData } from '@ctrl/ngx-emoji-mart/ngx-emoji';
+import { ActivityService } from '@services/activity.service';
 
 @UntilDestroy()
 @Component({
@@ -68,13 +70,16 @@ export class MessageFormComponent implements AfterViewInit {
 		},
 	};
 
+	isInactive$ = this.activityService.isActive$.pipe(map((isActive) => !isActive));
 	mentionValueMappingFn = <T extends User>(value: T) => value.nickname;
 
 	constructor(
 		private chatService: ChatService,
 		private roomService: RoomService,
 		private userService: UserService,
-		private deviceService: DeviceDetectorService
+		private deviceService: DeviceDetectorService,
+		private activityService: ActivityService,
+		private changeDetectorRef: ChangeDetectorRef
 	) {
 		this.roomHasMultipleMembers$
 			.pipe(untilDestroyed(this))
@@ -116,6 +121,10 @@ export class MessageFormComponent implements AfterViewInit {
 			.subscribe(() => {
 				this.sendMessage();
 			});
+
+		this.isInactive$.subscribe(() => {
+			this.changeDetectorRef.detectChanges();
+		});
 	}
 
 	sendMessage() {

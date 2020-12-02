@@ -4,6 +4,10 @@ export const GLOBAL_CONFIG = {
 	},
 	chat: {
 		groupMessagesWithinMinutes: 5,
+		timeout: {
+			checkInterval: 60000,
+			intervalCount: 5,
+		},
 	},
 	vibration: {
 		default: [20],

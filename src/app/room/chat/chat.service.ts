@@ -91,7 +91,7 @@ export class ChatService {
 	 */
 	roomHasMultipleMembers$ = this.roomService.members$.pipe(
 		map((members) => members.length >= 2),
-		shareReplay()
+		shareReplay(1)
 	);
 
 	mentionRegex = ChatService.getRegExp('@');

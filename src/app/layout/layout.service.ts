@@ -29,7 +29,7 @@ export class LayoutService {
 		}),
 		startWith(this.deviceService.isDesktop() ? false : !!this.router.url.match(/^\/room\/.+$/)),
 		distinctUntilChanged(),
-		shareReplay()
+		shareReplay(1)
 	);
 
 	/**
