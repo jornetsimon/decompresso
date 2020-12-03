@@ -1,3 +1,15 @@
+<nz-alert
+	nzBanner
+	[nzMessage]="offlineTpl"
+	[nzShowIcon]="false"
+	class="offline-banner"
+	*ngIf="isOffline$ | async"
+></nz-alert>
+<ng-template #offlineTpl>
+	<i nz-icon nzType="api" nzTheme="twotone" nzTwotoneColor="#faad14"></i>
+	Vous êtes actuellement déconnecté
+</ng-template>
+
 <ng-container *ngIf="authService.isAuthenticated$ | async">
 	<button
 		id="user-drawer-button"

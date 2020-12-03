@@ -19,6 +19,23 @@
 	filter: invert(54%) sepia(84%) saturate(511%) hue-rotate(358deg) brightness(107%) contrast(107%);
 }
 
+.offline-banner {
+	animation: fadeInFromTop 500ms 0ms forwards;
+	::ng-deep .ant-alert-message {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		font-size: 14px;
+		color: #faad14;
+		font-weight: 500;
+
+		i {
+			font-size: 22px;
+			margin-right: 0.25em;
+		}
+	}
+}
+
 #links,
 #footer {
 	width: 100%;

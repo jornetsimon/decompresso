@@ -1,4 +1,5 @@
 import { Timestamp } from '@utilities/timestamp';
+import { ConnectionState } from '@services/presence.service';
 
 export interface User {
 	nickname: string;
@@ -6,4 +7,6 @@ export interface User {
 	createdAt: Timestamp;
 	color: string;
 	deleted?: boolean;
+	state: ConnectionState;
+	last_state_update: Timestamp;
 }

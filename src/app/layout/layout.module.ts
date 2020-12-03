@@ -5,6 +5,7 @@ import { SharedModule } from '../shared/shared.module';
 import { UserDrawerComponent } from './user-drawer/user-drawer.component';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import {
+	ApiTwoTone,
 	HomeOutline,
 	LogoutOutline,
 	MenuOutline,
@@ -27,6 +28,7 @@ import {
 			QuestionCircleOutline,
 			MessageOutline,
 			HomeOutline,
+			ApiTwoTone,
 		]),
 	],
 })
