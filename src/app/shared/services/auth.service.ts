@@ -22,6 +22,7 @@ import { serialize } from '@utilities/serialize';
 import { User } from '@model/user';
 import { DataService } from './data.service';
 import firebase from 'firebase';
+import { PresenceService } from '@services/presence.service';
 
 export type FirebaseUser = firebase.User;
 export type FirebaseUserCredential = firebase.auth.UserCredential;
@@ -77,7 +78,8 @@ export class AuthService extends ObservableStore<StoreState> {
 	constructor(
 		private fns: AngularFireFunctions,
 		private auth: AngularFireAuth,
-		private dataService: DataService
+		private dataService: DataService,
+		private presenceService: PresenceService
 	) {
 		super({});
 
@@ -104,7 +106,12 @@ export class AuthService extends ObservableStore<StoreState> {
 						first(),
 						// The request will be retried every 2 seconds for 5 times
 						retryWhen((errors) => errors.pipe(delay(2000), take(5))),
-						map((user) => (user ? user : null))
+						map((user) => (user ? user : null)),
+						tap((user) => {
+							if (user) {
+								this.presenceService.trackPresence();
+							}
+						})
 					);
 				}),
 				// Update user state
@@ -200,7 +207,8 @@ export class AuthService extends ObservableStore<StoreState> {
 	 */
 	logout() {
 		// Adding isAuthenticated$ in the mix to ensure subsequent uses can have a properly updated state
-		return combineLatest([from(this.auth.signOut()), this.isAuthenticated$]).pipe(
+		return from(this.presenceService.setConnectionState('offline')).pipe(
+			switchMap(() => combineLatest([from(this.auth.signOut()), this.isAuthenticated$])),
 			filter(([signOut, isAuthenticated]) => !isAuthenticated),
 			first()
 		);
