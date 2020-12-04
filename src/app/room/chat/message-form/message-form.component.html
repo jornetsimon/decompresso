@@ -2,9 +2,10 @@
 	<div fxLayout="row" fxLayoutAlign="center flex-end">
 		<div fxFlex="grow">
 			<div class="inactive-bar" *ngIf="isInactive$ | async">
-				Vous êtes actuellement inactif.
-				<br />
-				Les nouveaux messages ne seront pas affichés.
+				<div style="font-weight: 500; font-size: small">
+					Vous êtes actuellement inactif.
+				</div>
+				<div>Les nouveaux messages ne seront pas affichés.</div>
 			</div>
 			<nz-mention
 				[nzSuggestions]="members"

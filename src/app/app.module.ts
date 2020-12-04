@@ -20,6 +20,10 @@ import {
 	AngularFireFunctionsModule,
 	USE_EMULATOR as USE_FUNCTIONS_EMULATOR,
 } from '@angular/fire/functions';
+import {
+	AngularFireDatabaseModule,
+	USE_EMULATOR as USE_DATABASE_EMULATOR,
+} from '@angular/fire/database';
 import { AngularFireAuthModule, USE_EMULATOR as USE_AUTH_EMULATOR } from '@angular/fire/auth';
 import { WelcomeComponent } from './welcome/welcome.component';
 import {
@@ -51,7 +55,8 @@ registerLocaleData(fr);
 			IdcardFill,
 		]),
 		AngularFireModule.initializeApp(environment.firebase),
-		AngularFirestoreModule,
+		AngularFirestoreModule.enablePersistence(),
+		AngularFireDatabaseModule,
 		AngularFireFunctionsModule,
 		AngularFireAuthModule,
 		ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
@@ -63,6 +68,10 @@ registerLocaleData(fr);
 		{
 			provide: USE_FIRESTORE_EMULATOR,
 			useValue: environment.useEmulators ? ['localhost', 8888] : undefined,
+		},
+		{
+			provide: USE_DATABASE_EMULATOR,
+			useValue: environment.useEmulators ? ['localhost', 9000] : undefined,
 		},
 		{
 			provide: USE_FUNCTIONS_EMULATOR,

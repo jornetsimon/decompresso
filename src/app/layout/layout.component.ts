@@ -5,6 +5,7 @@ import { NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { filter, map, startWith } from 'rxjs/operators';
 import { RoomService } from '@services/room.service';
+import { UserService } from '@services/user.service';
 
 @Component({
 	selector: 'mas-layout',
@@ -40,11 +41,13 @@ export class LayoutComponent {
 			return Math.round(estimate);
 		})
 	);
+	isOffline$ = this.userService.connectionStatus$.pipe(map((status) => status === 'offline'));
 	constructor(
 		public authService: AuthService,
 		public layoutService: LayoutService,
 		public router: Router,
-		public roomService: RoomService
+		public roomService: RoomService,
+		private userService: UserService
 	) {
 		this.enableCompactMode$ = this.router.events.pipe(
 			filter((event) => event instanceof NavigationEnd),

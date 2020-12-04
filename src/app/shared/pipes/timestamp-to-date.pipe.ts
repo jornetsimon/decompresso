@@ -1,6 +1,8 @@
 import { Inject, LOCALE_ID, Pipe, PipeTransform } from '@angular/core';
 import { Timestamp } from '@utilities/timestamp';
 import { DatePipe } from '@angular/common';
+import { formatRelative, fromUnixTime } from 'date-fns/esm';
+import { fr } from 'date-fns/locale';
 
 @Pipe({
 	name: 'timestampToDate',
@@ -14,6 +16,15 @@ export class TimestampToDatePipe implements PipeTransform {
 		timezone?: string,
 		locale?: string
 	) {
+		if (format === 'relative') {
+			if (!value?.seconds) {
+				return null;
+			}
+			return formatRelative(fromUnixTime(value?.seconds), new Date(), {
+				locale: fr,
+				weekStartsOn: 1,
+			});
+		}
 		const datePipe = new DatePipe(this._locale);
 		return datePipe.transform(
 			value?.seconds ? value?.seconds * 1000 : null,
