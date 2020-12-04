@@ -1,9 +1,16 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import {
+	AfterViewInit,
+	ChangeDetectionStrategy,
+	Component,
+	ElementRef,
+	Input,
+	ViewChild,
+} from '@angular/core';
 import { ChatService } from '../../chat.service';
 import { Message } from '@model/message';
 import { Reaction, ReactionType } from '@model/reaction';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { fromEvent, merge, Observable } from 'rxjs';
+import { distinctUntilChanged, map } from 'rxjs/operators';
 import { UserService } from '@services/user.service';
 import { MappedMessage } from '../../model';
 import { GLOBAL_CONFIG } from '../../../../global-config';
@@ -14,15 +21,26 @@ import { GLOBAL_CONFIG } from '../../../../global-config';
 	styleUrls: ['./message.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MessageComponent {
+export class MessageComponent implements AfterViewInit {
 	@Input() message: MappedMessage;
 	@Input() isFresh: boolean;
 	@Input() isMine: boolean;
 	@Input() color: string | undefined;
 
+	@ViewChild('bubble') bubbleRef: ElementRef<HTMLDivElement>;
+
 	vibrationConfig = GLOBAL_CONFIG.vibration;
 	highlightForDeletion: boolean;
+	showReactionsPopover$: Observable<boolean>;
 	constructor(private chatService: ChatService, private userService: UserService) {}
+
+	ngAfterViewInit() {
+		this.showReactionsPopover$ = merge(
+			fromEvent(this.bubbleRef.nativeElement, 'mouseenter').pipe(map(() => true)),
+			fromEvent(this.bubbleRef.nativeElement, 'mouseleave').pipe(map(() => false)),
+			fromEvent(document.getElementById('chat-content')!, 'scroll').pipe(map(() => false))
+		).pipe(distinctUntilChanged());
+	}
 
 	toggleReaction(message: Message, reaction: ReactionType) {
 		this.chatService.toggleReaction(message, reaction);

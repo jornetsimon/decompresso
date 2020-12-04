@@ -5,6 +5,7 @@
 >
 	<div
 		class="bubble"
+		#bubble
 		[class.animate]="isFresh"
 		[style.background-color]="isMine ? undefined : color"
 		[class.solo-emoji]="containsOnlyEmojis(message.content)"
@@ -14,7 +15,8 @@
 				? undefined
 				: reactionsPopoverTpl
 		"
-		nzPopoverTrigger="hover"
+		[nzPopoverTrigger]="null"
+		[nzPopoverVisible]="showReactionsPopover$ | async"
 		[nzPopoverPlacement]="isMine ? 'left' : 'right'"
 		nzPopoverOverlayClassName="reactions-popover"
 		[ngxVibration]="vibrationConfig.soft"
