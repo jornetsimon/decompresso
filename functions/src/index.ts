@@ -1,4 +1,5 @@
 import { createUser, deleteUser } from './auth';
+import { onUserStatusChanged } from './presence';
 
 export enum Endpoints {
 	Users = '/users',
@@ -11,3 +12,4 @@ export enum Endpoints {
 
 exports.createUser = createUser;
 exports.deleteUser = deleteUser;
+exports.userConnectionStatusSync = onUserStatusChanged;
