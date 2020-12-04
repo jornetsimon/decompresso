@@ -1,15 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FirebaseUser } from '@services/auth.service';
-import {
-	debounceTime,
-	distinctUntilChanged,
-	filter,
-	first,
-	map,
-	switchMap,
-	tap,
-} from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { debounce, distinctUntilChanged, filter, first, map, switchMap, tap } from 'rxjs/operators';
+import { interval, Observable } from 'rxjs';
 import { User } from '@model/user';
 import { UserPersonalData } from '@model/user-personal-data';
 import { DataService } from '@services/data.service';
@@ -53,8 +45,8 @@ export class UserService extends ObservableStore<StoreState> {
 	);
 	connectionStatus$ = this.globalStateChanged.pipe(
 		distinctUntilChanged((a, b) => a.connection_state === b.connection_state),
-		debounceTime(2000),
-		map((state) => state.connection_state)
+		map((state) => state.connection_state),
+		debounce((state) => (state === 'offline' ? interval(10000) : interval(1000)))
 	);
 
 	constructor(private dataService: DataService) {
