@@ -26,7 +26,7 @@
 					<nz-badge
 						[nzStatus]="member.state === 'online' ? 'success' : 'error'"
 						[nz-tooltip]="connectionStatusTooltipTpl"
-						[nzTooltipColor]="member.state === 'online' ? '#52c41a' : null"
+						[nzTooltipColor]="member.state === 'online' ? '#52c41a' : undefined"
 					></nz-badge>
 					<ng-template #connectionStatusTooltipTpl>
 						<ng-container *ngIf="member.state === 'online'; else lastSeenTpl">

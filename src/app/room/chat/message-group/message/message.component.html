@@ -16,7 +16,7 @@
 				: reactionsPopoverTpl
 		"
 		[nzPopoverTrigger]="null"
-		[nzPopoverVisible]="showReactionsPopover$ | async"
+		[nzPopoverVisible]="(showReactionsPopover$ | async) || false"
 		[nzPopoverPlacement]="isMine ? 'left' : 'right'"
 		nzPopoverOverlayClassName="reactions-popover"
 		[ngxVibration]="vibrationConfig.soft"
