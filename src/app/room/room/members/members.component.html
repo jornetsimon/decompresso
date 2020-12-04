@@ -8,7 +8,12 @@
 		</nz-list-header>
 		<nz-list-item *ngFor="let member of members; trackBy: trackByMemberFn">
 			<div>
-				<ng-container *ngIf="member.nickname === (userService.user$ | async)?.nickname">
+				<ng-container
+					*ngIf="
+						member.nickname === (userService.user$ | async)?.nickname;
+						else connectionStatusTpl
+					"
+				>
 					<i
 						nz-icon
 						nzType="smile"
@@ -17,6 +22,22 @@
 						nzTooltipColor="blue"
 					></i>
 				</ng-container>
+				<ng-template #connectionStatusTpl>
+					<nz-badge
+						[nzStatus]="member.state === 'online' ? 'success' : 'error'"
+						[nz-tooltip]="connectionStatusTooltipTpl"
+						[nzTooltipColor]="member.state === 'online' ? '#52c41a' : null"
+					></nz-badge>
+					<ng-template #connectionStatusTooltipTpl>
+						<ng-container *ngIf="member.state === 'online'; else lastSeenTpl">
+							Connecté
+						</ng-container>
+						<ng-template #lastSeenTpl>
+							Déconnecté
+							{{ member.last_state_update | timestampToDate: 'relative' }}
+						</ng-template>
+					</ng-template>
+				</ng-template>
 			</div>
 			<span
 				[style.color]="member.color"
