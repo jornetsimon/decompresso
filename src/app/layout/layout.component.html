@@ -1,15 +1,3 @@
-<nz-alert
-	nzBanner
-	[nzMessage]="offlineTpl"
-	[nzShowIcon]="false"
-	class="offline-banner"
-	*ngIf="isOffline$ | async"
-></nz-alert>
-<ng-template #offlineTpl>
-	<i nz-icon nzType="api" nzTheme="twotone" nzTwotoneColor="#faad14"></i>
-	Vous êtes actuellement déconnecté
-</ng-template>
-
 <ng-container *ngIf="authService.isAuthenticated$ | async">
 	<button
 		id="user-drawer-button"
@@ -27,11 +15,22 @@
 	></mas-user-drawer>
 </ng-container>
 <div
-	style="min-height: 100%"
+	style="min-height: 100%; position: relative"
 	fxLayout="column"
 	fxLayoutAlign="start center"
 	[class.compact]="enableCompactMode$ | async"
 >
+	<nz-alert
+		nzBanner
+		[nzMessage]="offlineTpl"
+		[nzShowIcon]="false"
+		class="offline-banner"
+		*ngIf="isOffline$ | async"
+	></nz-alert>
+	<ng-template #offlineTpl>
+		<i nz-icon nzType="api" nzTheme="twotone" nzTwotoneColor="#faad14"></i>
+		Vous êtes actuellement déconnecté
+	</ng-template>
 	<a
 		id="header"
 		[class.fixed-header]="layoutService.chatLayout$ | async"

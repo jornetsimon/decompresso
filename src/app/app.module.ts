@@ -55,7 +55,7 @@ registerLocaleData(fr);
 			IdcardFill,
 		]),
 		AngularFireModule.initializeApp(environment.firebase),
-		AngularFirestoreModule,
+		AngularFirestoreModule.enablePersistence(),
 		AngularFireDatabaseModule,
 		AngularFireFunctionsModule,
 		AngularFireAuthModule,
