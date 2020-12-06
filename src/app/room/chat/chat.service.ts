@@ -1,21 +1,45 @@
 import { Injectable } from '@angular/core';
 import { RoomService } from '@services/room.service';
 import { UserService } from '@services/user.service';
-import { first, map, share, shareReplay, switchMap, tap } from 'rxjs/operators';
+import {
+	debounceTime,
+	distinctUntilChanged,
+	filter,
+	first,
+	map,
+	scan,
+	share,
+	shareReplay,
+	startWith,
+	switchMap,
+	tap,
+	withLatestFrom,
+} from 'rxjs/operators';
 import { DataService } from '@services/data.service';
-import { combineLatest, Observable, throwError } from 'rxjs';
+import { combineLatest, Observable, Subject, throwError } from 'rxjs';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Message } from '@model/message';
 import firebase from 'firebase/app';
 import { Reaction, ReactionType } from '@model/reaction';
-import { MappedMessage, MessageFeed, MessageGroup, MessageReactions } from './model';
-import { differenceInMinutes } from 'date-fns/esm';
+import {
+	LastReadMessageFeedEntry,
+	MappedMessage,
+	MessageFeed,
+	MessageFeedEntry,
+	MessageGroup,
+	MessageReactions,
+} from './model';
+import { differenceInMinutes, fromUnixTime, isAfter, isBefore, isEqual } from 'date-fns/esm';
 import { timestampToDate } from '@utilities/timestamp';
 import { GLOBAL_CONFIG } from '../../global-config';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import firestore = firebase.firestore;
+
+const hash = require('object-hash');
 
 const FieldValue = firestore.FieldValue;
 
+@UntilDestroy()
 @Injectable({
 	providedIn: 'root',
 })
@@ -30,12 +54,13 @@ export class ChatService {
 	 */
 	messageFeed$: Observable<MessageFeed> = combineLatest([
 		this.roomService.messages$,
-		this.roomService.members$,
+		this.roomService.members$.pipe(first()),
 		this.roomService.reactions$,
-		this.userService.userUid$,
+		this.userService.userUid$.pipe(first()),
+		this.roomService.lastReadMessageStored$.pipe(first()),
 	]).pipe(
-		map(([messages, members, reactions, userUid]) => {
-			return messages
+		map(([messages, members, reactions, userUid, lastReadMessage]) => {
+			const messageEntries: ReadonlyArray<MessageFeedEntry> = messages
 				.map(
 					(message): MappedMessage => {
 						const messageReactions: MessageReactions = (reactions || [])
@@ -71,15 +96,57 @@ export class ChatService {
 					ChatService.groupMessagesByDateAndAuthor,
 					[] as ReadonlyArray<MessageGroup<MappedMessage>>
 				)
-				.map((messageGroup: MessageGroup<MappedMessage>, index) => {
-					return {
-						...messageGroup,
-						authorUser: members.find((m) => m.uid === messageGroup.author),
-						isMine: messageGroup.author === userUid,
-						isLast: index === messages.length - 1,
-						isFresh: this.feedLoadCount !== 0,
-					};
-				});
+				.map(
+					(messageGroup: MessageGroup<MappedMessage>, index): MessageFeedEntry => {
+						return {
+							type: 'message',
+							...messageGroup,
+							authorUser: members.find((m) => m.uid === messageGroup.author),
+							isMine: messageGroup.author === userUid,
+							isLast: index === messages.length - 1,
+							isFresh: this.feedLoadCount !== 0,
+						};
+					}
+				);
+
+			const messagesFromOthers = messages.filter((m) => m.author !== userUid);
+			let lastReadMessageEntry: ReadonlyArray<LastReadMessageFeedEntry> = [];
+			if (lastReadMessage) {
+				const isThereMessagesSinceLastRead = isBefore(
+					fromUnixTime(lastReadMessage.createdAt.seconds),
+					fromUnixTime(
+						messagesFromOthers[messagesFromOthers.length - 1].createdAt.seconds
+					)
+				);
+				if (isThereMessagesSinceLastRead) {
+					const matchedEntryTimestamp = messageEntries
+						.filter((entry) => !entry.isMine)
+						.find(
+							(entry) =>
+								!!entry.messages.find((message) =>
+									isAfter(
+										fromUnixTime(message.createdAt.seconds),
+										fromUnixTime(lastReadMessage!.createdAt.seconds)
+									)
+								)
+						)!.timestamp;
+					lastReadMessageEntry = [
+						{
+							type: 'last-read-message',
+							timestamp: matchedEntryTimestamp,
+						},
+					];
+				}
+			}
+
+			return [...messageEntries, ...lastReadMessageEntry].sort((a, b) => {
+				const aDate = fromUnixTime(a.timestamp.seconds);
+				const bDate = fromUnixTime(b.timestamp.seconds);
+				if (isEqual(aDate, bDate)) {
+					return a.type === 'last-read-message' ? -1 : 1;
+				}
+				return isBefore(aDate, bDate) ? -1 : 1;
+			});
 		}),
 		tap(() => {
 			this.feedLoadCount++;
@@ -96,12 +163,56 @@ export class ChatService {
 
 	mentionRegex = ChatService.getRegExp('@');
 
+	private readingStateSubject = new Subject<Message>();
+	readingState$ = this.readingStateSubject.asObservable().pipe(
+		scan(ChatService.latestMessageReduceFn, undefined),
+		distinctUntilChanged((a, b) => a?.uid === b?.uid)
+	);
+
+	lastReadMessage$ = combineLatest([
+		this.roomService.lastReadMessageStored$,
+		this.readingState$.pipe(startWith(undefined), debounceTime(500)),
+	]).pipe(
+		map(([latestStored, latestLocal]) => {
+			if (latestStored && latestLocal) {
+				return isAfter(
+					fromUnixTime(latestStored.createdAt.seconds),
+					fromUnixTime(latestLocal.createdAt.seconds)
+				)
+					? latestStored
+					: latestLocal;
+			} else {
+				if (!(latestStored || latestLocal)) {
+					return undefined;
+				}
+				return latestStored || latestLocal;
+			}
+		})
+	);
+
 	constructor(
 		private roomService: RoomService,
 		private userService: UserService,
 		private dataService: DataService,
 		private afs: AngularFirestore
-	) {}
+	) {
+		this.readingState$
+			.pipe(
+				debounceTime(500),
+				withLatestFrom(this.roomService.lastReadMessageStored$),
+				filter(
+					([lastReadMessage, lastReadMessageStored]) =>
+						lastReadMessage?.uid !== lastReadMessageStored?.uid
+				),
+				untilDestroyed(this)
+			)
+			.subscribe(([lastReadMessage]) => {
+				if (lastReadMessage) {
+					console.log('Updating last read message');
+					this.roomService.updateMemberLastReadMessage(lastReadMessage);
+				}
+			});
+	}
 
 	/**
 	 * Reducer function to group messages by adjacent author
@@ -155,9 +266,19 @@ export class ChatService {
 		}
 	}
 
+	static latestMessageReduceFn(greatest: Message | undefined, current: Message) {
+		const currentDate = fromUnixTime(current.createdAt.seconds);
+		const greatestDate = greatest ? fromUnixTime(greatest.createdAt.seconds) : null;
+		if (!greatestDate || isAfter(currentDate, greatestDate)) {
+			return current;
+		} else {
+			return greatest;
+		}
+	}
+
 	static getRegExp(prefix: string | readonly string[]): RegExp {
 		const prefixArray = Array.isArray(prefix) ? prefix : [prefix];
-		let prefixToken = prefixArray.join('').replace(/(\$|\^)/g, '\\$1');
+		let prefixToken = prefixArray.join('').replace(/([$^])/g, '\\$1');
 
 		if (prefixArray.length > 1) {
 			prefixToken = `[${prefixToken}]`;
@@ -243,5 +364,9 @@ export class ChatService {
 				})
 			)
 			.toPromise();
+	}
+
+	trackMessageAsRead(message: Message) {
+		this.readingStateSubject.next(message);
 	}
 }

@@ -15,6 +15,7 @@ service cloud.firestore {
 
 			match /members/{userId} {
 				allow read: if isMyDomain(domain);
+				allow update: if isMyDomain(domain) && authUidMatches(userId);
 			}
 		}
 		match /chats/{domain} {

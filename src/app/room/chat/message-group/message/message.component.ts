@@ -10,7 +10,7 @@ import { ChatService } from '../../chat.service';
 import { Message } from '@model/message';
 import { Reaction, ReactionType } from '@model/reaction';
 import { fromEvent, merge, Observable } from 'rxjs';
-import { distinctUntilChanged, map } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, filter, map, take } from 'rxjs/operators';
 import { UserService } from '@services/user.service';
 import { MappedMessage } from '../../model';
 import { GLOBAL_CONFIG } from '../../../../global-config';
@@ -32,7 +32,12 @@ export class MessageComponent implements AfterViewInit {
 	vibrationConfig = GLOBAL_CONFIG.vibration;
 	highlightForDeletion: boolean;
 	showReactionsPopover$: Observable<boolean>;
-	constructor(private chatService: ChatService, private userService: UserService) {}
+	bubbleVisible$: Observable<boolean>;
+	constructor(
+		private chatService: ChatService,
+		private userService: UserService,
+		private elRef: ElementRef
+	) {}
 
 	ngAfterViewInit() {
 		this.showReactionsPopover$ = merge(
@@ -40,6 +45,37 @@ export class MessageComponent implements AfterViewInit {
 			fromEvent(this.bubbleRef.nativeElement, 'mouseleave').pipe(map(() => false)),
 			fromEvent(document.getElementById('chat-content')!, 'scroll').pipe(map(() => false))
 		).pipe(distinctUntilChanged());
+
+		this.bubbleVisible$ = fromEvent(
+			this.elRef.nativeElement.closest('#chat-content'),
+			'scroll'
+		).pipe(
+			debounceTime(500),
+			map(() => {
+				const bubbleElement = this.bubbleRef.nativeElement;
+				const chatContentElement: Element = this.elRef.nativeElement.closest(
+					'#chat-content'
+				);
+
+				const bubbleRect = bubbleElement.getBoundingClientRect();
+				const chatContentRect = chatContentElement.getBoundingClientRect();
+
+				return (
+					bubbleRect.top >= chatContentRect.top &&
+					bubbleRect.top + bubbleRect.height <
+						chatContentRect.top + chatContentRect.height
+				);
+			})
+		);
+
+		this.bubbleVisible$
+			.pipe(
+				filter((isVisible) => !this.isMine && isVisible),
+				take(1)
+			)
+			.subscribe(() => {
+				this.chatService.trackMessageAsRead(this.message);
+			});
 	}
 
 	toggleReaction(message: Message, reaction: ReactionType) {

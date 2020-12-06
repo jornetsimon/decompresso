@@ -9,6 +9,7 @@ import {
 	shareReplay,
 	switchMap,
 	takeUntil,
+	withLatestFrom,
 } from 'rxjs/operators';
 import { UserService } from '@services/user.service';
 import { DataService, expectData } from '@services/data.service';
@@ -20,6 +21,7 @@ import { timestampToDate } from '@utilities/timestamp';
 import { isBefore } from 'date-fns/esm';
 import { Reaction } from '@model/reaction';
 import { ActivityService } from '@services/activity.service';
+import { RoomMember } from '@model/room-member';
 
 const hash = require('object-hash');
 
@@ -38,10 +40,17 @@ export class RoomService extends ObservableStore<StoreState> {
 		expectData,
 		shareReplay(1)
 	);
+	member$: Observable<RoomMember> = this.userService.user$.pipe(
+		withLatestFrom(this.userService.userUid$),
+		switchMap(([user, uid]) => this.dataService.roomMember$(user.domain, uid)),
+		expectData,
+		distinctUntilChanged((a, b) => hash(a || {}) === hash(b || {})),
+		shareReplay(1)
+	);
 	/**
 	 * Long lives members data
 	 */
-	members$: Observable<ReadonlyArray<User & { uid: string }>> = this.userService.user$.pipe(
+	members$: Observable<ReadonlyArray<RoomMember>> = this.userService.user$.pipe(
 		switchMap((user) =>
 			this.dataService.roomMembers$(user.domain).pipe(
 				expectData,
@@ -79,6 +88,10 @@ export class RoomService extends ObservableStore<StoreState> {
 			return hash(a || {}) === hash(b || {});
 		})
 	);
+	lastReadMessageStored$ = this.member$.pipe(
+		map((member) => member.last_read_message),
+		distinctUntilChanged((a, b) => a?.uid === b?.uid)
+	);
 
 	constructor(
 		private userService: UserService,
@@ -114,5 +127,18 @@ export class RoomService extends ObservableStore<StoreState> {
 		const aDate = timestampToDate(a.createdAt);
 		const bDate = timestampToDate(b.createdAt);
 		return isBefore(aDate, bDate) ? -1 : 1;
+	}
+
+	updateMemberLastReadMessage(message: Message) {
+		return this.member$
+			.pipe(
+				first(),
+				switchMap((member) =>
+					this.dataService
+						.roomMemberDoc(member.domain, member.uid)
+						.update({ last_read_message: message })
+				)
+			)
+			.toPromise();
 	}
 }
