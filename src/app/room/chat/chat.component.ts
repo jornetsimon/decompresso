@@ -14,16 +14,20 @@ import {
 	delay,
 	distinctUntilChanged,
 	filter,
+	first,
 	map,
 	skip,
 	startWith,
+	switchMap,
 	take,
 	takeWhile,
 	withLatestFrom,
 } from 'rxjs/operators';
 import { scrollParentToChild } from '@utilities/scroll-parent-to-child';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { MessageFeedEntry } from './model';
+import { FeedEntry, isMessageFeedEntry } from './model';
+import { GLOBAL_CONFIG } from '../../global-config';
+import { FeedService } from './feed.service';
 
 @UntilDestroy()
 @Component({
@@ -41,10 +45,10 @@ export class ChatComponent implements AfterViewInit {
 	chatContentResized$ = this.chatContentResizedSubject.asObservable();
 
 	roomHasMultipleMembers$ = this.chatService.roomHasMultipleMembers$;
-	messageFeed$ = this.chatService.messageFeed$;
+	feed$ = this.feedService.feed$;
 	showFeedLoader$ = combineLatest([
 		of(false).pipe(delay(1000)),
-		this.messageFeed$
+		this.feed$
 			.pipe(
 				map(() => true),
 				take(1)
@@ -58,11 +62,17 @@ export class ChatComponent implements AfterViewInit {
 	private chatScrollingState$: Observable<readonly [number, number, number]>;
 	stickToChatBottom$: Observable<boolean>;
 	showNewMessageTag$: Observable<boolean>;
+	showLastReadMessageBar$: Observable<boolean>;
 
-	trackByFeedEntryFn: TrackByFunction<MessageFeedEntry> = (index, item) =>
-		item.timestamp.seconds + item.author;
+	trackByFeedEntryFn: TrackByFunction<FeedEntry<any>> = (index, item) => {
+		return item.timestamp.seconds + (isMessageFeedEntry(item) ? item.author : item.type);
+	};
 
-	constructor(private chatService: ChatService, private roomService: RoomService) {}
+	constructor(
+		private chatService: ChatService,
+		private roomService: RoomService,
+		private feedService: FeedService
+	) {}
 
 	ngAfterViewInit() {
 		/**
@@ -87,6 +97,17 @@ export class ChatComponent implements AfterViewInit {
 			distinctUntilChanged(),
 			startWith(true)
 		);
+
+		/**
+		 * Determines when the "last message bar" should be displayed
+		 */
+		this.showLastReadMessageBar$ = merge(
+			of(true),
+			this.stickToChatBottom$.pipe(
+				delay(GLOBAL_CONFIG.chat.hideLastReadMessageAfterStickToBottomDelay),
+				map((stick) => !stick)
+			)
+		).pipe(takeWhile((show) => show, true));
 
 		/**
 		 * Determines when the "new message" tag should appear
@@ -115,23 +136,51 @@ export class ChatComponent implements AfterViewInit {
 		});
 
 		// When the chat content scrollHeight changes
-		this.chatContentResized$
+		this.feedService.feed$
 			.pipe(
-				debounceTime(200),
+				switchMap((feed) =>
+					combineLatest([of(feed), this.chatContentResized$.pipe(first())])
+				),
+				debounceTime(100),
 				withLatestFrom(this.stickToChatBottom$),
 				// if the current scroll is stuck to the bottom
-				filter(([scrollHeight, stickToChatBottom]) => !!stickToChatBottom),
+				filter(([data, stickToChatBottom]) => !!stickToChatBottom),
 				untilDestroyed(this)
 			)
-			.subscribe(() => {
-				// scroll to the bottom
-				this.scrollToBottomOfChat(this.chatService.feedLoadCount > 1 ? 'smooth' : 'auto');
+			.subscribe(([[feed]]) => {
+				const feedHasLastReadMessageEntry = !!feed.find(
+					(e) => e.type === 'last-read-message'
+				);
+				if (!feedHasLastReadMessageEntry) {
+					this.scrollToBottomOfChat('auto');
+				} else if (this.feedService.feedLoadCount > 1) {
+					this.scrollToBottomOfChat('smooth');
+				} else {
+					this.scrollToLastMessageBar();
+				}
 			});
 	}
 
+	/**
+	 * ⬇ Scroll the chat to the last read message bar
+	 */
+	scrollToLastMessageBar() {
+		const lastReadMessageBarElement = document.getElementById('last-read-message-bar');
+		if (lastReadMessageBarElement) {
+			this.scrollToMessage(lastReadMessageBarElement);
+		}
+	}
+
+	/**
+	 * ⬇ Scroll the chat to a message element
+	 */
 	scrollToMessage(messageElement: Element) {
 		scrollParentToChild(this.chatContentRef.nativeElement, messageElement);
 	}
+
+	/**
+	 * ⬇ Scroll to the bottom of the chat
+	 */
 	scrollToBottomOfChat(behavior: ScrollBehavior = 'smooth') {
 		this.chatContentRef.nativeElement.scrollTo({
 			top: this.chatContentRef.nativeElement.scrollHeight,
@@ -140,6 +189,7 @@ export class ChatComponent implements AfterViewInit {
 	}
 
 	onNewMessageSent() {
+		// When a message is sent, scroll to the bottom of the chat
 		this.scrollToBottomOfChat('auto');
 	}
 }

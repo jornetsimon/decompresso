@@ -6,6 +6,7 @@ import { UserPersonalData } from '@model/user-personal-data';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Chat } from '@model/chat';
+import { RoomMember } from '@model/room-member';
 
 export enum Endpoints {
 	Users = '/users',
@@ -51,8 +52,15 @@ export class DataService {
 	roomDoc(uid: string) {
 		return this.afs.collection<Room>(Endpoints.Rooms).doc(uid);
 	}
-	roomMembersCol(uid: string) {
-		return this.afs.collection<User>(`${Endpoints.Rooms}/${uid}/${Endpoints.RoomMembers}`);
+	roomMembersCol(domain: string) {
+		return this.afs.collection<RoomMember>(
+			`${Endpoints.Rooms}/${domain}/${Endpoints.RoomMembers}`
+		);
+	}
+	roomMemberDoc(domain: string, uid: string) {
+		return this.afs.doc<RoomMember>(
+			`${Endpoints.Rooms}/${domain}/${Endpoints.RoomMembers}/${uid}`
+		);
 	}
 	chatDoc(uid: string) {
 		return this.afs.collection<Chat>(Endpoints.Chats).doc(uid);
@@ -66,6 +74,11 @@ export class DataService {
 	}
 	room$(domain: string) {
 		return this.roomDoc(domain).valueChanges();
+	}
+	roomMember$(domain: string, uid: string) {
+		return this.roomMemberDoc(domain, uid).valueChanges({
+			idField: 'uid',
+		});
 	}
 	roomMembers$(domain: string) {
 		return this.roomMembersCol(domain).valueChanges({

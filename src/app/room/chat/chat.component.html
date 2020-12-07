@@ -1,15 +1,24 @@
 <nz-card id="chat-card">
 	<div id="chat-content" #chatContent>
-		<ng-container *ngIf="messageFeed$ | async as feed">
+		<ng-container *ngIf="feed$ | async as feed">
 			<ng-container *ngIf="(roomHasMultipleMembers$ | async) === true; else memberAloneTpl">
 				<ng-container *ngIf="feed.length; else noMessageTpl">
 					<div class="top-reached" [class.hidden-opacity]="feed.length < 10">
 						Vous avez atteint la limite de l'historique 🔭
 					</div>
-					<mas-message-group
-						*ngFor="let entry of feed; trackBy: trackByFeedEntryFn"
-						[group]="entry"
-					></mas-message-group>
+					<ng-container *ngFor="let entry of feed; trackBy: trackByFeedEntryFn">
+						<ng-container *ngIf="entry.type === 'message'">
+							<mas-message-group [group]="$any(entry)"></mas-message-group>
+						</ng-container>
+						<ng-container
+							*ngIf="
+								entry.type === 'last-read-message' &&
+								(showLastReadMessageBar$ | async) === true
+							"
+						>
+							<mas-last-read-message></mas-last-read-message>
+						</ng-container>
+					</ng-container>
 				</ng-container>
 				<ng-template #noMessageTpl>
 					<div class="p2">

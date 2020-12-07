@@ -10,10 +10,11 @@ import { ChatService } from '../../chat.service';
 import { Message } from '@model/message';
 import { Reaction, ReactionType } from '@model/reaction';
 import { fromEvent, merge, Observable } from 'rxjs';
-import { distinctUntilChanged, map } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, filter, map, take } from 'rxjs/operators';
 import { UserService } from '@services/user.service';
 import { MappedMessage } from '../../model';
 import { GLOBAL_CONFIG } from '../../../../global-config';
+import { getRegExp } from '@utilities/regex';
 
 @Component({
 	selector: 'mas-message',
@@ -29,10 +30,20 @@ export class MessageComponent implements AfterViewInit {
 
 	@ViewChild('bubble') bubbleRef: ElementRef<HTMLDivElement>;
 
+	private mentionRegex = getRegExp('@');
 	vibrationConfig = GLOBAL_CONFIG.vibration;
 	highlightForDeletion: boolean;
 	showReactionsPopover$: Observable<boolean>;
-	constructor(private chatService: ChatService, private userService: UserService) {}
+	/**
+	 * Is the message bubble currently visible in the chat
+	 */
+	bubbleVisibility: Observable<boolean>;
+
+	constructor(
+		private chatService: ChatService,
+		private userService: UserService,
+		private elRef: ElementRef
+	) {}
 
 	ngAfterViewInit() {
 		this.showReactionsPopover$ = merge(
@@ -40,6 +51,42 @@ export class MessageComponent implements AfterViewInit {
 			fromEvent(this.bubbleRef.nativeElement, 'mouseleave').pipe(map(() => false)),
 			fromEvent(document.getElementById('chat-content')!, 'scroll').pipe(map(() => false))
 		).pipe(distinctUntilChanged());
+
+		this.bubbleVisibility = fromEvent(
+			this.elRef.nativeElement.closest('#chat-content'),
+			'scroll'
+		).pipe(
+			debounceTime(500),
+			map(() => {
+				const bubbleElement = this.bubbleRef.nativeElement;
+				const chatContentElement: Element = this.elRef.nativeElement.closest(
+					'#chat-content'
+				);
+
+				const bubbleRect = bubbleElement.getBoundingClientRect();
+				const chatContentRect = chatContentElement.getBoundingClientRect();
+
+				return (
+					bubbleRect.top >= chatContentRect.top &&
+					bubbleRect.top + bubbleRect.height <
+						chatContentRect.top + chatContentRect.height
+				);
+			})
+		);
+
+		/**
+		 * When the message visibility changes
+		 */
+		this.bubbleVisibility
+			.pipe(
+				// Only when it is visible
+				filter((isVisible) => !this.isMine && isVisible),
+				take(1)
+			)
+			.subscribe(() => {
+				// Track it as read
+				this.chatService.trackMessageAsRead(this.message);
+			});
 	}
 
 	toggleReaction(message: Message, reaction: ReactionType) {
@@ -94,7 +141,7 @@ export class MessageComponent implements AfterViewInit {
 
 	renderedContent(content: string) {
 		return content.replace(
-			this.chatService.mentionRegex,
+			this.mentionRegex,
 			(match) => `<span class="mention">${match.trim()}</span>`
 		);
 	}

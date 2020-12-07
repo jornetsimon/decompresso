@@ -8,6 +8,7 @@ export const GLOBAL_CONFIG = {
 			checkInterval: 60000,
 			intervalCount: 5,
 		},
+		hideLastReadMessageAfterStickToBottomDelay: 10000,
 	},
 	vibration: {
 		default: [20],

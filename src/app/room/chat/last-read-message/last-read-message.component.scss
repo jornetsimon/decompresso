@@ -1,0 +1,27 @@
+$color: #ff4646;
+.last-read-message {
+	display: flex;
+	align-items: center;
+	text-align: center;
+	margin: 5px 0;
+
+	& .text {
+		color: white;
+		font-size: 12px;
+		border-radius: 5px;
+		background-color: $color;
+		padding: 0 5px;
+	}
+}
+.last-read-message::before,
+.last-read-message::after {
+	content: '';
+	flex: 1;
+	border-bottom: 1px solid $color;
+}
+.last-read-message::before {
+	margin-right: 0.25em;
+}
+.last-read-message::after {
+	margin-left: 0.25em;
+}

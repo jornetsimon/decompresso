@@ -8,9 +8,16 @@ import { MessageComponent } from './message-group/message/message.component';
 import { MessageFormComponent } from './message-form/message-form.component';
 import { NzMentionModule } from 'ng-zorro-antd/mention';
 import { PickerModule } from '@ctrl/ngx-emoji-mart';
+import { LastReadMessageComponent } from './last-read-message/last-read-message.component';
 
 @NgModule({
-	declarations: [ChatComponent, MessageGroupComponent, MessageComponent, MessageFormComponent],
+	declarations: [
+		ChatComponent,
+		MessageGroupComponent,
+		MessageComponent,
+		MessageFormComponent,
+		LastReadMessageComponent,
+	],
 	imports: [CommonModule, SharedModule, NzIconModule.forChild([]), NzMentionModule, PickerModule],
 	exports: [ChatComponent],
 })
