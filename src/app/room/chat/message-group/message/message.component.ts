@@ -9,8 +9,8 @@ import {
 import { ChatService } from '../../chat.service';
 import { Message } from '@model/message';
 import { Reaction, ReactionType } from '@model/reaction';
-import { fromEvent, merge, Observable } from 'rxjs';
-import { debounceTime, distinctUntilChanged, filter, map, take } from 'rxjs/operators';
+import { fromEvent, Observable } from 'rxjs';
+import { debounceTime, filter, map, take } from 'rxjs/operators';
 import { UserService } from '@services/user.service';
 import { MappedMessage } from '../../model';
 import { GLOBAL_CONFIG } from '../../../../global-config';
@@ -33,7 +33,6 @@ export class MessageComponent implements AfterViewInit {
 	private mentionRegex = getRegExp('@');
 	vibrationConfig = GLOBAL_CONFIG.vibration;
 	highlightForDeletion: boolean;
-	showReactionsPopover$: Observable<boolean>;
 	/**
 	 * Is the message bubble currently visible in the chat
 	 */
@@ -46,12 +45,6 @@ export class MessageComponent implements AfterViewInit {
 	) {}
 
 	ngAfterViewInit() {
-		this.showReactionsPopover$ = merge(
-			fromEvent(this.bubbleRef.nativeElement, 'mouseenter').pipe(map(() => true)),
-			fromEvent(this.bubbleRef.nativeElement, 'mouseleave').pipe(map(() => false)),
-			fromEvent(document.getElementById('chat-content')!, 'scroll').pipe(map(() => false))
-		).pipe(distinctUntilChanged());
-
 		this.bubbleVisibility = fromEvent(
 			this.elRef.nativeElement.closest('#chat-content'),
 			'scroll'
