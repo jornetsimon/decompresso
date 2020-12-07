@@ -229,7 +229,11 @@ export class AuthService extends ObservableStore<StoreState> {
 	 * Removes their data in db and delete their auth account
 	 */
 	deleteUser() {
-		const callable = this.fns.httpsCallable('deleteUser');
-		return callable({});
+		return from(this.presenceService.setConnectionState('offline')).pipe(
+			switchMap(() => {
+				const callable = this.fns.httpsCallable('deleteUser');
+				return callable({});
+			})
+		);
 	}
 }
