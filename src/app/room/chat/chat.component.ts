@@ -27,6 +27,7 @@ import { scrollParentToChild } from '@utilities/scroll-parent-to-child';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { FeedEntry, isMessageFeedEntry } from './model';
 import { GLOBAL_CONFIG } from '../../global-config';
+import { FeedService } from './feed.service';
 
 @UntilDestroy()
 @Component({
@@ -44,10 +45,10 @@ export class ChatComponent implements AfterViewInit {
 	chatContentResized$ = this.chatContentResizedSubject.asObservable();
 
 	roomHasMultipleMembers$ = this.chatService.roomHasMultipleMembers$;
-	messageFeed$ = this.chatService.messageFeed$;
+	feed$ = this.feedService.feed$;
 	showFeedLoader$ = combineLatest([
 		of(false).pipe(delay(1000)),
-		this.messageFeed$
+		this.feed$
 			.pipe(
 				map(() => true),
 				take(1)
@@ -67,7 +68,11 @@ export class ChatComponent implements AfterViewInit {
 		return item.timestamp.seconds + (isMessageFeedEntry(item) ? item.author : item.type);
 	};
 
-	constructor(private chatService: ChatService, private roomService: RoomService) {}
+	constructor(
+		private chatService: ChatService,
+		private roomService: RoomService,
+		private feedService: FeedService
+	) {}
 
 	ngAfterViewInit() {
 		/**
@@ -93,10 +98,12 @@ export class ChatComponent implements AfterViewInit {
 			startWith(true)
 		);
 
+		/**
+		 * Determines when the "last message bar" should be displayed
+		 */
 		this.showLastReadMessageBar$ = merge(
 			of(true),
 			this.stickToChatBottom$.pipe(
-				skip(1),
 				delay(GLOBAL_CONFIG.chat.hideLastReadMessageAfterStickToBottomDelay),
 				map((stick) => !stick)
 			)
@@ -129,7 +136,7 @@ export class ChatComponent implements AfterViewInit {
 		});
 
 		// When the chat content scrollHeight changes
-		this.chatService.messageFeed$
+		this.feedService.feed$
 			.pipe(
 				switchMap((feed) =>
 					combineLatest([of(feed), this.chatContentResized$.pipe(first())])
@@ -146,7 +153,7 @@ export class ChatComponent implements AfterViewInit {
 				);
 				if (!feedHasLastReadMessageEntry) {
 					this.scrollToBottomOfChat('auto');
-				} else if (this.chatService.feedLoadCount > 1) {
+				} else if (this.feedService.feedLoadCount > 1) {
 					this.scrollToBottomOfChat('smooth');
 				} else {
 					this.scrollToLastMessageBar();
@@ -154,15 +161,26 @@ export class ChatComponent implements AfterViewInit {
 			});
 	}
 
+	/**
+	 * ⬇ Scroll the chat to the last read message bar
+	 */
 	scrollToLastMessageBar() {
 		const lastReadMessageBarElement = document.getElementById('last-read-message-bar');
 		if (lastReadMessageBarElement) {
 			this.scrollToMessage(lastReadMessageBarElement);
 		}
 	}
+
+	/**
+	 * ⬇ Scroll the chat to a message element
+	 */
 	scrollToMessage(messageElement: Element) {
 		scrollParentToChild(this.chatContentRef.nativeElement, messageElement);
 	}
+
+	/**
+	 * ⬇ Scroll to the bottom of the chat
+	 */
 	scrollToBottomOfChat(behavior: ScrollBehavior = 'smooth') {
 		this.chatContentRef.nativeElement.scrollTo({
 			top: this.chatContentRef.nativeElement.scrollHeight,
@@ -171,6 +189,7 @@ export class ChatComponent implements AfterViewInit {
 	}
 
 	onNewMessageSent() {
+		// When a message is sent, scroll to the bottom of the chat
 		this.scrollToBottomOfChat('auto');
 	}
 }

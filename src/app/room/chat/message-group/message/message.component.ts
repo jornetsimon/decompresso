@@ -14,6 +14,7 @@ import { debounceTime, distinctUntilChanged, filter, map, take } from 'rxjs/oper
 import { UserService } from '@services/user.service';
 import { MappedMessage } from '../../model';
 import { GLOBAL_CONFIG } from '../../../../global-config';
+import { getRegExp } from '@utilities/regex';
 
 @Component({
 	selector: 'mas-message',
@@ -29,10 +30,15 @@ export class MessageComponent implements AfterViewInit {
 
 	@ViewChild('bubble') bubbleRef: ElementRef<HTMLDivElement>;
 
+	private mentionRegex = getRegExp('@');
 	vibrationConfig = GLOBAL_CONFIG.vibration;
 	highlightForDeletion: boolean;
 	showReactionsPopover$: Observable<boolean>;
-	bubbleVisible$: Observable<boolean>;
+	/**
+	 * Is the message bubble currently visible in the chat
+	 */
+	bubbleVisibility: Observable<boolean>;
+
 	constructor(
 		private chatService: ChatService,
 		private userService: UserService,
@@ -46,7 +52,7 @@ export class MessageComponent implements AfterViewInit {
 			fromEvent(document.getElementById('chat-content')!, 'scroll').pipe(map(() => false))
 		).pipe(distinctUntilChanged());
 
-		this.bubbleVisible$ = fromEvent(
+		this.bubbleVisibility = fromEvent(
 			this.elRef.nativeElement.closest('#chat-content'),
 			'scroll'
 		).pipe(
@@ -68,12 +74,17 @@ export class MessageComponent implements AfterViewInit {
 			})
 		);
 
-		this.bubbleVisible$
+		/**
+		 * When the message visibility changes
+		 */
+		this.bubbleVisibility
 			.pipe(
+				// Only when it is visible
 				filter((isVisible) => !this.isMine && isVisible),
 				take(1)
 			)
 			.subscribe(() => {
+				// Track it as read
 				this.chatService.trackMessageAsRead(this.message);
 			});
 	}
@@ -130,7 +141,7 @@ export class MessageComponent implements AfterViewInit {
 
 	renderedContent(content: string) {
 		return content.replace(
-			this.chatService.mentionRegex,
+			this.mentionRegex,
 			(match) => `<span class="mention">${match.trim()}</span>`
 		);
 	}

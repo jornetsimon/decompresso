@@ -1,6 +1,6 @@
 <nz-card id="chat-card">
 	<div id="chat-content" #chatContent>
-		<ng-container *ngIf="messageFeed$ | async as feed">
+		<ng-container *ngIf="feed$ | async as feed">
 			<ng-container *ngIf="(roomHasMultipleMembers$ | async) === true; else memberAloneTpl">
 				<ng-container *ngIf="feed.length; else noMessageTpl">
 					<div class="top-reached" [class.hidden-opacity]="feed.length < 10">

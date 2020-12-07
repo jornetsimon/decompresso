@@ -40,6 +40,9 @@ export class RoomService extends ObservableStore<StoreState> {
 		expectData,
 		shareReplay(1)
 	);
+	/**
+	 * Long lived room member data matching the connected user
+	 */
 	member$: Observable<RoomMember> = this.userService.user$.pipe(
 		withLatestFrom(this.userService.userUid$),
 		switchMap(([user, uid]) => this.dataService.roomMember$(user.domain, uid)),
@@ -48,7 +51,7 @@ export class RoomService extends ObservableStore<StoreState> {
 		shareReplay(1)
 	);
 	/**
-	 * Long lives members data
+	 * Long lived room members data
 	 */
 	members$: Observable<ReadonlyArray<RoomMember>> = this.userService.user$.pipe(
 		switchMap((user) =>
