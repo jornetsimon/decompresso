@@ -3,6 +3,7 @@ export const GLOBAL_CONFIG = {
 		minPasswordLength: 6,
 	},
 	chat: {
+		purgeIntervalDays: 7,
 		groupMessagesWithinMinutes: 5,
 		timeout: {
 			checkInterval: 60000,

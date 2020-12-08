@@ -18,6 +18,9 @@
 						>
 							<mas-last-read-message></mas-last-read-message>
 						</ng-container>
+						<ng-container *ngIf="entry.type === 'system'">
+							<mas-system [entry]="$any(entry)"></mas-system>
+						</ng-container>
 					</ng-container>
 				</ng-container>
 				<ng-template #noMessageTpl>

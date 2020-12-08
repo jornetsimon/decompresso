@@ -1,7 +1,16 @@
 import { Message } from '@model/message';
 import { RoomMember } from '@model/room-member';
 import { Reaction } from '@model/reaction';
-import { differenceInMinutes, fromUnixTime, isAfter, isBefore, isEqual } from 'date-fns/esm';
+import {
+	addDays,
+	differenceInMinutes,
+	fromUnixTime,
+	isAfter,
+	isBefore,
+	isEqual,
+	isWithinInterval,
+	startOfWeek,
+} from 'date-fns/esm';
 import { timestampToDate } from '@utilities/timestamp';
 import { GLOBAL_CONFIG } from '../../../global-config';
 import { MessageGroup } from './model/message/message-group';
@@ -10,8 +19,11 @@ import { MappedMessage } from './model/message/mapped-message';
 import { MessageReactions } from './model/message/message-reactions';
 import { LastReadMessageFeedEntry } from './model/last-read-message.feed-entry';
 import { MessageFeedEntry } from './model/message.feed-entry';
+import { SystemFeedEntry } from './model/system.feed-entry';
 
 export class FeedBuilder {
+	lastPurge: Date = startOfWeek(Date.now()); // TODO: replace with actual value from DB
+	nextPurge: Date;
 	constructor(
 		private messages: ReadonlyArray<Message>,
 		private members: ReadonlyArray<RoomMember>,
@@ -20,7 +32,9 @@ export class FeedBuilder {
 		private lastReadMessage: Message | undefined,
 		private feedLoadCount: number,
 		private initializationDate: Date
-	) {}
+	) {
+		this.nextPurge = addDays(this.lastPurge, GLOBAL_CONFIG.chat.purgeIntervalDays);
+	}
 
 	/**
 	 * Reducer function to group messages by adjacent author
@@ -169,9 +183,32 @@ export class FeedBuilder {
 		return [];
 	}
 
+	private buildSystemEntries(): ReadonlyArray<SystemFeedEntry> {
+		const memberJoinEntries: ReadonlyArray<SystemFeedEntry> = this.members
+			.filter((member) =>
+				isWithinInterval(fromUnixTime(member.createdAt.seconds), {
+					start: this.lastPurge,
+					end: Date.now(),
+				})
+			)
+			.map((member) => {
+				return {
+					type: 'system',
+					timestamp: member.createdAt,
+					color: '#c71c8e',
+					content: `${member.nickname} a rejoint le salon`,
+					icon: '🐣',
+				};
+			});
+
+		return [...memberJoinEntries];
+	}
+
 	feed(): Feed {
-		return [...this.buildMessageEntries(), ...this.buildLastReadMessageEntries()].sort(
-			FeedBuilder.feedSortFn
-		);
+		return [
+			...this.buildMessageEntries(),
+			...this.buildLastReadMessageEntries(),
+			...this.buildSystemEntries(),
+		].sort(FeedBuilder.feedSortFn);
 	}
 }
