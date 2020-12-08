@@ -40,7 +40,33 @@ export const createUser = functions.https.onCall(async (data, context) => {
 	// Create the chat in case it does not exist
 	await createChat(domain);
 
-	const nickname = await pickNickname(domain);
+	let nickname: string;
+	const existingUserPersonalDataSnap = await db
+		.collection(`${Endpoints.UserPersonalData}`)
+		.where('email', '==', email)
+		.get();
+	if (!existingUserPersonalDataSnap.empty) {
+		// The person previously has an account
+		// Lets get their previous UID...
+		const previousUid = existingUserPersonalDataSnap.docs[0].id;
+		// ... to get their previous nickname
+		const memberSnap = await db
+			.doc(`${Endpoints.Rooms}/${domain}/${Endpoints.RoomMembers}/${previousUid}`)
+			.get();
+		if (memberSnap.exists) {
+			nickname = memberSnap.get('nickname');
+		} else {
+			console.error(
+				new Error(
+					`Previous user with UID ${previousUid} could not be matched with a previous member nickname. Picking new nickname instead.`
+				)
+			);
+			nickname = await pickNickname(domain);
+		}
+	} else {
+		nickname = await pickNickname(domain);
+	}
+
 	const color = randomColor({
 		luminosity: 'dark',
 	});

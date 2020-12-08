@@ -17,6 +17,7 @@ export function createChat(domain: string) {
 		.doc(`${Endpoints.Chats}/${domain}`)
 		.create({
 			messages: [],
+			reactions: [],
 		})
 		.catch(() => null);
 }

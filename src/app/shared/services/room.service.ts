@@ -57,7 +57,17 @@ export class RoomService extends ObservableStore<StoreState> {
 		switchMap((user) =>
 			this.dataService.roomMembers$(user.domain).pipe(
 				expectData,
-				map((members) => members.sort((a, b) => RoomService.memberSortFn(a, b, user)))
+				map((members) =>
+					members
+						.sort((a, b) => RoomService.memberSortFn(a, b, user))
+						.filter((member, index, array) => {
+							// Exclude duplicates by nickname that are deleted (for users that recreated an account)
+							return !(
+								member.deleted &&
+								!!array.find((m) => m.nickname === member.nickname)
+							);
+						})
+				)
 			)
 		),
 		shareReplay(1)
@@ -85,7 +95,7 @@ export class RoomService extends ObservableStore<StoreState> {
 		distinctUntilChanged((a, b) => hash(a || {}) === hash(b || {})),
 		map((messages) => [...messages].sort(RoomService.messageSortFn))
 	);
-	reactions$: Observable<ReadonlyArray<Reaction> | undefined> = this.chat$.pipe(
+	reactions$: Observable<ReadonlyArray<Reaction>> = this.chat$.pipe(
 		map((chat) => chat.reactions),
 		distinctUntilChanged((a, b) => {
 			return hash(a || {}) === hash(b || {});

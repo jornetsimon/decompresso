@@ -3,5 +3,5 @@ import { Reaction } from '@model/reaction';
 
 export interface Chat {
 	messages: ReadonlyArray<Message>;
-	reactions?: ReadonlyArray<Reaction>;
+	reactions: ReadonlyArray<Reaction>;
 }
