@@ -25,9 +25,10 @@ import {
 } from 'rxjs/operators';
 import { scrollParentToChild } from '@utilities/scroll-parent-to-child';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { FeedEntry, isMessageFeedEntry } from './model';
 import { GLOBAL_CONFIG } from '../../global-config';
-import { FeedService } from './feed.service';
+import { FeedService } from './feed/feed.service';
+import { FeedEntry } from './feed/model/feed-entry';
+import { isMessageFeedEntry } from './feed/model/message.feed-entry';
 
 @UntilDestroy()
 @Component({

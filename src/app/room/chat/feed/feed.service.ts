@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { combineLatest, Observable } from 'rxjs';
-import { Feed } from './model';
 import { first, map, share, tap } from 'rxjs/operators';
 import { RoomService } from '@services/room.service';
 import { UserService } from '@services/user.service';
 import { FeedBuilder } from './feed-builder';
+import { Feed } from './model/feed-entry';
 
 @Injectable({
 	providedIn: 'root',

@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, TrackByFunction } from '@angular/core';
-import { MappedMessage, MessageFeedEntry } from '../model';
+import { MappedMessage } from '../feed/model/message/mapped-message';
+import { MessageFeedEntry } from '../feed/model/message.feed-entry';
 
 @Component({
 	selector: 'mas-message-group',

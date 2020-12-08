@@ -19,9 +19,9 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { Message } from '@model/message';
 import firebase from 'firebase/app';
 import { Reaction, ReactionType } from '@model/reaction';
-import { MappedMessage } from './model';
 import { fromUnixTime, isAfter } from 'date-fns/esm';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { MappedMessage } from './feed/model/message/mapped-message';
 import firestore = firebase.firestore;
 
 const hash = require('object-hash');

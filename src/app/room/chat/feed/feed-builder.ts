@@ -1,18 +1,15 @@
 import { Message } from '@model/message';
 import { RoomMember } from '@model/room-member';
 import { Reaction } from '@model/reaction';
-import {
-	Feed,
-	FeedEntry,
-	LastReadMessageFeedEntry,
-	MappedMessage,
-	MessageFeedEntry,
-	MessageGroup,
-	MessageReactions,
-} from './model';
 import { differenceInMinutes, fromUnixTime, isAfter, isBefore, isEqual } from 'date-fns/esm';
 import { timestampToDate } from '@utilities/timestamp';
-import { GLOBAL_CONFIG } from '../../global-config';
+import { GLOBAL_CONFIG } from '../../../global-config';
+import { MessageGroup } from './model/message/message-group';
+import { Feed, FeedEntry } from './model/feed-entry';
+import { MappedMessage } from './model/message/mapped-message';
+import { MessageReactions } from './model/message/message-reactions';
+import { LastReadMessageFeedEntry } from './model/last-read-message.feed-entry';
+import { MessageFeedEntry } from './model/message.feed-entry';
 
 export class FeedBuilder {
 	constructor(
