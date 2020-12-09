@@ -6,3 +6,10 @@ export interface Timestamp {
 export function timestampToDate(timestamp: Timestamp): Date {
 	return new Date(timestamp.seconds * 1000);
 }
+export function dateToTimestamp(date: Date): Timestamp {
+	console.log(date, date.getTime());
+	return {
+		seconds: date.getTime() / 1000,
+		nanoseconds: 0,
+	};
+}

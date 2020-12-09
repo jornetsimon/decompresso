@@ -2,17 +2,22 @@ import { Message } from '@model/message';
 import { RoomMember } from '@model/room-member';
 import { Reaction } from '@model/reaction';
 import {
-	Feed,
-	FeedEntry,
-	LastReadMessageFeedEntry,
-	MappedMessage,
-	MessageFeedEntry,
-	MessageGroup,
-	MessageReactions,
-} from './model';
-import { differenceInMinutes, fromUnixTime, isAfter, isBefore, isEqual } from 'date-fns/esm';
+	differenceInMinutes,
+	fromUnixTime,
+	isAfter,
+	isBefore,
+	isEqual,
+	isWithinInterval,
+} from 'date-fns/esm';
 import { timestampToDate } from '@utilities/timestamp';
-import { GLOBAL_CONFIG } from '../../global-config';
+import { GLOBAL_CONFIG } from '../../../global-config';
+import { MessageGroup } from './model/message/message-group';
+import { Feed, FeedEntry } from './model/feed-entry';
+import { MappedMessage } from './model/message/mapped-message';
+import { MessageReactions } from './model/message/message-reactions';
+import { LastReadMessageFeedEntry } from './model/last-read-message.feed-entry';
+import { MessageFeedEntry } from './model/message.feed-entry';
+import { SystemFeedEntry } from './model/system.feed-entry';
 
 export class FeedBuilder {
 	constructor(
@@ -22,7 +27,8 @@ export class FeedBuilder {
 		private userUid: string,
 		private lastReadMessage: Message | undefined,
 		private feedLoadCount: number,
-		private initializationDate: Date
+		private initializationDate: Date,
+		private lastPurge: Date
 	) {}
 
 	/**
@@ -172,9 +178,32 @@ export class FeedBuilder {
 		return [];
 	}
 
+	private buildSystemEntries(): ReadonlyArray<SystemFeedEntry> {
+		const memberJoinEntries: ReadonlyArray<SystemFeedEntry> = this.members
+			.filter((member) =>
+				isWithinInterval(fromUnixTime(member.createdAt.seconds), {
+					start: this.lastPurge,
+					end: Date.now(),
+				})
+			)
+			.map((member) => {
+				return {
+					type: 'system',
+					timestamp: member.createdAt,
+					color: '#c71c8e',
+					content: `${member.nickname} a rejoint le salon`,
+					icon: '🐣',
+				};
+			});
+
+		return [...memberJoinEntries];
+	}
+
 	feed(): Feed {
-		return [...this.buildMessageEntries(), ...this.buildLastReadMessageEntries()].sort(
-			FeedBuilder.feedSortFn
-		);
+		return [
+			...this.buildMessageEntries(),
+			...this.buildLastReadMessageEntries(),
+			...this.buildSystemEntries(),
+		].sort(FeedBuilder.feedSortFn);
 	}
 }

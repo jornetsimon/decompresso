@@ -12,9 +12,9 @@ import { Reaction, ReactionType } from '@model/reaction';
 import { fromEvent, Observable } from 'rxjs';
 import { debounceTime, filter, map, take } from 'rxjs/operators';
 import { UserService } from '@services/user.service';
-import { MappedMessage } from '../../model';
 import { GLOBAL_CONFIG } from '../../../../global-config';
 import { getRegExp } from '@utilities/regex';
+import { MappedMessage } from '../../feed/model/message/mapped-message';
 
 @Component({
 	selector: 'mas-message',

@@ -1,4 +1,5 @@
 <nz-card id="chat-card">
+	<mas-purge-notification></mas-purge-notification>
 	<div id="chat-content" #chatContent>
 		<ng-container *ngIf="feed$ | async as feed">
 			<ng-container *ngIf="(roomHasMultipleMembers$ | async) === true; else memberAloneTpl">
@@ -17,6 +18,9 @@
 							"
 						>
 							<mas-last-read-message></mas-last-read-message>
+						</ng-container>
+						<ng-container *ngIf="entry.type === 'system'">
+							<mas-system [entry]="$any(entry)"></mas-system>
 						</ng-container>
 					</ng-container>
 				</ng-container>
