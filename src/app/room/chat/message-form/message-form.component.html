@@ -15,18 +15,29 @@
 				(nzOnSelect)="mentionSelectedSubject.next($event)"
 				nzPlacement="top"
 			>
-				<textarea
-					#newMessageInput
-					nz-input
-					nzSize="large"
-					type="text"
-					placeholder="Message"
-					formControlName="message"
-					nzAutosize
-					id="message-input"
-					(keydown.enter)="enterOnMessageSubject.next($event)"
-					nzMentionTrigger
-				></textarea>
+				<div style="position: relative">
+					<textarea
+						#newMessageInput
+						nz-input
+						nzSize="large"
+						type="text"
+						placeholder="Message"
+						formControlName="message"
+						nzAutosize
+						id="message-input"
+						(keydown.enter)="enterOnMessageSubject.next($event)"
+						nzMentionTrigger
+						[class.has-counter]="showRemainingChars$ | async"
+					>
+					</textarea>
+					<div
+						id="remaining-chars"
+						[class.invalid]="(remainingChars$ | async)! < 0"
+						*ngIf="showRemainingChars$ | async"
+					>
+						{{ remainingChars$ | async }}
+					</div>
+				</div>
 				<ng-container *nzMentionSuggestion="let member">
 					<span [style.color]="member.color">{{ member.nickname }}</span>
 				</ng-container>
@@ -52,7 +63,10 @@
 			nzSize="large"
 			nzType="primary"
 			id="send-button"
-			[disabled]="(roomHasMultipleMembers$ | async) === false"
+			[disabled]="
+				(roomHasMultipleMembers$ | async) === false ||
+				newMessageForm.get('message')?.hasError('maxlength')
+			"
 			[ngxVibration]="vibrationConfig.soft"
 		>
 			<i nz-icon nzType="send" nzTheme="outline"></i>

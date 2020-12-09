@@ -10,6 +10,7 @@ export const GLOBAL_CONFIG = {
 			intervalCount: 5,
 		},
 		hideLastReadMessageAfterStickToBottomDelay: 10000,
+		maxMessageCharCount: 700,
 	},
 	vibration: {
 		default: [20],

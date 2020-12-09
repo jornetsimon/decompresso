@@ -15,7 +15,16 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { merge, Subject } from 'rxjs';
 import { RoomService } from '@services/room.service';
-import { delay, filter, map, startWith, tap, withLatestFrom } from 'rxjs/operators';
+import {
+	delay,
+	distinctUntilChanged,
+	filter,
+	map,
+	share,
+	startWith,
+	tap,
+	withLatestFrom,
+} from 'rxjs/operators';
 import { NzMentionComponent } from 'ng-zorro-antd/mention';
 import { User } from '@model/user';
 import { UserService } from '@services/user.service';
@@ -34,7 +43,10 @@ export class MessageFormComponent implements AfterViewInit {
 	@ViewChild('newMessageInput') newMessageInputRef: ElementRef<HTMLDivElement>;
 	@ViewChild('mention') mention: NzMentionComponent;
 	newMessageForm = new FormGroup({
-		message: new FormControl(undefined, [Validators.required]),
+		message: new FormControl(undefined, [
+			Validators.required,
+			Validators.maxLength(GLOBAL_CONFIG.chat.maxMessageCharCount),
+		]),
 	});
 	vibrationConfig = GLOBAL_CONFIG.vibration;
 	roomHasMultipleMembers$ = this.chatService.roomHasMultipleMembers$;
@@ -49,6 +61,13 @@ export class MessageFormComponent implements AfterViewInit {
 			map(() => true)
 		)
 	).pipe(startWith(true));
+	remainingChars$ = this.newMessageForm.get('message')!.valueChanges.pipe(
+		filter((value) => value !== undefined),
+		distinctUntilChanged(),
+		map((value: string) => GLOBAL_CONFIG.chat.maxMessageCharCount - value?.length),
+		share()
+	);
+	showRemainingChars$ = this.remainingChars$.pipe(map((count) => count <= 10));
 
 	emojiMartI18n = {
 		search: 'Recherche',
@@ -129,7 +148,7 @@ export class MessageFormComponent implements AfterViewInit {
 
 	sendMessage() {
 		const content = this.newMessageForm.value.message?.trim();
-		if (!content) {
+		if (!content || this.newMessageForm.invalid) {
 			return;
 		}
 		this.newMessageForm.reset();
