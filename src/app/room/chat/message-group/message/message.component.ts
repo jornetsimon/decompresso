@@ -56,6 +56,10 @@ export class MessageComponent implements AfterViewInit {
 					'#chat-content'
 				);
 
+				if (!(bubbleElement && chatContentElement)) {
+					return false;
+				}
+
 				const bubbleRect = bubbleElement.getBoundingClientRect();
 				const chatContentRect = chatContentElement.getBoundingClientRect();
 
