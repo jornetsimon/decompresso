@@ -5,6 +5,7 @@ import { RoomService } from '@services/room.service';
 import { UserService } from '@services/user.service';
 import { FeedBuilder } from './feed-builder';
 import { Feed } from './model/feed-entry';
+import { PurgeService } from '@services/purge.service';
 
 @Injectable({
 	providedIn: 'root',
@@ -34,7 +35,8 @@ export class FeedService {
 				userUid,
 				lastReadMessage,
 				this.feedLoadCount,
-				this.initializationDate
+				this.initializationDate,
+				this.purgeService.lastPurge
 			);
 
 			return feedBuilder.feed();
@@ -45,5 +47,9 @@ export class FeedService {
 		share()
 	);
 
-	constructor(private roomService: RoomService, private userService: UserService) {}
+	constructor(
+		private roomService: RoomService,
+		private userService: UserService,
+		private purgeService: PurgeService
+	) {}
 }

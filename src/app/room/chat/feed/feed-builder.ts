@@ -2,14 +2,12 @@ import { Message } from '@model/message';
 import { RoomMember } from '@model/room-member';
 import { Reaction } from '@model/reaction';
 import {
-	addDays,
 	differenceInMinutes,
 	fromUnixTime,
 	isAfter,
 	isBefore,
 	isEqual,
 	isWithinInterval,
-	startOfWeek,
 } from 'date-fns/esm';
 import { timestampToDate } from '@utilities/timestamp';
 import { GLOBAL_CONFIG } from '../../../global-config';
@@ -22,8 +20,6 @@ import { MessageFeedEntry } from './model/message.feed-entry';
 import { SystemFeedEntry } from './model/system.feed-entry';
 
 export class FeedBuilder {
-	lastPurge: Date = startOfWeek(Date.now()); // TODO: replace with actual value from DB
-	nextPurge: Date;
 	constructor(
 		private messages: ReadonlyArray<Message>,
 		private members: ReadonlyArray<RoomMember>,
@@ -31,10 +27,9 @@ export class FeedBuilder {
 		private userUid: string,
 		private lastReadMessage: Message | undefined,
 		private feedLoadCount: number,
-		private initializationDate: Date
-	) {
-		this.nextPurge = addDays(this.lastPurge, GLOBAL_CONFIG.chat.purgeIntervalDays);
-	}
+		private initializationDate: Date,
+		private lastPurge: Date
+	) {}
 
 	/**
 	 * Reducer function to group messages by adjacent author

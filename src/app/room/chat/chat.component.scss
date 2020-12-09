@@ -1,5 +1,14 @@
+::ng-deep #chat-card {
+	position: relative;
+}
 ::ng-deep .ant-card {
 	box-shadow: 1px 2px 12px 0 #e4e4e4;
+}
+::ng-deep mas-purge-notification {
+	position: absolute;
+	width: 100%;
+	top: 0;
+	left: 0;
 }
 ::ng-deep #chat-card .ant-card-body {
 	display: flex;
@@ -48,6 +57,9 @@
 		z-index: 10;
 		background-color: #f7f7f9;
 		width: 100%;
+	}
+	::ng-deep mas-purge-notification {
+		top: $headerHeight + $pageHeaderHeight;
 	}
 	::ng-deep #chat-card {
 		padding-top: 140px !important;
