@@ -3,13 +3,15 @@ import { RoomMember } from '@model/room-member';
 import { Reaction } from '@model/reaction';
 import {
 	differenceInMinutes,
+	format,
 	fromUnixTime,
 	isAfter,
 	isBefore,
 	isEqual,
 	isWithinInterval,
+	startOfWeek,
 } from 'date-fns/esm';
-import { timestampToDate } from '@utilities/timestamp';
+import { dateToTimestamp, timestampToDate } from '@utilities/timestamp';
 import { GLOBAL_CONFIG } from '../../../global-config';
 import { MessageGroup } from './model/message/message-group';
 import { Feed, FeedEntry } from './model/feed-entry';
@@ -18,6 +20,7 @@ import { MessageReactions } from './model/message/message-reactions';
 import { LastReadMessageFeedEntry } from './model/last-read-message.feed-entry';
 import { MessageFeedEntry } from './model/message.feed-entry';
 import { SystemFeedEntry } from './model/system.feed-entry';
+import { fr } from 'date-fns/locale';
 
 export class FeedBuilder {
 	constructor(
@@ -28,7 +31,7 @@ export class FeedBuilder {
 		private lastReadMessage: Message | undefined,
 		private feedLoadCount: number,
 		private initializationDate: Date,
-		private lastPurge: Date
+		private lastPurge: Date | undefined
 	) {}
 
 	/**
@@ -150,7 +153,7 @@ export class FeedBuilder {
 				m.author !== this.userUid &&
 				isBefore(fromUnixTime(m.createdAt.seconds), this.initializationDate)
 		);
-		if (this.lastReadMessage) {
+		if (this.lastReadMessage && messagesFromOthers.length) {
 			const isThereMessagesSinceLastRead = isBefore(
 				fromUnixTime(this.lastReadMessage.createdAt.seconds),
 				fromUnixTime(messagesFromOthers[messagesFromOthers.length - 1].createdAt.seconds)
@@ -179,10 +182,24 @@ export class FeedBuilder {
 	}
 
 	private buildSystemEntries(): ReadonlyArray<SystemFeedEntry> {
+		const purgeEntry: ReadonlyArray<SystemFeedEntry> = this.lastPurge
+			? [
+					{
+						type: 'system',
+						timestamp: dateToTimestamp(this.lastPurge),
+						color: '#767676',
+						content: `Dernière purge effectuée ${format(this.lastPurge, 'EEEE', {
+							locale: fr,
+							weekStartsOn: 1,
+						})} matin`,
+						icon: '🧹',
+					},
+			  ]
+			: [];
 		const memberJoinEntries: ReadonlyArray<SystemFeedEntry> = this.members
 			.filter((member) =>
 				isWithinInterval(fromUnixTime(member.createdAt.seconds), {
-					start: this.lastPurge,
+					start: this.lastPurge || startOfWeek(Date.now(), { weekStartsOn: 1 }),
 					end: Date.now(),
 				})
 			)
@@ -196,7 +213,7 @@ export class FeedBuilder {
 				};
 			});
 
-		return [...memberJoinEntries];
+		return [...purgeEntry, ...memberJoinEntries];
 	}
 
 	feed(): Feed {

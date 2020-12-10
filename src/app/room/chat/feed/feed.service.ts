@@ -26,8 +26,9 @@ export class FeedService {
 		this.roomService.reactions$,
 		this.userService.userUid$.pipe(first()),
 		this.roomService.lastReadMessageStored$.pipe(first()),
+		this.roomService.lastPurge$.pipe(first()),
 	]).pipe(
-		map(([messages, members, reactions, userUid, lastReadMessage]) => {
+		map(([messages, members, reactions, userUid, lastReadMessage, lastPurge]) => {
 			const feedBuilder = new FeedBuilder(
 				messages,
 				members,
@@ -36,7 +37,7 @@ export class FeedService {
 				lastReadMessage,
 				this.feedLoadCount,
 				this.initializationDate,
-				this.purgeService.lastPurge
+				lastPurge
 			);
 
 			return feedBuilder.feed();

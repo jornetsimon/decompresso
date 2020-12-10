@@ -12,7 +12,8 @@ import {
 } from 'date-fns/esm';
 import { GLOBAL_CONFIG } from '../../global-config';
 import { Observable, timer } from 'rxjs';
-import { filter, map, share, tap } from 'rxjs/operators';
+import { filter, map, share, switchMapTo, tap } from 'rxjs/operators';
+import { RoomService } from '@services/room.service';
 
 interface PurgeNotification {
 	number: number;
@@ -22,8 +23,15 @@ interface PurgeNotification {
 	providedIn: 'root',
 })
 export class PurgeService {
-	lastPurge: Date = startOfWeek(Date.now(), { weekStartsOn: 1 }); // TODO: replace with actual value from DB
-	nextPurge: Date;
+	lastPurge$ = this.roomService.lastPurge$;
+	nextPurge$ = this.lastPurge$.pipe(
+		map((lastPurge) =>
+			addDays(
+				lastPurge || startOfWeek(Date.now(), { weekStartsOn: 1 }),
+				GLOBAL_CONFIG.chat.purgeIntervalDays
+			)
+		)
+	);
 	private notificationInitialDelay = 3000;
 	private notificationCheckIntervalHours = 1;
 	private today = Date.now();
@@ -45,10 +53,11 @@ export class PurgeService {
 				!alreadyNotifiedForToday
 			);
 		}),
-		map(() => {
-			const daysToPurge = differenceInDays(this.nextPurge, this.today);
+		switchMapTo(this.nextPurge$),
+		map((nextPurge) => {
+			const daysToPurge = differenceInDays(nextPurge, this.today);
 			if (daysToPurge === 0) {
-				const hoursToPurge = differenceInHours(this.nextPurge, this.today);
+				const hoursToPurge = differenceInHours(nextPurge, this.today);
 				return {
 					number: hoursToPurge,
 					label: `heure${hoursToPurge > 1 ? 's' : ''} avant<br/>la purge`,
@@ -68,7 +77,5 @@ export class PurgeService {
 		share()
 	);
 
-	constructor() {
-		this.nextPurge = addDays(this.lastPurge, GLOBAL_CONFIG.chat.purgeIntervalDays);
-	}
+	constructor(private roomService: RoomService) {}
 }

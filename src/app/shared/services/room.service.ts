@@ -101,6 +101,10 @@ export class RoomService extends ObservableStore<StoreState> {
 			return hash(a || {}) === hash(b || {});
 		})
 	);
+	lastPurge$ = this.chat$.pipe(
+		map((chat) => (chat.last_purge ? timestampToDate(chat.last_purge) : undefined)),
+		distinctUntilChanged()
+	);
 	lastReadMessageStored$ = this.member$.pipe(
 		map((member) => member.last_read_message),
 		distinctUntilChanged((a, b) => a?.uid === b?.uid)
