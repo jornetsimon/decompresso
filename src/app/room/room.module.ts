@@ -7,6 +7,7 @@ import { SharedModule } from '../shared/shared.module';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import {
 	CloseCircleTwoTone,
+	ExclamationCircleTwoTone,
 	QuestionCircleFill,
 	SendOutline,
 	SmileOutline,
@@ -37,6 +38,7 @@ const roomRoutes: Routes = [
 			SendOutline,
 			TeamOutline,
 			CloseCircleTwoTone,
+			ExclamationCircleTwoTone,
 			SmileOutline,
 		]),
 		ChatModule,

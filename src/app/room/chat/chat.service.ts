@@ -157,6 +157,25 @@ export class ChatService {
 			)
 			.toPromise();
 	}
+	reportMessage(message: Message) {
+		return combineLatest([
+			this.userService.userUid$.pipe(first()),
+			this.roomService.room$.pipe(first()),
+		])
+			.pipe(
+				switchMap(([userUid, room]) => {
+					if (userUid === message.author) {
+						return throwError(new Error('report_forbidden_for_this_user'));
+					}
+					return this.dataService.reportsCol(room.domain).add({
+						author: userUid,
+						message,
+						createdAt: new Date(),
+					} as any);
+				})
+			)
+			.toPromise();
+	}
 
 	toggleReaction(message: Message, reactionType: ReactionType) {
 		return combineLatest([

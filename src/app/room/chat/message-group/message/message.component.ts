@@ -10,11 +10,15 @@ import { ChatService } from '../../chat.service';
 import { Message } from '@model/message';
 import { Reaction, ReactionType } from '@model/reaction';
 import { fromEvent, Observable } from 'rxjs';
-import { debounceTime, filter, map, take } from 'rxjs/operators';
+import { debounceTime, filter, first, map, take } from 'rxjs/operators';
 import { UserService } from '@services/user.service';
 import { GLOBAL_CONFIG } from '../../../../global-config';
 import { getRegExp } from '@utilities/regex';
 import { MappedMessage } from '../../feed/model/message/mapped-message';
+import { NzModalService } from 'ng-zorro-antd/modal';
+import { ReportComponent } from '../../report/report.component';
+import { RoomService } from '@services/room.service';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
 	selector: 'mas-message',
@@ -33,6 +37,7 @@ export class MessageComponent implements AfterViewInit {
 	private mentionRegex = getRegExp('@');
 	vibrationConfig = GLOBAL_CONFIG.vibration;
 	highlightForDeletion: boolean;
+	highlightForReport: boolean;
 	/**
 	 * Is the message bubble currently visible in the chat
 	 */
@@ -41,7 +46,10 @@ export class MessageComponent implements AfterViewInit {
 	constructor(
 		private chatService: ChatService,
 		private userService: UserService,
-		private elRef: ElementRef
+		private roomService: RoomService,
+		private elRef: ElementRef,
+		private modalService: NzModalService,
+		private nzMessageService: NzMessageService
 	) {}
 
 	ngAfterViewInit() {
@@ -131,9 +139,66 @@ export class MessageComponent implements AfterViewInit {
 	delete() {
 		this.chatService.deleteMessage(this.message);
 	}
+	openReportModal() {
+		this.roomService.members$
+			.pipe(
+				map((members) => members.find((m) => m.uid === this.message.author)),
+				first()
+			)
+			.toPromise()
+			.then((authorUser) => {
+				const reportModal = this.modalService.create({
+					nzTitle: 'Signaler un message',
+					nzContent: ReportComponent,
+					nzComponentParams: {
+						message: {
+							uid: this.message.uid,
+							author: this.message.author,
+							createdAt: this.message.createdAt,
+							content: this.message.content,
+						},
+						authorUser,
+					},
+					nzClassName: 'report-modal',
+					nzFooter: [
+						{
+							label: 'Annuler',
+							type: 'default',
+							onClick: () => reportModal.destroy(),
+						},
+						{
+							label: 'Signaler ce message',
+							type: 'primary',
+							autoLoading: true,
+							onClick: (component: ReportComponent) => {
+								this.chatService.reportMessage(component.message).then(
+									() => {
+										this.nzMessageService.success('Message signalé');
+									},
+									(error) => {
+										console.error(error);
+										this.nzMessageService.error(
+											`Le message n'a pas pu être signalé.<br/>Vous pouvez contacter notre support : <a href="mailto:support@decompresso.fr">support@decompresso.fr</a>.`,
+											{
+												nzDuration: 20000,
+												nzPauseOnHover: true,
+											}
+										);
+									}
+								);
+								reportModal.destroy();
+							},
+						},
+					],
+				});
+			});
+	}
 
 	onDeletePopoverToggle(shown: boolean) {
 		this.highlightForDeletion = shown;
+	}
+	onReportPopoverToggle(shown: boolean) {
+		this.highlightForReport = shown;
 	}
 
 	renderedContent(content: string) {

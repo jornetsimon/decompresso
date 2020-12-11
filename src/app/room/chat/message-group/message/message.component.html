@@ -2,6 +2,7 @@
 	class="bubble-container"
 	[class.has-reactions]="message.reactions.like || message.reactions.dislike"
 	[class.highlight-for-deletion]="highlightForDeletion"
+	[class.highlight-for-report]="highlightForReport"
 >
 	<div
 		class="bubble"
@@ -56,6 +57,25 @@
 		nzCancelText="Annuler"
 		(nzOnConfirm)="delete()"
 	></i>
+	<i
+		nz-icon
+		nzType="exclamation-circle"
+		nzTheme="twotone"
+		twoToneColor="orange"
+		*ngIf="!isMine"
+		class="report-icon"
+		nz-popconfirm
+		[nzPopconfirmTitle]="reportPopconfirmTitle"
+		(nzPopconfirmVisibleChange)="onReportPopoverToggle($event)"
+		nzOkText="Signaler..."
+		nzPopconfirmOverlayClassName="report-popconfirm"
+		nzCancelText="Annuler"
+		(nzOnConfirm)="openReportModal()"
+	></i>
+	<ng-template #reportPopconfirmTitle>
+		Si vous considérez ce message comme contraire au règles du chat,<br />
+		vous pouvez le signaler.
+	</ng-template>
 	<div class="reaction-icons-container">
 		<div
 			class="reaction-icon"

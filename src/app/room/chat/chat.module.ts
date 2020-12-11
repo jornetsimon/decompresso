@@ -11,6 +11,7 @@ import { PickerModule } from '@ctrl/ngx-emoji-mart';
 import { LastReadMessageComponent } from './last-read-message/last-read-message.component';
 import { SystemComponent } from './system/system.component';
 import { PurgeNotificationComponent } from './purge-notification/purge-notification.component';
+import { ReportComponent } from './report/report.component';
 
 @NgModule({
 	declarations: [
@@ -21,6 +22,7 @@ import { PurgeNotificationComponent } from './purge-notification/purge-notificat
 		LastReadMessageComponent,
 		SystemComponent,
 		PurgeNotificationComponent,
+		ReportComponent,
 	],
 	imports: [CommonModule, SharedModule, NzIconModule.forChild([]), NzMentionModule, PickerModule],
 	exports: [ChatComponent],

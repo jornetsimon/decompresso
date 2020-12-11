@@ -17,10 +17,14 @@ service cloud.firestore {
 				allow read: if isMyDomain(domain);
 				allow update: if isMyDomain(domain) && authUidMatches(userId);
 			}
+			match /reports/{uid} {
+				allow create: if isMyDomain(domain);
+			}
 		}
 		match /chats/{domain} {
 			allow get, update: if isMyDomain(domain);
 		}
+
 
 		function isVerified() {
 			return request.auth.token.email_verified == true || exists(/databases/$(database)/documents/users/$(request.auth.uid));
