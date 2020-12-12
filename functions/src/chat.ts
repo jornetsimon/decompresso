@@ -3,6 +3,8 @@ import { db } from './init';
 import { Endpoints } from './index';
 import * as admin from 'firebase-admin';
 
+const nodeMailer = require('nodemailer');
+
 /**
  * When the max message count is reached, delete the oldest ones
  */
@@ -49,4 +51,44 @@ export const purgeChat = functions.pubsub
 
 		// Execute all jobs concurrently
 		return await Promise.all(chatJobs);
+	});
+
+/**
+ * On report creation, send an email to support
+ */
+export const onReportCreated = functions.firestore
+	.document(`/rooms/{domain}/reports/{uid}`)
+	.onCreate((snapshot, context) => {
+		const data = snapshot.data();
+		const domain = context.params.domain;
+
+		const transporter = nodeMailer.createTransport({
+			host: 'smtp-relay.gmail.com',
+			port: 587,
+			secure: false,
+			auth: {
+				type: 'OAuth2',
+				user: 'simon@job-tunnel.com',
+				serviceClient: functions.config().nodemailer.client_id,
+				privateKey: functions.config().nodemailer.private_key,
+			},
+		});
+
+		const mailOptions = {
+			from: 'decompresso@job-tunnel.com',
+			to: 'support@job-tunnel.com',
+			subject: `[Signalement] ${domain}`,
+			html: `
+				Domaine : ${domain}<br/>
+				Signalé par : ${data.author}<br/>
+				ID du message : ${data.message.uid}<br/>
+				Contenu : <blockquote>${data.message.content}</blockquote><br/>
+				ID de l'auteur : ${data.message.author}<br/>
+				Date du message : ${new Date(data.message.createdAt.seconds * 1000).toLocaleString('fr-FR', {
+					timeZone: 'Europe/Paris',
+				})}
+			`,
+		};
+
+		return transporter.sendMail(mailOptions);
 	});
