@@ -1,8 +1,10 @@
 import { Message } from '@model/message';
 import { Timestamp } from '@utilities/timestamp';
+import { RoomMember } from '@model/room-member';
 
 export interface Report {
-	author: string;
+	report_author: RoomMember;
 	message: Message;
+	message_author: RoomMember;
 	createdAt: Timestamp;
 }

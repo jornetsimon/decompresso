@@ -22,6 +22,8 @@ import { Reaction, ReactionType } from '@model/reaction';
 import { fromUnixTime, isAfter } from 'date-fns/esm';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { MappedMessage } from './feed/model/message/mapped-message';
+import { Report } from '@model/report';
+import { dateToTimestamp } from '@utilities/timestamp';
 import firestore = firebase.firestore;
 
 const hash = require('object-hash');
@@ -159,19 +161,22 @@ export class ChatService {
 	}
 	reportMessage(message: Message) {
 		return combineLatest([
-			this.userService.userUid$.pipe(first()),
+			this.roomService.member$.pipe(first()),
+			this.roomService.members$.pipe(first()),
 			this.roomService.room$.pipe(first()),
 		])
 			.pipe(
-				switchMap(([userUid, room]) => {
-					if (userUid === message.author) {
+				switchMap(([member, members, room]) => {
+					if (member.uid === message.author) {
 						return throwError(new Error('report_forbidden_for_this_user'));
 					}
-					return this.dataService.reportsCol(room.domain).add({
-						author: userUid,
+					const report: Report = {
+						report_author: member,
 						message,
-						createdAt: new Date(),
-					} as any);
+						message_author: members.find((m) => m.uid === message.author)!,
+						createdAt: dateToTimestamp(new Date()),
+					};
+					return this.dataService.reportsCol(room.domain).add(report as any);
 				})
 			)
 			.toPromise();
