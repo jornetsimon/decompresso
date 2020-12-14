@@ -24,6 +24,9 @@ service cloud.firestore {
 		match /chats/{domain} {
 			allow get, update: if isMyDomain(domain);
 		}
+		match /{path=**}/reports/{uid} {
+        	allow read, write: if isAdmin();
+        }
 
 
 		function isVerified() {
@@ -40,6 +43,9 @@ service cloud.firestore {
 		}
 		function isMyDomain(domain) {
 			return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.domain == domain && isVerified();
+		}
+		function isAdmin() {
+			return isVerified() && request.auth.token.email == 'simon@job-tunnel.com' || request.auth.token.email == 'annabelle@job-tunnel.com';
 		}
 	}
 }

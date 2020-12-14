@@ -175,6 +175,7 @@ export class ChatService {
 						message,
 						message_author: members.find((m) => m.uid === message.author)!,
 						createdAt: dateToTimestamp(new Date()),
+						moderation: 'pending',
 					};
 					return this.dataService.reportsCol(room.domain).add(report as any);
 				})

@@ -7,4 +7,7 @@ export interface Report {
 	message: Message;
 	message_author: RoomMember;
 	createdAt: Timestamp;
+	moderation: ModerationType;
 }
+
+export type ModerationType = 'moderate' | 'leave' | 'pending';

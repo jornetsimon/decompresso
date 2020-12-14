@@ -4,6 +4,7 @@ import { LayoutComponent } from './layout/layout.component';
 import { AngularFireAuthGuard, redirectUnauthorizedTo } from '@angular/fire/auth-guard';
 import { WelcomeComponent } from './welcome/welcome.component';
 import { HomeGuard } from './home/home.guard';
+import { AdminGuard } from './admin/admin.guard';
 
 const routes: Routes = [
 	{
@@ -28,6 +29,11 @@ const routes: Routes = [
 			{
 				path: 'help',
 				loadChildren: () => import('./help/help.module').then((m) => m.HelpModule),
+			},
+			{
+				path: 'admin',
+				loadChildren: () => import('./admin/admin.module').then((m) => m.AdminModule),
+				canLoad: [AdminGuard],
 			},
 		],
 	},

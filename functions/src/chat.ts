@@ -61,6 +61,9 @@ export const onReportCreated = functions.firestore
 	.onCreate((snapshot, context) => {
 		const data = snapshot.data();
 		const domain = context.params.domain;
+		const moderationUrl = `https://www.decompresso.fr/admin/reports/${
+			context.params.uid
+		}?domain=${encodeURIComponent(domain)}`;
 
 		const transporter = nodeMailer.createTransport({
 			host: 'smtp-relay.gmail.com',
@@ -87,6 +90,8 @@ export const onReportCreated = functions.firestore
 				Date du message : ${new Date(data.message.createdAt.seconds * 1000).toLocaleString('fr-FR', {
 					timeZone: 'Europe/Paris',
 				})}
+				<br/><br/>
+				<a href="${moderationUrl}">Lien de modération</a>
 			`,
 		};
 

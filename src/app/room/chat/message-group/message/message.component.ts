@@ -202,6 +202,9 @@ export class MessageComponent implements AfterViewInit {
 	}
 
 	renderedContent(content: string) {
+		if (this.message.moderated) {
+			return `<span class="italic">Le contenu de ce message a été modéré.</span>`;
+		}
 		return content.replace(
 			this.mentionRegex,
 			(match) => `<span class="mention">${match.trim()}</span>`

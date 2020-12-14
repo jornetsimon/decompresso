@@ -62,7 +62,7 @@
 		nzType="exclamation-circle"
 		nzTheme="twotone"
 		twoToneColor="orange"
-		*ngIf="!isMine"
+		*ngIf="!isMine && !message.moderated"
 		class="report-icon"
 		nz-popconfirm
 		[nzPopconfirmTitle]="reportPopconfirmTitle"

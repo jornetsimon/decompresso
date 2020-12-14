@@ -5,4 +5,5 @@ export interface Message {
 	createdAt: Timestamp;
 	author: string;
 	content: string;
+	moderated?: boolean;
 }

@@ -1,0 +1,23 @@
+<h1 nz-typography>Modération</h1>
+
+<div fxLayout="column" fxLayoutAlign="center center">
+	<ng-container *ngIf="reports$ | async as reports">
+		<nz-select
+			ngModel
+			(ngModelChange)="onReportSelected($event)"
+			[nzPlaceHolder]="reports.length + ' signalements'"
+			nzSize="large"
+		>
+			<nz-option
+				*ngFor="let report of reports$ | async"
+				[nzValue]="report"
+				[nzLabel]="
+					(report.createdAt | timestampToDate) + ' - ' + report.message_author.domain
+				"
+			></nz-option>
+		</nz-select>
+	</ng-container>
+</div>
+<div class="my3">
+	<router-outlet></router-outlet>
+</div>

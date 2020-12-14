@@ -1,0 +1,61 @@
+<nz-card *ngIf="report$ | async as report" [nzTitle]="cardTitle">
+	<ng-template #cardTitle>
+		<div fxLayoutAlign="space-between">
+			<div>
+				Signalement dans le salon <strong>{{ report.message_author.domain }}</strong>
+			</div>
+			<div>
+				<a [href]="firestoreConsoleReportUrl$ | async"> #{{ report.id }} </a>
+			</div>
+		</div>
+	</ng-template>
+	<div>
+		<nz-descriptions nzBordered [nzColumn]="2">
+			<nz-descriptions-item nzTitle="Signalé par">
+				<span
+					class="bold"
+					[style.color]="report.report_author.color"
+					[nz-tooltip]="report.report_author.uid"
+				>
+					{{ report.report_author.nickname }}
+				</span>
+			</nz-descriptions-item>
+			<nz-descriptions-item nzTitle="Signalé le">
+				{{ report.createdAt | timestampToDate: "dd/MM/yyyy à HH'h'mm" }}
+			</nz-descriptions-item>
+			<nz-descriptions-item nzTitle="ID du message" nzSpan="2">
+				{{ report.message.uid }}
+			</nz-descriptions-item>
+			<nz-descriptions-item nzTitle="Contenu" nzSpan="2">
+				<div class="quote">{{ report.message.content }}</div>
+			</nz-descriptions-item>
+			<nz-descriptions-item nzTitle="Auteur du message">
+				<span
+					class="bold"
+					[style.color]="report.message_author.color"
+					[nz-tooltip]="report.message_author.uid"
+				>
+					{{ report.message_author.nickname }}
+				</span>
+			</nz-descriptions-item>
+			<nz-descriptions-item nzTitle="Date du message">
+				{{ report.message.createdAt | timestampToDate: "dd/MM/yyyy à HH'h'mm" }}
+			</nz-descriptions-item>
+		</nz-descriptions>
+	</div>
+
+	<div class="mt3" fxLayoutAlign="center">
+		<nz-button-group
+			nzSize="large"
+			*ngIf="report.moderation === 'pending'; else moderationResultTpl"
+		>
+			<button nz-button nzType="primary" (click)="action('moderate')">Modérer</button>
+			<button nz-button nzType="default" (click)="action('leave')">Ne rien faire</button>
+		</nz-button-group>
+		<ng-template #moderationResultTpl>
+			<h2 class="moderation-result">
+				{{ report.moderation === 'moderate' ? 'Modéré' : 'Ignoré' }}
+			</h2>
+		</ng-template>
+	</div>
+</nz-card>
