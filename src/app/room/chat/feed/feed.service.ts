@@ -6,6 +6,8 @@ import { UserService } from '@services/user.service';
 import { FeedBuilder } from './feed-builder';
 import { Feed } from './model/feed-entry';
 import { PurgeService } from '@services/purge.service';
+import { isBefore } from 'date-fns/esm';
+import { timestampToDate } from '@utilities/timestamp';
 
 @Injectable({
 	providedIn: 'root',
@@ -28,6 +30,17 @@ export class FeedService {
 		this.roomService.lastReadMessageStored$.pipe(first()),
 		this.roomService.lastPurge$.pipe(first()),
 	]).pipe(
+		tap(([messages, members, reactions, userUid, lastReadMessage, lastPurge]) => {
+			// If the last read message dates before the last purge, reset it
+			if (
+				lastReadMessage &&
+				lastPurge &&
+				isBefore(timestampToDate(lastReadMessage.createdAt), lastPurge)
+			) {
+				console.log('resetting last read message');
+				this.roomService.updateMemberLastReadMessage(null);
+			}
+		}),
 		map(([messages, members, reactions, userUid, lastReadMessage, lastPurge]) => {
 			const feedBuilder = new FeedBuilder(
 				messages,

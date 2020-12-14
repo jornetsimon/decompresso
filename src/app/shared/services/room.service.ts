@@ -146,7 +146,7 @@ export class RoomService extends ObservableStore<StoreState> {
 		return isBefore(aDate, bDate) ? -1 : 1;
 	}
 
-	updateMemberLastReadMessage(message: Message) {
+	updateMemberLastReadMessage(message: Message | null) {
 		return this.member$
 			.pipe(
 				first(),

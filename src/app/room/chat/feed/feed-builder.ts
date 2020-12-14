@@ -28,7 +28,7 @@ export class FeedBuilder {
 		private members: ReadonlyArray<RoomMember>,
 		private reactions: ReadonlyArray<Reaction> | undefined,
 		private userUid: string,
-		private lastReadMessage: Message | undefined,
+		private lastReadMessage: Message | null,
 		private feedLoadCount: number,
 		private initializationDate: Date,
 		private lastPurge: Date | undefined

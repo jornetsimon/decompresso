@@ -82,7 +82,10 @@ export const createUser = functions.https.onCall(async (data, context) => {
 	batch.set(db.doc(`${Endpoints.UserPersonalData}/${uid}`), {
 		email,
 	});
-	batch.set(db.doc(`${Endpoints.Rooms}/${domain}/${Endpoints.RoomMembers}/${uid}`), user);
+	batch.set(db.doc(`${Endpoints.Rooms}/${domain}/${Endpoints.RoomMembers}/${uid}`), {
+		...user,
+		last_read_message: null,
+	});
 	batch.update(db.doc(`${Endpoints.Rooms}/${domain}`), 'member_count', FieldValue.increment(1));
 	await batch.commit();
 
