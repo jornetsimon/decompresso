@@ -2,6 +2,7 @@ import * as functions from 'firebase-functions';
 import { db } from './init';
 import { Endpoints } from './index';
 import * as admin from 'firebase-admin';
+import { sendMail } from './mail';
 
 const nodeMailer = require('nodemailer');
 
@@ -65,21 +66,9 @@ export const onReportCreated = functions.firestore
 			context.params.uid
 		}?domain=${encodeURIComponent(domain)}`;
 
-		const transporter = nodeMailer.createTransport({
-			host: 'smtp-relay.gmail.com',
-			port: 587,
-			secure: false,
-			auth: {
-				type: 'OAuth2',
-				user: 'simon@job-tunnel.com',
-				serviceClient: functions.config().nodemailer.client_id,
-				privateKey: functions.config().nodemailer.private_key,
-			},
-		});
-
 		const mailOptions = {
-			from: 'decompresso@job-tunnel.com',
-			to: 'support@job-tunnel.com',
+			from: 'app@decompresso.fr',
+			to: 'support@decompresso.fr',
 			subject: `[Signalement] ${domain}`,
 			html: `
 				Domaine : ${domain}<br/>
@@ -94,6 +83,39 @@ export const onReportCreated = functions.firestore
 				<a href="${moderationUrl}">Lien de modération</a>
 			`,
 		};
+		return sendMail(mailOptions);
+	});
 
-		return transporter.sendMail(mailOptions);
+export const onReportModified = functions.firestore
+	.document(`/rooms/{domain}/reports/{uid}`)
+	.onUpdate(async (snapshot, context) => {
+		const dataBefore = snapshot.before.data();
+		const dataAfter = snapshot.after.data();
+
+		if (dataBefore.moderation === 'pending' && dataAfter.moderation === 'moderate') {
+			const message = dataAfter.message;
+			const messageAuthorPersonalDataSnap = await db
+				.doc(`${Endpoints.UserPersonalData}/${message.author}`)
+				.get();
+			const messageAuthorEmail = messageAuthorPersonalDataSnap.data()?.email;
+
+			if (!messageAuthorEmail) {
+				throw new Error('no_email_associated_with_message_author');
+			}
+
+			// TODO: lien vers la page de règles
+			return sendMail({
+				from: 'support@decompresso.fr',
+				to: messageAuthorEmail,
+				subject: `[Décompresso] Modération de votre message`,
+				html: `Bonjour,
+				<p>Nous vous informons que l'un de vos messages a fait l'objet d'une modération : </p>
+				<blockquote>${message.content}</blockquote>
+				<p>Nous vous rappelons qu'à défaut du respect des <a href="#">règles de Décompresso</a>, vous pourrez faire l'objet de nouvelles modérations de contenu, qui pourront également conduire à votre exclusion du salon.</p>
+				<p>Cordialement,<br/>
+				L'équipe Décompresso.</p>
+				`,
+			});
+		}
+		return null;
 	});

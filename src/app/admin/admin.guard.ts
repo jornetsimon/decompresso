@@ -17,9 +17,10 @@ export class AdminGuard implements CanLoad {
 		return this.authService.waitForAuthChecked$.pipe(
 			switchMap(() => this.authService.authCredential$),
 			map((authUser) => {
+				const domain = authUser?.email?.split('@')[1];
 				if (
-					authUser?.emailVerified &&
-					authUser?.email?.split('@')[1] === 'job-tunnel.com'
+					(authUser?.emailVerified && domain === 'job-tunnel.com') ||
+					domain === 'decompresso.fr'
 				) {
 					return true;
 				}

@@ -1,6 +1,6 @@
 import { createUser, deleteUser } from './auth';
 import { onUserStatusChanged } from './presence';
-import { onReportCreated, purgeChat, sliceMessages } from './chat';
+import { onReportCreated, onReportModified, purgeChat, sliceMessages } from './chat';
 
 export enum Endpoints {
 	Users = '/users',
@@ -17,3 +17,4 @@ exports.userConnectionStatusSync = onUserStatusChanged;
 exports.sliceMessages = sliceMessages;
 exports.purgeChat = purgeChat;
 exports.onReportCreated = onReportCreated;
+exports.onReportModified = onReportModified;
