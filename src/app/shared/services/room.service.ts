@@ -54,6 +54,7 @@ export class RoomService extends ObservableStore<StoreState> {
 	 * Long lived room members data
 	 */
 	members$: Observable<ReadonlyArray<RoomMember>> = this.userService.user$.pipe(
+		first(),
 		switchMap((user) =>
 			this.dataService.roomMembers$(user.domain).pipe(
 				expectData,
