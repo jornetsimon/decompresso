@@ -8,6 +8,7 @@ import { DataService } from '@services/data.service';
 import { ObservableStore } from '@codewithdan/observable-store';
 import { Serialized } from '@utilities/data-transfer-object';
 import { ConnectionState } from '@services/presence.service';
+import { Message } from '@model/message';
 
 interface StoreState {
 	auth_credential: Serialized<FirebaseUser> | null | undefined;
@@ -48,6 +49,10 @@ export class UserService extends ObservableStore<StoreState> {
 		map((state) => state.connection_state),
 		debounce((state) => (state === 'offline' ? interval(10000) : interval(1000)))
 	);
+	lastReadMessageStored$ = this.user$.pipe(
+		map((user) => user.last_read_message),
+		distinctUntilChanged((a, b) => a?.uid === b?.uid)
+	);
 
 	constructor(private dataService: DataService) {
 		super({});
@@ -61,5 +66,16 @@ export class UserService extends ObservableStore<StoreState> {
 				})
 			)
 			.subscribe();
+	}
+
+	updateLastReadMessage(message: Message | null) {
+		return this.userUid$
+			.pipe(
+				first(),
+				switchMap((userUid) =>
+					this.dataService.userDoc(userUid).update({ last_read_message: message })
+				)
+			)
+			.toPromise();
 	}
 }

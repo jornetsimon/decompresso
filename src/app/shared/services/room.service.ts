@@ -105,10 +105,6 @@ export class RoomService extends ObservableStore<StoreState> {
 		map((chat) => (chat.last_purge ? timestampToDate(chat.last_purge) : undefined)),
 		distinctUntilChanged()
 	);
-	lastReadMessageStored$ = this.member$.pipe(
-		map((member) => member.last_read_message),
-		distinctUntilChanged((a, b) => a?.uid === b?.uid)
-	);
 
 	constructor(
 		private userService: UserService,
@@ -144,18 +140,5 @@ export class RoomService extends ObservableStore<StoreState> {
 		const aDate = timestampToDate(a.createdAt);
 		const bDate = timestampToDate(b.createdAt);
 		return isBefore(aDate, bDate) ? -1 : 1;
-	}
-
-	updateMemberLastReadMessage(message: Message | null) {
-		return this.member$
-			.pipe(
-				first(),
-				switchMap((member) =>
-					this.dataService
-						.roomMemberDoc(member.domain, member.uid)
-						.update({ last_read_message: message })
-				)
-			)
-			.toPromise();
 	}
 }

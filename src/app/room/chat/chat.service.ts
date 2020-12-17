@@ -56,7 +56,7 @@ export class ChatService {
 	 * Emits the latest message read by the user, either locally or stored in the database
 	 */
 	lastReadMessage$ = combineLatest([
-		this.roomService.lastReadMessageStored$,
+		this.userService.lastReadMessageStored$,
 		this.readingState$.pipe(startWith(undefined), debounceTime(500)),
 	]).pipe(
 		map(([latestStored, latestLocal]) => {
@@ -88,7 +88,7 @@ export class ChatService {
 		this.readingState$
 			.pipe(
 				debounceTime(500),
-				withLatestFrom(this.roomService.lastReadMessageStored$),
+				withLatestFrom(this.userService.lastReadMessageStored$),
 				filter(
 					// Only when the message ID differs from the one stored in DB
 					([lastReadMessage, lastReadMessageStored]) =>
@@ -100,7 +100,7 @@ export class ChatService {
 				if (lastReadMessage) {
 					console.log('Updating last read message');
 					// Store it in the DB
-					this.roomService.updateMemberLastReadMessage(lastReadMessage);
+					this.userService.updateLastReadMessage(lastReadMessage);
 				}
 			});
 	}

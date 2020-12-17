@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
 import { combineLatest, Observable } from 'rxjs';
-import { first, map, share, tap } from 'rxjs/operators';
+import { map, share, tap, withLatestFrom } from 'rxjs/operators';
 import { RoomService } from '@services/room.service';
 import { UserService } from '@services/user.service';
 import { FeedBuilder } from './feed-builder';
 import { Feed } from './model/feed-entry';
-import { PurgeService } from '@services/purge.service';
 import { isBefore } from 'date-fns/esm';
 import { timestampToDate } from '@utilities/timestamp';
 
@@ -38,7 +37,7 @@ export class FeedService {
 				isBefore(timestampToDate(lastReadMessage.createdAt), lastPurge)
 			) {
 				console.log('resetting last read message');
-				this.roomService.updateMemberLastReadMessage(null);
+				this.userService.updateLastReadMessage(null);
 			}
 		}),
 		map(([messages, members, reactions, userUid, lastReadMessage, lastPurge]) => {
@@ -61,9 +60,5 @@ export class FeedService {
 		share()
 	);
 
-	constructor(
-		private roomService: RoomService,
-		private userService: UserService,
-		private purgeService: PurgeService
-	) {}
+	constructor(private roomService: RoomService, private userService: UserService) {}
 }
