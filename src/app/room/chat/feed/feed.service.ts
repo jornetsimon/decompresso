@@ -23,13 +23,15 @@ export class FeedService {
 
 	feed$: Observable<Feed> = combineLatest([
 		this.roomService.messages$,
-		this.roomService.members$.pipe(first()),
 		this.roomService.reactions$,
-		this.userService.userUid$.pipe(first()),
-		this.roomService.lastReadMessageStored$.pipe(first()),
-		this.roomService.lastPurge$.pipe(first()),
 	]).pipe(
-		tap(([messages, members, reactions, userUid, lastReadMessage, lastPurge]) => {
+		withLatestFrom(
+			this.roomService.members$,
+			this.userService.userUid$,
+			this.userService.lastReadMessageStored$,
+			this.roomService.lastPurge$
+		),
+		tap(([[messages, reactions], members, userUid, lastReadMessage, lastPurge]) => {
 			// If the last read message dates before the last purge, reset it
 			if (
 				lastReadMessage &&
@@ -40,7 +42,7 @@ export class FeedService {
 				this.userService.updateLastReadMessage(null);
 			}
 		}),
-		map(([messages, members, reactions, userUid, lastReadMessage, lastPurge]) => {
+		map(([[messages, reactions], members, userUid, lastReadMessage, lastPurge]) => {
 			const feedBuilder = new FeedBuilder(
 				messages,
 				members,
