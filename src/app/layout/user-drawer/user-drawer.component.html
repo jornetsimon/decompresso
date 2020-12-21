@@ -5,45 +5,48 @@
 		[nzTitle]="titleTpl"
 		(nzOnClose)="closeDrawer()"
 		nzCloseIcon=""
+		[nzContent]="nzDrawerContent"
 	>
-		<div fxFlex="grow" fxLayout="column">
-			<div fxFlex="grow">
-				<section>
-					<label>Salon</label>
-					<div class="value">
-						{{ user.domain }}
+		<ng-template #nzDrawerContent>
+			<div fxFlex="grow" fxLayout="column">
+				<div fxFlex="grow">
+					<section>
+						<label>Salon</label>
+						<div class="value">
+							{{ user.domain }}
+						</div>
+					</section>
+					<section>
+						<label>Inscrit le</label>
+						<div class="value">
+							{{ user.createdAt | timestampToDate: 'dd/MM/yyyy' }}
+						</div>
+					</section>
+				</div>
+				<div fxFlex="none">
+					<div fxLayout="column" fxLayoutAlign="center center">
+						<button
+							nz-button
+							nzType="default"
+							nzDanger
+							(click)="logout()"
+							class="logout-button"
+						>
+							<i nz-icon nzType="logout" nzTheme="outline"></i>
+							Déconnexion
+						</button>
+						<button
+							nz-button
+							nzType="text"
+							(click)="deleteAccount()"
+							class="delete-account-button"
+						>
+							Supprimer mon compte
+						</button>
 					</div>
-				</section>
-				<section>
-					<label>Inscrit le</label>
-					<div class="value">
-						{{ user.createdAt | timestampToDate: 'dd/MM/yyyy' }}
-					</div>
-				</section>
-			</div>
-			<div fxFlex="none">
-				<div fxLayout="column" fxLayoutAlign="center center">
-					<button
-						nz-button
-						nzType="default"
-						nzDanger
-						(click)="logout()"
-						class="logout-button"
-					>
-						<i nz-icon nzType="logout" nzTheme="outline"></i>
-						Déconnexion
-					</button>
-					<button
-						nz-button
-						nzType="text"
-						(click)="deleteAccount()"
-						class="delete-account-button"
-					>
-						Supprimer mon compte
-					</button>
 				</div>
 			</div>
-		</div>
+		</ng-template>
 	</nz-drawer>
 
 	<ng-template #titleTpl>

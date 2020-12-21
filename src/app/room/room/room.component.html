@@ -33,8 +33,11 @@
 	nzTitle="Membres"
 	[nzMaskClosable]="true"
 	(nzOnClose)="membersDrawer.close()"
+	[nzContent]="nzDrawerContent"
 >
-	<div fxFlex="grow" fxLayout="column">
-		<mas-members></mas-members>
-	</div>
+	<ng-template #nzDrawerContent>
+		<div fxFlex="grow" fxLayout="column">
+			<mas-members></mas-members>
+		</div>
+	</ng-template>
 </nz-drawer>
