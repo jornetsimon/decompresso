@@ -47,7 +47,7 @@ export class PresenceService extends ObservableStore<StoreState> {
 	}
 
 	async trackPresence() {
-		const userStatusDatabaseRef = await this.getDatabaseRef();
+		/*const userStatusDatabaseRef = await this.getDatabaseRef();
 		const userStatusFirestoreRef = await this.getFirestoreRef();
 
 		// Create a reference to the special '.info/connected' path in
@@ -84,12 +84,13 @@ export class PresenceService extends ObservableStore<StoreState> {
 						this.setState({ connection_state: 'online' });
 					});
 				});
-		});
+		});*/
 	}
 
 	async setConnectionState(state: ConnectionState) {
-		console.log(`setting ${state}`);
+		/*console.log(`setting ${state}`);
 		const userStatusDatabaseRef = await this.getDatabaseRef();
-		userStatusDatabaseRef.set(this.connectionStateData(state));
+		userStatusDatabaseRef.set(this.connectionStateData(state));*/
+		return Promise.resolve();
 	}
 }

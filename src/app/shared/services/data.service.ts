@@ -8,6 +8,7 @@ import { map } from 'rxjs/operators';
 import { Chat } from '@model/chat';
 import { RoomMember } from '@model/room-member';
 import { Report } from '@model/report';
+import { FirestoreTrackerService } from '@services/firestore/firestore-tracker.service';
 
 export enum Endpoints {
 	Users = '/users',
@@ -44,7 +45,8 @@ export function expectData<T>(source: Observable<T | undefined>): Observable<T> 
 	providedIn: 'root',
 })
 export class DataService {
-	constructor(private afs: AngularFirestore) {}
+	constructor(private afs: AngularFirestore, private tracker: FirestoreTrackerService) {}
+
 	userDoc(uid: string) {
 		return this.afs.collection<User>(Endpoints.Users).doc(uid);
 	}
@@ -72,25 +74,29 @@ export class DataService {
 	}
 
 	user$(uid: string) {
-		return this.userDoc(uid).valueChanges();
+		return this.userDoc(uid).valueChanges().pipe(this.tracker.logAction('user'));
 	}
 	userPersonalData$(uid: string) {
-		return this.userPersonalDataDoc(uid).valueChanges();
+		return this.userPersonalDataDoc(uid)
+			.valueChanges()
+			.pipe(this.tracker.logAction('user_personal_data'));
 	}
 	room$(domain: string) {
-		return this.roomDoc(domain).valueChanges();
+		return this.roomDoc(domain).valueChanges().pipe(this.tracker.logAction('room'));
 	}
 	roomMember$(domain: string, uid: string) {
-		return this.roomMemberDoc(domain, uid).valueChanges({
-			idField: 'uid',
-		});
+		return this.roomMemberDoc(domain, uid)
+			.valueChanges({
+				idField: 'uid',
+			})
+			.pipe(this.tracker.logAction('member'));
 	}
 	roomMembers$(domain: string) {
-		return this.roomMembersCol(domain).valueChanges({
-			idField: 'uid',
-		});
+		return this.roomMembersCol(domain)
+			.valueChanges({ idField: 'uid' })
+			.pipe(this.tracker.logAction('members'));
 	}
 	chat$(domain: string) {
-		return this.chatDoc(domain).valueChanges();
+		return this.chatDoc(domain).valueChanges().pipe(this.tracker.logAction('chat'));
 	}
 }

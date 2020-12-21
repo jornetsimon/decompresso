@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
 import { combineLatest, Observable } from 'rxjs';
-import { first, map, share, tap } from 'rxjs/operators';
+import { map, share, tap, withLatestFrom } from 'rxjs/operators';
 import { RoomService } from '@services/room.service';
 import { UserService } from '@services/user.service';
 import { FeedBuilder } from './feed-builder';
 import { Feed } from './model/feed-entry';
-import { PurgeService } from '@services/purge.service';
 import { isBefore } from 'date-fns/esm';
 import { timestampToDate } from '@utilities/timestamp';
 
@@ -24,13 +23,15 @@ export class FeedService {
 
 	feed$: Observable<Feed> = combineLatest([
 		this.roomService.messages$,
-		this.roomService.members$.pipe(first()),
 		this.roomService.reactions$,
-		this.userService.userUid$.pipe(first()),
-		this.roomService.lastReadMessageStored$.pipe(first()),
-		this.roomService.lastPurge$.pipe(first()),
 	]).pipe(
-		tap(([messages, members, reactions, userUid, lastReadMessage, lastPurge]) => {
+		withLatestFrom(
+			this.roomService.members$,
+			this.userService.userUid$,
+			this.userService.lastReadMessageStored$,
+			this.roomService.lastPurge$
+		),
+		tap(([[messages, reactions], members, userUid, lastReadMessage, lastPurge]) => {
 			// If the last read message dates before the last purge, reset it
 			if (
 				lastReadMessage &&
@@ -38,10 +39,10 @@ export class FeedService {
 				isBefore(timestampToDate(lastReadMessage.createdAt), lastPurge)
 			) {
 				console.log('resetting last read message');
-				this.roomService.updateMemberLastReadMessage(null);
+				this.userService.updateLastReadMessage(null);
 			}
 		}),
-		map(([messages, members, reactions, userUid, lastReadMessage, lastPurge]) => {
+		map(([[messages, reactions], members, userUid, lastReadMessage, lastPurge]) => {
 			const feedBuilder = new FeedBuilder(
 				messages,
 				members,
@@ -61,9 +62,5 @@ export class FeedService {
 		share()
 	);
 
-	constructor(
-		private roomService: RoomService,
-		private userService: UserService,
-		private purgeService: PurgeService
-	) {}
+	constructor(private roomService: RoomService, private userService: UserService) {}
 }
