@@ -236,4 +236,19 @@ export class AuthService extends ObservableStore<StoreState> {
 			})
 		);
 	}
+
+	resetPassword(email?: string): Observable<void> {
+		if (email) {
+			return from(this.auth.sendPasswordResetEmail(email));
+		}
+		return this.authCredential$.pipe(
+			first(),
+			switchMap((cred) => {
+				if (!cred?.email) {
+					throw new Error('user_has_no_email');
+				}
+				return this.auth.sendPasswordResetEmail(cred.email);
+			})
+		);
+	}
 }

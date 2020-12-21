@@ -91,4 +91,53 @@ export class UserDrawerComponent {
 			},
 		});
 	}
+
+	resetPassword() {
+		let resetPasswordLoading = false;
+		const modal = this.modalService.confirm({
+			nzTitle: 'Modification de mot de passe',
+			nzContent: `Nous pouvons vous envoyer un email pour modifier votre mot de passe.`,
+			nzClassName: 'reset-password-modal',
+			nzOkText: 'Réinitialiser mon mot de passe',
+			nzOkType: 'primary',
+			nzIconType: 'mail',
+			nzCancelText: 'Annuler',
+			nzOkLoading: resetPasswordLoading,
+			nzOnOk: () => {
+				resetPasswordLoading = true;
+				return this.authService
+					.resetPassword()
+					.pipe(
+						tap({
+							next: () => {
+								modal.close();
+							},
+						}),
+						finalize(() => {
+							resetPasswordLoading = true;
+						}),
+						tap({
+							next: () => {
+								this.modalService.success({
+									nzTitle: 'Email envoyé',
+									nzContent:
+										'Vous pourrez modifier votre mot de passe en cliquant sur le lien que vous avez reçu par email sur votre boîte pro.',
+									nzOkText: 'Fermer',
+								});
+							},
+							error: (err) => {
+								console.error(err);
+								this.message.error(
+									'Une erreur est survenue.<br/>Merci de contacter notre support : <a href="mailto:support@decompresso.fr">support@decompresso.fr</a>.',
+									{
+										nzDuration: 20000,
+									}
+								);
+							},
+						})
+					)
+					.toPromise();
+			},
+		});
+	}
 }

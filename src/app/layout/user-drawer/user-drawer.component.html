@@ -38,9 +38,19 @@
 						<button
 							nz-button
 							nzType="text"
-							(click)="deleteAccount()"
-							class="delete-account-button"
+							(click)="resetPassword()"
+							class="action-button"
 						>
+							<i nz-icon nzType="lock" nzTheme="outline"></i>
+							Modifier mon mot de passe
+						</button>
+						<button
+							nz-button
+							nzType="text"
+							(click)="deleteAccount()"
+							class="action-button delete-account-button"
+						>
+							<i nz-icon nzType="frown" nzTheme="outline"></i>
 							Supprimer mon compte
 						</button>
 					</div>
