@@ -1,4 +1,4 @@
-<ng-container *ngIf="roomService.members$ | async as members; else loadingTpl">
+<ng-container *ngIf="roomService.membersWithoutDeleted$ | async as members; else loadingTpl">
 	<nz-list nzBordered nzSize="small" class="members-list">
 		<nz-list-header class="center">
 			<strong>

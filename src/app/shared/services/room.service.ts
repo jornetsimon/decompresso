@@ -58,21 +58,20 @@ export class RoomService extends ObservableStore<StoreState> {
 		switchMap((user) =>
 			this.dataService.roomMembers$(user.domain).pipe(
 				expectData,
-				map((members) =>
-					members
-						.sort((a, b) => RoomService.memberSortFn(a, b, user))
-						.filter((member, index, array) => {
-							// Exclude duplicates by nickname that are deleted (for users that recreated an account)
-							return !(
-								member.deleted &&
-								!!array.find((m) => m.nickname === member.nickname)
-							);
-						})
-				)
+				map((members) => members.sort((a, b) => RoomService.memberSortFn(a, b, user)))
 			)
 		),
 		shareReplay(1)
 	);
+	membersWithoutDeleted$ = this.members$.pipe(
+		map((members) =>
+			members.filter((member, index, array) => {
+				// Exclude duplicates by nickname that are deleted (for users that recreated an account)
+				return !(member.deleted && !!array.find((m) => m.nickname === member.nickname));
+			})
+		)
+	);
+
 	/**
 	 * Stream of chat data
 	 * Disconnect when the user is inactive and reconnect when they come back

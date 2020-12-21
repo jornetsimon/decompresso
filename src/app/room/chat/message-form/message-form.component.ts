@@ -113,7 +113,7 @@ export class MessageFormComponent implements AfterViewInit {
 				}
 			});
 
-		this.roomService.members$
+		this.roomService.membersWithoutDeleted$
 			.pipe(withLatestFrom(this.userService.userUid$), untilDestroyed(this))
 			.subscribe(([members, userUid]) => {
 				if (members) {

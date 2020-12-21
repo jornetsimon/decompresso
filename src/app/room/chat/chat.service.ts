@@ -38,7 +38,7 @@ export class ChatService {
 	/**
 	 * Checks if there is more than two members in the room
 	 */
-	roomHasMultipleMembers$ = this.roomService.members$.pipe(
+	roomHasMultipleMembers$ = this.roomService.membersWithoutDeleted$.pipe(
 		map((members) => members.length >= 2),
 		shareReplay(1)
 	);
