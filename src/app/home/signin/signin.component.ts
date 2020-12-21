@@ -8,6 +8,8 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { GLOBAL_CONFIG } from '../../global-config';
 import { ErrorWithCode } from '@utilities/errors';
 import { NzModalService } from 'ng-zorro-antd/modal';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 type Type = 'login' | 'signup';
 
@@ -24,8 +26,9 @@ export class SigninComponent implements OnInit {
 	tabIndex = 0;
 	loading: boolean;
 
+	emailFc = new FormControl(undefined, [Validators.required]);
 	loginFormGroup = new FormGroup({
-		email: new FormControl(undefined, [Validators.required]),
+		email: this.emailFc,
 		password: new FormGroup(
 			{
 				signupPassword: new FormGroup(
@@ -49,6 +52,10 @@ export class SigninComponent implements OnInit {
 			}
 		),
 	});
+
+	showPasswordResetButton$: Observable<boolean> = this.emailFc.valueChanges.pipe(
+		map((value) => this.emailFc.valid && value)
+	);
 
 	static passwordsMatchValidator: ValidatorFn = (group: FormGroup) => {
 		const pass = group.get('password')?.value;
@@ -193,5 +200,19 @@ export class SigninComponent implements OnInit {
 				}
 				break;
 		}
+	}
+
+	resetPassword() {
+		if (this.emailFc.invalid) {
+			return;
+		}
+		this.authService.resetPassword(this.emailFc.value).subscribe(() => {
+			this.modal.success({
+				nzTitle: 'Email de réinitialisation de mot de passe envoyé',
+				nzContent:
+					'Vous pourrez modifier votre mot de passe en cliquant sur le lien que vous avez reçu par email sur votre boîte pro.',
+				nzOkText: 'Fermer',
+			});
+		});
 	}
 }

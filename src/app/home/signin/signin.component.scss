@@ -39,9 +39,12 @@ $card-radius: 10px;
 .login-button-container {
 	margin-top: 20px;
 }
-.login-button-container button {
+.login-button-container .login-button {
 	font-weight: bold;
 	text-transform: uppercase;
+}
+.reset-password-button {
+	font-size: 12px;
 }
 
 @media (min-width: 768px) {

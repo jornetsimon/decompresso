@@ -145,6 +145,7 @@
 			<button
 				nz-button
 				type="submit"
+				class="login-button"
 				nzType="primary"
 				nzSize="large"
 				[disabled]="loginFormGroup.invalid"
@@ -153,6 +154,16 @@
 			>
 				<ng-container *ngIf="type === 'signup'">Créer mon compte</ng-container>
 				<ng-container *ngIf="type === 'login'">Connexion</ng-container>
+			</button>
+			<button
+				nz-button
+				type="button"
+				nzType="link"
+				class="reset-password-button"
+				*ngIf="showPasswordResetButton$ | async"
+				(click)="resetPassword()"
+			>
+				J'ai oublié mon mot de passe
 			</button>
 		</div>
 	</form>
