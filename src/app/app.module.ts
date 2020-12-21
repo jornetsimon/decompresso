@@ -28,6 +28,7 @@ import { AngularFireAuthModule, USE_EMULATOR as USE_AUTH_EMULATOR } from '@angul
 import { WelcomeComponent } from './welcome/welcome.component';
 import {
 	CheckCircleFill,
+	CheckCircleTwoTone,
 	CommentOutline,
 	IdcardFill,
 	MailOutline,
@@ -53,6 +54,7 @@ registerLocaleData(fr);
 			MailOutline,
 			SafetyCertificateFill,
 			IdcardFill,
+			CheckCircleTwoTone,
 		]),
 		AngularFireModule.initializeApp(environment.firebase),
 		AngularFirestoreModule,

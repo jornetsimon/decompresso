@@ -14,7 +14,7 @@ import { of } from 'rxjs';
 	selector: 'mas-welcome',
 	templateUrl: './welcome.component.html',
 	styleUrls: ['./welcome.component.scss'],
-	changeDetection: ChangeDetectionStrategy.OnPush,
+	changeDetection: ChangeDetectionStrategy.Default,
 })
 export class WelcomeComponent {
 	loginOrCreateAccount$ = this.authService.loginOrCreateAccount().pipe(
@@ -89,6 +89,10 @@ export class WelcomeComponent {
 		share()
 	);
 
+	nicknames$ = this.authService.nicknamesSample();
+	showNicknames: boolean;
+	selectedNickname?: string;
+
 	constructor(
 		private authService: AuthService,
 		private dataService: DataService,
@@ -112,5 +116,24 @@ export class WelcomeComponent {
 			return '';
 		}
 		return split[split.length - 1];
+	}
+
+	selectNickname(nickname: string) {
+		this.authService.changeNickname(nickname).subscribe(
+			() => {
+				this.selectedNickname = nickname;
+			},
+			(error) => {
+				if (error.message === 'nickname_unavailable') {
+					this.message.error(
+						`Désolé, ce pseudo vient d'être choisi à l'instant par un collègue. 😮<br/> Merci d'en choisir un autre.`
+					);
+				} else {
+					this.message.error(
+						`Le changement de pseudo a échoué. <br/>Vous pouvez contacter notre support : <a href="mailto:support@decompresso.fr">support@decompresso.fr</a>.`
+					);
+				}
+			}
+		);
 	}
 }

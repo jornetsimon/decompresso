@@ -70,3 +70,17 @@ q {
 	padding: 0.5em 0.75em;
 	font-size: 12px;
 }
+
+.ant-btn-group.vertical {
+	flex-direction: column;
+	& > .ant-btn:first-child:not(:last-child) {
+		border-radius: 5px 5px 0 0;
+	}
+	& > .ant-btn:last-child:not(:first-child) {
+		border-radius: 0 0 5px 5px;
+	}
+	& .ant-btn + .ant-btn {
+		margin-left: initial;
+		margin-top: -1px;
+	}
+}

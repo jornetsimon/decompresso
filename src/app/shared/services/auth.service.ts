@@ -202,6 +202,15 @@ export class AuthService extends ObservableStore<StoreState> {
 		);
 	}
 
+	nicknamesSample(): Observable<ReadonlyArray<string>> {
+		const callable = this.fns.httpsCallable('nicknamesSample');
+		return callable({ count: 5 });
+	}
+	changeNickname(nickname: string) {
+		const callable = this.fns.httpsCallable('changeNickname');
+		return callable({ nickname });
+	}
+
 	/**
 	 * Log the user out and wait for the state to be propagated
 	 */

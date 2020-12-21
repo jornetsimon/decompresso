@@ -31,9 +31,40 @@
 						nzTooltipTitle="👌"
 						nzTooltipColor="#ffffff"
 					>
-						{{ authResult.user.nickname }}
+						{{ selectedNickname || authResult.user.nickname }}
 					</span>
 				</p>
+				<div>
+					<button
+						nz-button
+						nzType="default"
+						(click)="showNicknames = !showNicknames"
+						*ngIf="!showNicknames"
+					>
+						Envie d'un autre pseudo ?
+					</button>
+					<ng-container *ngIf="nicknames$ | async as nicknames">
+						<ng-container *ngIf="showNicknames">
+							<h3 class="m0">Je choisis mon pseudo 👇</h3>
+							<nz-button-group nzSize="large" class="vertical p2">
+								<button
+									nz-button
+									*ngFor="let nickname of nicknames"
+									(click)="selectNickname(nickname)"
+								>
+									<i
+										nz-icon
+										nzType="check-circle"
+										nzTheme="twotone"
+										nzTwotoneColor="#52c41a"
+										*ngIf="nickname === selectedNickname"
+									></i>
+									{{ nickname }}
+								</button>
+							</nz-button-group>
+						</ng-container>
+					</ng-container>
+				</div>
 				<div class="px3 my3" fxFlexAlign="center center">
 					<nz-alert
 						nzType="success"
