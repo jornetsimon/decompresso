@@ -14,11 +14,15 @@ service cloud.firestore {
 				allow read: if isMyDomain(domain);
 			}
 			match /reports/{uid} {
-				allow create: if isMyDomain(domain);
+				allow create: if isMyDomain(domain)
+					&& resource.data.report_author == request.auth.uid
+					&& exists(/databases/$(database)/documents/users/$(resource.data.message_author))
+					&& resource.data.moderation == 'pending';
 			}
 		}
 		match /chats/{domain} {
-			allow get, update: if isMyDomain(domain);
+			allow get: if isMyDomain(domain);
+			allow update: if isMyDomain(domain) && !("last_purge" in request.resource.data);
 		}
 		match /{path=**}/reports/{uid} {
         	allow read, write: if isAdmin();
