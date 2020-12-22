@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 import { AuthService, AuthType } from '@services/auth.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -24,7 +24,7 @@ import { of } from 'rxjs';
 	selector: 'mas-welcome',
 	templateUrl: './welcome.component.html',
 	styleUrls: ['./welcome.component.scss'],
-	changeDetection: ChangeDetectionStrategy.Default,
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WelcomeComponent {
 	loginOrCreateAccount$ = this.authService.loginOrCreateAccount().pipe(
@@ -109,7 +109,8 @@ export class WelcomeComponent {
 		private dataService: DataService,
 		private message: NzMessageService,
 		private modal: NzModalService,
-		private router: Router
+		private router: Router,
+		private cd: ChangeDetectorRef
 	) {
 		// Redirect to room if the user was simply logged in
 		this.loginOrCreateAccount$
@@ -136,11 +137,13 @@ export class WelcomeComponent {
 			.pipe(
 				finalize(() => {
 					this.loadingNickname = null;
+					this.cd.detectChanges();
 				})
 			)
 			.subscribe(
 				() => {
 					this.selectedNickname = nickname;
+					this.cd.detectChanges();
 				},
 				(error) => {
 					if (error.message === 'nickname_unavailable') {

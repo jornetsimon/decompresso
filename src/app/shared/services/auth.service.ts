@@ -103,7 +103,7 @@ export class AuthService extends ObservableStore<StoreState> {
 						return of(null);
 					}
 					return this.dataService.user$(auth_credential.uid).pipe(
-						first(),
+						take(2),
 						// The request will be retried every 2 seconds for 5 times
 						retryWhen((errors) => errors.pipe(delay(2000), take(5))),
 						map((user) => (user ? user : null)),
@@ -154,8 +154,12 @@ export class AuthService extends ObservableStore<StoreState> {
 							// Lets create it
 
 							// Before calling the callable function, refresh the token to get the right value for the 'email_verified' property
-							return of(authUser.getIdToken(true)).pipe(
+							return from(authUser.getIdToken(true)).pipe(
 								switchMap(() => this.createUser().pipe(retry(5))),
+								switchMap((createdUser) =>
+									// Refresh the token to get the updated claims
+									from(authUser.getIdToken(true)).pipe(map(() => createdUser))
+								),
 								map((createdUser) => {
 									return {
 										authType: AuthType.Created,

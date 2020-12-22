@@ -4,8 +4,6 @@ import { Endpoints } from './index';
 import * as admin from 'firebase-admin';
 import { sendMail } from './mail';
 
-const nodeMailer = require('nodemailer');
-
 /**
  * When the max message count is reached, delete the oldest ones
  */

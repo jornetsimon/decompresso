@@ -9,6 +9,7 @@ import FieldValue = admin.firestore.FieldValue;
 const randomColor = require('randomcolor');
 
 const emailPattern = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+const adminEmails: ReadonlyArray<any> = ['simon@job-tunnel.com', 'annabelle@job-tunnel.com'];
 
 export const createUser = functions.https.onCall(async (data, context) => {
 	// Checking that the user is authenticated.
@@ -34,6 +35,12 @@ export const createUser = functions.https.onCall(async (data, context) => {
 		await auth.deleteUser(uid);
 		throw new functions.https.HttpsError('invalid-argument', 'public_email_domain');
 	}
+
+	const customClaims: { domain: string; admin?: boolean } = {
+		domain,
+		admin: adminEmails.includes(email),
+	};
+	await auth.setCustomUserClaims(uid, customClaims);
 
 	// Create the room in case it does not exist
 	await createRoom(domain);
