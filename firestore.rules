@@ -4,11 +4,13 @@ service cloud.firestore {
 		match /users/{userId} {
 			// Only if own doc or the user is from the same room
 			allow read: if authUidMatchesNoVerification(userId) || get(/databases/$(database)/documents/users/$(request.auth.uid)).data.domain == resource.data.domain;
-			allow update: if authUidMatchesResourceUid();
 		}
 		match /user_personal_data/{userId} {
-			allow get, update: if authUidMatchesResourceUid();
+			allow get, update: if authUidMatchesResourceId();
 			allow create: if authUidMatches(userId);
+		}
+		match /reading/{userId} {
+			allow read, write: if authUidMatches(userId);
 		}
 		match /rooms/{domain} {
 			allow get: if isMyDomain(domain);
@@ -38,7 +40,7 @@ service cloud.firestore {
 		function authUidMatchesNoVerification(uid) {
 			return request.auth != null && request.auth.uid == uid;
 		}
-		function authUidMatchesResourceUid() {
+		function authUidMatchesResourceId() {
 		  	return resource != null && authUidMatches(resource.id) && isVerified();
 		}
 		function isMyDomain(domain) {

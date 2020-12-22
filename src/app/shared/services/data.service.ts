@@ -9,10 +9,12 @@ import { Chat } from '@model/chat';
 import { RoomMember } from '@model/room-member';
 import { Report } from '@model/report';
 import { FirestoreTrackerService } from '@services/firestore/firestore-tracker.service';
+import { Reading } from '@model/reading';
 
 export enum Endpoints {
 	Users = '/users',
 	UserPersonalData = '/user_personal_data',
+	Reading = '/reading',
 	Rooms = '/rooms',
 	RoomMembers = 'members',
 	Reports = 'reports',
@@ -53,6 +55,9 @@ export class DataService {
 	userPersonalDataDoc(uid: string) {
 		return this.afs.collection<UserPersonalData>(Endpoints.UserPersonalData).doc(uid);
 	}
+	userReadingDoc(uid: string) {
+		return this.afs.collection<Reading>(Endpoints.Reading).doc(uid);
+	}
 	roomDoc(uid: string) {
 		return this.afs.collection<Room>(Endpoints.Rooms).doc(uid);
 	}
@@ -80,6 +85,10 @@ export class DataService {
 		return this.userPersonalDataDoc(uid)
 			.valueChanges()
 			.pipe(this.tracker.logAction('user_personal_data'));
+	}
+
+	userReading$(uid: string) {
+		return this.userReadingDoc(uid).valueChanges().pipe(this.tracker.logAction('reading'));
 	}
 	room$(domain: string) {
 		return this.roomDoc(domain).valueChanges().pipe(this.tracker.logAction('room'));

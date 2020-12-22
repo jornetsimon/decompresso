@@ -78,10 +78,7 @@ export const createUser = functions.https.onCall(async (data, context) => {
 	};
 
 	const batch = db.batch();
-	batch.set(db.doc(`${Endpoints.Users}/${uid}`), {
-		...user,
-		last_read_message: null,
-	});
+	batch.set(db.doc(`${Endpoints.Users}/${uid}`), user);
 	batch.set(db.doc(`${Endpoints.UserPersonalData}/${uid}`), {
 		email,
 	});

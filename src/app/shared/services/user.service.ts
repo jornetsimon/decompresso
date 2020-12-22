@@ -1,6 +1,14 @@
 import { Injectable } from '@angular/core';
 import { FirebaseUser } from '@services/auth.service';
-import { debounce, distinctUntilChanged, filter, first, map, switchMap } from 'rxjs/operators';
+import {
+	debounce,
+	distinctUntilChanged,
+	filter,
+	first,
+	map,
+	shareReplay,
+	switchMap,
+} from 'rxjs/operators';
 import { interval, Observable } from 'rxjs';
 import { User } from '@model/user';
 import { UserPersonalData } from '@model/user-personal-data';
@@ -42,9 +50,12 @@ export class UserService extends ObservableStore<StoreState> {
 		map((state) => state.connection_state),
 		debounce((state) => (state === 'offline' ? interval(10000) : interval(1000)))
 	);
-	lastReadMessageStored$ = this.user$.pipe(
-		map((user) => user.last_read_message),
-		distinctUntilChanged((a, b) => a?.uid === b?.uid)
+	lastReadMessageStored$: Observable<Message | null> = this.userUid$.pipe(
+		first(),
+		switchMap((userUid) => this.dataService.userReading$(userUid)),
+		map((reading) => reading?.last_read_message || null),
+		distinctUntilChanged((a, b) => a?.uid === b?.uid),
+		shareReplay(1)
 	);
 
 	constructor(private dataService: DataService) {
@@ -56,7 +67,9 @@ export class UserService extends ObservableStore<StoreState> {
 			.pipe(
 				first(),
 				switchMap((userUid) =>
-					this.dataService.userDoc(userUid).update({ last_read_message: message })
+					this.dataService
+						.userReadingDoc(userUid)
+						.set({ last_read_message: message }, { merge: true })
 				)
 			)
 			.toPromise();
