@@ -3,7 +3,17 @@ import { AuthService, AuthType } from '@services/auth.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { DataService } from '@services/data.service';
-import { delay, filter, map, retryWhen, share, switchMap, take, tap } from 'rxjs/operators';
+import {
+	delay,
+	filter,
+	finalize,
+	map,
+	retryWhen,
+	share,
+	switchMap,
+	take,
+	tap,
+} from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { ErrorWithCode } from '@utilities/errors';
@@ -92,6 +102,7 @@ export class WelcomeComponent {
 	nicknames$ = this.authService.nicknamesSample();
 	showNicknames: boolean;
 	selectedNickname?: string;
+	loadingNickname: string | null = null;
 
 	constructor(
 		private authService: AuthService,
@@ -119,21 +130,29 @@ export class WelcomeComponent {
 	}
 
 	selectNickname(nickname: string) {
-		this.authService.changeNickname(nickname).subscribe(
-			() => {
-				this.selectedNickname = nickname;
-			},
-			(error) => {
-				if (error.message === 'nickname_unavailable') {
-					this.message.error(
-						`Désolé, ce pseudo vient d'être choisi à l'instant par un collègue. 😮<br/> Merci d'en choisir un autre.`
-					);
-				} else {
-					this.message.error(
-						`Le changement de pseudo a échoué. <br/>Vous pouvez contacter notre support : <a href="mailto:support@decompresso.fr">support@decompresso.fr</a>.`
-					);
+		this.loadingNickname = nickname;
+		this.authService
+			.changeNickname(nickname)
+			.pipe(
+				finalize(() => {
+					this.loadingNickname = null;
+				})
+			)
+			.subscribe(
+				() => {
+					this.selectedNickname = nickname;
+				},
+				(error) => {
+					if (error.message === 'nickname_unavailable') {
+						this.message.error(
+							`Désolé, ce pseudo vient d'être choisi à l'instant par un collègue. 😮<br/> Merci d'en choisir un autre.`
+						);
+					} else {
+						this.message.error(
+							`Le changement de pseudo a échoué. <br/>Vous pouvez contacter notre support : <a href="mailto:support@decompresso.fr">support@decompresso.fr</a>.`
+						);
+					}
 				}
-			}
-		);
+			);
 	}
 }

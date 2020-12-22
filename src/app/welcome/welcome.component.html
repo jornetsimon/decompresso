@@ -51,6 +51,7 @@
 									nz-button
 									*ngFor="let nickname of nicknames"
 									(click)="selectNickname(nickname)"
+									[nzLoading]="loadingNickname === nickname"
 								>
 									<i
 										nz-icon
