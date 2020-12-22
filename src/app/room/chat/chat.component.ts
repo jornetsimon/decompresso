@@ -48,16 +48,16 @@ export class ChatComponent implements AfterViewInit {
 
 	roomHasMultipleMembers$ = this.chatService.roomHasMultipleMembers$;
 	feed$ = this.feedService.feed$;
-	showFeedLoader$ = combineLatest([
+	showFeedLoader$ = merge(
 		of(false).pipe(delay(1000)),
 		this.feed$
 			.pipe(
 				map(() => true),
 				take(1)
 			)
-			.pipe(startWith(false)),
-	]).pipe(
-		map(([initial, feed]) => !feed),
+			.pipe(startWith(false))
+	).pipe(
+		map((x) => !x),
 		takeWhile((show) => show, true),
 		shareReplay(1)
 	);
