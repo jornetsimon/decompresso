@@ -1,12 +1,12 @@
 {
   "projects": {
-    "default": "mascarade-chat"
+    "default": "decompresso-fr"
   },
   "targets": {
-    "mascarade-chat": {
+    "decompresso-fr": {
       "hosting": {
-        "mascarade": [
-          "mascarade-chat"
+        "decompresso": [
+          "decompresso-fr"
         ]
       }
     }
