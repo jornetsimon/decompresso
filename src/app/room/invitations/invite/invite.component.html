@@ -1,0 +1,35 @@
+<form [formGroup]="form" fxLayout="row" fxLayoutGap="10px">
+	<div fxFlex="grow" class="mb1">
+		<nz-form-item style="margin-bottom: 0">
+			<nz-form-control [nzHasFeedback]="!!emailFc.value && !sent">
+				<nz-input-group nzSize="large" [nzSuffix]="'@' + domain">
+					<input
+						type="text"
+						nz-input
+						formControlName="email"
+						[placeholder]="placeholder"
+					/>
+				</nz-input-group>
+			</nz-form-control>
+		</nz-form-item>
+	</div>
+	<div fxFlex="noshrink">
+		<ng-container *ngIf="sent; else defaultButton">
+			<button nz-button nzType="primary" nzSize="large" class="success">
+				<i nz-icon nzType="check-circle" nzTheme="outline"></i>
+				Invitation envoyée
+			</button>
+		</ng-container>
+		<ng-template #defaultButton>
+			<button
+				nz-button
+				nzType="primary"
+				nzSize="large"
+				[disabled]="form.invalid"
+				(click)="sendInvite()"
+			>
+				Inviter
+			</button>
+		</ng-template>
+	</div>
+</form>

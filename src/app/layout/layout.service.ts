@@ -39,7 +39,7 @@ export class LayoutService {
 		filter(() => this.deviceService.isMobile() || this.deviceService.isDesktop()),
 		debounceTime(100),
 		map((event) => (event.target as VisualViewport).height),
-		startWith(window.visualViewport.height),
+		startWith(window.visualViewport?.height),
 		pairwise(),
 		filter(([prev, curr]) => {
 			const max = prev < curr ? curr : prev;

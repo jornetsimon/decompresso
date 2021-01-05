@@ -1,55 +1,63 @@
 <ng-container *ngIf="roomService.membersWithoutDeleted$ | async as members; else loadingTpl">
-	<nz-list nzBordered nzSize="small" class="members-list">
-		<nz-list-header class="center">
-			<strong>
-				{{ members.length }}
-				{{ members.length | i18nPlural: { '=1': 'membre', other: 'membres' } }}
-			</strong>
-		</nz-list-header>
-		<nz-list-item *ngFor="let member of members; trackBy: trackByMemberFn">
-			<div>
-				<ng-container
-					*ngIf="
-						member.nickname === (userService.user$ | async)?.nickname;
-						else connectionStatusTpl
-					"
-				>
-					<i
-						nz-icon
-						nzType="smile"
-						nzTheme="twotone"
-						nz-tooltip="C'est moi !"
-						nzTooltipColor="blue"
-					></i>
-				</ng-container>
-				<ng-template #connectionStatusTpl>
-					<nz-badge
-						*ngIf="!member.deleted"
-						[nzStatus]="member.state === 'online' ? 'success' : 'error'"
-						[nz-tooltip]="connectionStatusTooltipTpl"
-						[nzTooltipColor]="member.state === 'online' ? '#52c41a' : undefined"
-					></nz-badge>
-					<ng-template #connectionStatusTooltipTpl>
-						<ng-container *ngIf="member.state === 'online'; else lastSeenTpl">
-							Connecté
-						</ng-container>
-						<ng-template #lastSeenTpl>
-							Déconnecté
-							{{ member.last_state_update | timestampToDate: 'relative' }}
+	<div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="10px">
+		<nz-list nzBordered nzSize="small" class="members-list">
+			<nz-list-header class="center">
+				<strong>
+					{{ members.length }}
+					{{ members.length | i18nPlural: { '=1': 'membre', other: 'membres' } }}
+				</strong>
+			</nz-list-header>
+			<nz-list-item *ngFor="let member of members; trackBy: trackByMemberFn">
+				<div>
+					<ng-container
+						*ngIf="
+							member.nickname === (userService.user$ | async)?.nickname;
+							else connectionStatusTpl
+						"
+					>
+						<i
+							nz-icon
+							nzType="smile"
+							nzTheme="twotone"
+							nz-tooltip="C'est moi !"
+							nzTooltipColor="blue"
+						></i>
+					</ng-container>
+					<ng-template #connectionStatusTpl>
+						<nz-badge
+							*ngIf="!member.deleted"
+							[nzStatus]="member.state === 'online' ? 'success' : 'error'"
+							[nz-tooltip]="connectionStatusTooltipTpl"
+							[nzTooltipColor]="member.state === 'online' ? '#52c41a' : undefined"
+						></nz-badge>
+						<ng-template #connectionStatusTooltipTpl>
+							<ng-container *ngIf="member.state === 'online'; else lastSeenTpl">
+								Connecté
+							</ng-container>
+							<ng-template #lastSeenTpl>
+								Déconnecté
+								{{ member.last_state_update | timestampToDate: 'relative' }}
+							</ng-template>
 						</ng-template>
 					</ng-template>
-				</ng-template>
-			</div>
-			<span
-				[style.color]="member.color"
-				[class.strikethrough]="member.deleted"
-				[nz-tooltip]="memberTooltip(member)"
-				[nzTooltipColor]="tooltipConfig.color"
-			>
-				{{ member.nickname }}
-			</span>
-		</nz-list-item>
-	</nz-list>
+				</div>
+				<span
+					[style.color]="member.color"
+					[class.strikethrough]="member.deleted"
+					[nz-tooltip]="memberTooltip(member)"
+					[nzTooltipColor]="tooltipConfig.color"
+				>
+					{{ member.nickname }}
+				</span>
+			</nz-list-item>
+		</nz-list>
+		<div>
+			<button nz-button nzType="default" class="my2" (click)="openInvitationsModal()">
+				<i nz-icon nzType="mail" nzTheme="outline"></i>
+				Inviter des collègues
+			</button>
+		</div>
+	</div>
 </ng-container>
 
 <ng-template #loadingTpl>

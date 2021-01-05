@@ -1,0 +1,13 @@
+.success {
+	background-color: #52c41a;
+	color: white;
+	border-color: #52c41a;
+}
+
+input.ng-dirty:focus,
+input:disabled,
+input.ng-valid {
+	text-align: right;
+	font-weight: bold;
+	color: dodgerblue;
+}

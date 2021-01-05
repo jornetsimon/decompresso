@@ -12,6 +12,7 @@ import { LastReadMessageComponent } from './last-read-message/last-read-message.
 import { SystemComponent } from './system/system.component';
 import { PurgeNotificationComponent } from './purge-notification/purge-notification.component';
 import { ReportComponent } from './report/report.component';
+import { InvitationsModule } from '../invitations/invitations.module';
 
 @NgModule({
 	declarations: [
@@ -24,7 +25,14 @@ import { ReportComponent } from './report/report.component';
 		PurgeNotificationComponent,
 		ReportComponent,
 	],
-	imports: [CommonModule, SharedModule, NzIconModule.forChild([]), NzMentionModule, PickerModule],
+	imports: [
+		CommonModule,
+		SharedModule,
+		NzIconModule.forChild([]),
+		NzMentionModule,
+		PickerModule,
+		InvitationsModule,
+	],
 	exports: [ChatComponent],
 })
 export class ChatModule {}

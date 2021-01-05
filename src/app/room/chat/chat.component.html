@@ -34,12 +34,9 @@
 			</ng-container>
 			<ng-template #memberAloneTpl>
 				<div class="p2">
-					<nz-empty
-						nzNotFoundContent="On se sent un peu seul ici, non ? 🙁"
-						nzNotFoundImage="simple"
-						[nzNotFoundFooter]="invitationsTpl"
-					></nz-empty>
-					<ng-template #invitationsTpl>INVITATIONS</ng-template>
+					<nz-card class="invitations-card">
+						<mas-invitations></mas-invitations>
+					</nz-card>
 				</div>
 			</ng-template>
 		</ng-container>

@@ -9,6 +9,7 @@ export function createRoom(domain: string) {
 			domain,
 			member_count: 0,
 			nickname_pool: shuffleArray(nicknamePool),
+			remaining_invites: 10,
 		})
 		.catch(() => null);
 }
