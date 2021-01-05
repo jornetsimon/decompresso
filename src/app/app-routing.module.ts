@@ -5,11 +5,13 @@ import { AngularFireAuthGuard, redirectUnauthorizedTo } from '@angular/fire/auth
 import { WelcomeComponent } from './welcome/welcome.component';
 import { HomeGuard } from './home/home.guard';
 import { AdminGuard } from './admin/admin.guard';
+import { LanguageGuard } from './shared/language.guard';
 
 const routes: Routes = [
 	{
 		path: '',
 		component: LayoutComponent,
+		canActivateChild: [LanguageGuard],
 		children: [
 			{
 				path: '',
@@ -36,6 +38,13 @@ const routes: Routes = [
 				canLoad: [AdminGuard],
 			},
 		],
+	},
+	{
+		path: 'sorry',
+		loadChildren: () =>
+			import('./unsupported-language/unsupported-language.module').then(
+				(m) => m.UnsupportedLanguageModule
+			),
 	},
 	{ path: '**', redirectTo: '/' },
 ];

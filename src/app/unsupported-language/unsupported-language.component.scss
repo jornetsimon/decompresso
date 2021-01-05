@@ -1,0 +1,23 @@
+.container {
+	height: 100%;
+	width: 100%;
+	color: #231f20;
+}
+#logo {
+	height: min(200px, 33vmin);
+}
+#app-name {
+	font-family: 'Carter One', serif;
+	font-size: min(50px, 7vmin);
+	transition: all 0.35s cubic-bezier(0.2, 0.7, 0.32, 1), color 0s;
+	line-height: 1;
+	margin-top: 0.3em;
+	.first-letter {
+		font-size: 1.125em;
+	}
+}
+.explanation {
+	font-size: 5vmin;
+	padding: 15vmin;
+	text-align: center;
+}
