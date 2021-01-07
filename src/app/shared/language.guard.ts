@@ -18,7 +18,6 @@ export class LanguageGuard implements CanActivateChild {
 		childRoute: ActivatedRouteSnapshot,
 		state: RouterStateSnapshot
 	): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-		console.log(navigator.languages);
 		if (!navigator.languages.some((tag) => this.allowedLanguageTags.includes(tag))) {
 			return this.router.parseUrl('/sorry');
 		}

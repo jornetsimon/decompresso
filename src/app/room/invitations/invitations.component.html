@@ -10,7 +10,7 @@
 	<mas-invite
 		[placeholder]="'Invitation ' + (idx + 1)"
 		[domain]="(domain$ | async) || ''"
-		(inviteSent)="sentInvitesSub.next()"
+		(inviteSent)="onInviteSent()"
 	></mas-invite>
 </ng-container>
 <nz-alert
@@ -19,3 +19,4 @@
 	nzMessage="Votre salon a atteint la limite d'invitations disponibles."
 	class="center"
 ></nz-alert>
+<!--TODO: Indiquer qu'il est toujours possible de partager + boutons de partage -->

@@ -42,4 +42,8 @@ export class InvitationsComponent {
 	domain$ = this.roomService.room$.pipe(map((room) => room.domain));
 
 	constructor(private roomService: RoomService) {}
+
+	onInviteSent() {
+		this.sentInvitesSub.next();
+	}
 }

@@ -130,10 +130,9 @@
 	margin-bottom: 30px;
 	padding: 10px;
 	width: 100% !important;
-	border: 2px solid rgb(13 195 44 / 75%);
-	border-radius: 20px;
 	max-width: 650px;
-	box-shadow: 0 0 12px 0 rgb(13 195 44 / 75%);
+	background-color: #f6ffed;
+	border: 1px solid #b7eb8f;
 
 	::ng-deep .ant-card-body {
 		padding: 16px 24px;
