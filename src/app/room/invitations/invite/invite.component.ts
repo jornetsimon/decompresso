@@ -3,7 +3,10 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { InvitationsService } from '../invitations.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { finalize } from 'rxjs/operators';
+import { emailPattern } from 'shared/private-domain-email/private-domain-email.service';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
+@UntilDestroy()
 @Component({
 	selector: 'mas-invite',
 	templateUrl: './invite.component.html',
@@ -21,10 +24,15 @@ export class InviteComponent {
 	form = new FormGroup({
 		email: this.emailFc,
 	});
-	constructor(
-		private invitationsService: InvitationsService,
-		private message: NzMessageService
-	) {}
+	constructor(private invitationsService: InvitationsService, private message: NzMessageService) {
+		this.emailFc.valueChanges.pipe(untilDestroyed(this)).subscribe((value: string) => {
+			if (value.match(emailPattern) && value.split('@')[1] === this.domain) {
+				// The value is a full email address from the domain
+				// Lets cut it for the user
+				this.emailFc.setValue(value.split('@')[0]);
+			}
+		});
+	}
 
 	sendInvite() {
 		if (this.sent) {
