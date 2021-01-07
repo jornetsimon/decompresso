@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RoomService } from '@services/room.service';
-import { distinctUntilChanged, map, scan, startWith } from 'rxjs/operators';
+import { distinctUntilChanged, first, map, scan, shareReplay, startWith } from 'rxjs/operators';
 import { combineLatest, Observable, Subject } from 'rxjs';
 
 @Component({
@@ -11,6 +11,7 @@ import { combineLatest, Observable, Subject } from 'rxjs';
 })
 export class InvitationsComponent {
 	private readonly maxInvitesDisplayed = 3;
+	room$ = this.roomService.room$.pipe(first(), shareReplay());
 	sentInvitesSub = new Subject();
 	sentInvites$ = this.sentInvitesSub.asObservable().pipe(
 		scan((acc) => acc + 1, 0),
@@ -18,7 +19,7 @@ export class InvitationsComponent {
 	);
 
 	remainingInvites$ = combineLatest([
-		this.roomService.room$.pipe(map((room) => room.remaining_invites)),
+		this.room$.pipe(map((room) => room.remaining_invites)),
 		this.sentInvites$,
 	]).pipe(map(([remaining, sent]) => remaining - sent));
 
@@ -39,7 +40,7 @@ export class InvitationsComponent {
 		}),
 		distinctUntilChanged()
 	);
-	domain$ = this.roomService.room$.pipe(map((room) => room.domain));
+	domain$ = this.room$.pipe(map((room) => room.domain));
 
 	constructor(private roomService: RoomService) {}
 
