@@ -12,7 +12,7 @@ import { Observable } from 'rxjs';
 	providedIn: 'root',
 })
 export class LanguageGuard implements CanActivateChild {
-	private allowedLanguageTags: ReadonlyArray<string> = ['fr', 'fr-BE', 'fr-CH', 'fr-LU'];
+	private allowedLanguageTags: ReadonlyArray<string> = ['fr', 'fr-FR', 'fr-BE', 'fr-CH', 'fr-LU'];
 	constructor(private router: Router) {}
 	canActivateChild(
 		childRoute: ActivatedRouteSnapshot,

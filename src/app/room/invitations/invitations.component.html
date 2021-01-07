@@ -1,0 +1,22 @@
+<div class="header" *ngIf="remainingInvites$ | async">
+	<div class="title">Invitez donc quelques collègues à vous rejoindre !</div>
+	<div class="subtitle">
+		Nous nous occuperons de leur envoyer un message
+		<u>sans mentionner votre email</u>
+		🤫
+	</div>
+</div>
+<ng-container *ngFor="let x of instances$ | async; let idx = index">
+	<mas-invite
+		[placeholder]="'Invitation ' + (idx + 1)"
+		[domain]="(domain$ | async) || ''"
+		(inviteSent)="onInviteSent()"
+	></mas-invite>
+</ng-container>
+<nz-alert
+	*ngIf="(remainingInvites$ | async) === 0"
+	nzType="info"
+	nzMessage="Votre salon a atteint la limite d'invitations disponibles."
+	class="center"
+></nz-alert>
+<!--TODO: Indiquer qu'il est toujours possible de partager + boutons de partage -->

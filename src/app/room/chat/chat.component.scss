@@ -68,7 +68,7 @@
 	::ng-deep .ant-card-body {
 		border-radius: 0;
 	}
-	::ng-deep #chat-card .ant-card-body {
+	::ng-deep #chat-card > .ant-card-body {
 		width: 100vw;
 		padding: 0;
 
@@ -122,6 +122,20 @@
 		&:hover {
 			opacity: 1;
 		}
+	}
+}
+
+.invitations-card {
+	margin: auto;
+	margin-bottom: 30px;
+	padding: 10px;
+	width: 100% !important;
+	max-width: 650px;
+	background-color: #f6ffed;
+	border: 1px solid #b7eb8f;
+
+	::ng-deep .ant-card-body {
+		padding: 16px 24px;
 	}
 }
 

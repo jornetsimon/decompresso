@@ -1,6 +1,7 @@
 import { createUser, deleteUser } from './auth';
 import { onReportCreated, onReportModified, purgeChat, sliceMessages } from './chat';
 import { changeNickname, getNicknamesSample } from './nickname';
+import { invite } from './room';
 
 export enum Endpoints {
 	Users = '/users',
@@ -19,3 +20,4 @@ exports.onReportCreated = onReportCreated;
 exports.onReportModified = onReportModified;
 exports.nicknamesSample = getNicknamesSample;
 exports.changeNickname = changeNickname;
+exports.invite = invite;

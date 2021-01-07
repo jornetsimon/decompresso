@@ -16,6 +16,7 @@ import {
 } from '@ant-design/icons-angular/icons';
 import { MembersComponent } from './room/members/members.component';
 import { ChatModule } from './chat/chat.module';
+import { InvitationsModule } from './invitations/invitations.module';
 
 const roomRoutes: Routes = [
 	{
@@ -42,6 +43,7 @@ const roomRoutes: Routes = [
 			SmileOutline,
 		]),
 		ChatModule,
+		InvitationsModule,
 	],
 })
 export class RoomModule {}

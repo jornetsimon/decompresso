@@ -8,6 +8,8 @@ import {
 import { User } from '@model/user';
 import { UserService } from '@services/user.service';
 import { RoomService } from '@services/room.service';
+import { NzModalService } from 'ng-zorro-antd/modal';
+import { InvitationsComponent } from '../../invitations/invitations.component';
 
 @Component({
 	selector: 'mas-members',
@@ -21,12 +23,26 @@ export class MembersComponent {
 	};
 	@ViewChild('deleteAccountTooltip') deleteAccountTooltip: TemplateRef<void>;
 	trackByMemberFn: TrackByFunction<User> = (index, item) => item.nickname;
-	constructor(public userService: UserService, public roomService: RoomService) {}
+	constructor(
+		public userService: UserService,
+		public roomService: RoomService,
+		private modalService: NzModalService
+	) {}
 
 	memberTooltip(member: User): string | TemplateRef<void> | null {
 		if (member.deleted) {
 			return this.deleteAccountTooltip;
 		}
 		return null;
+	}
+
+	openInvitationsModal() {
+		this.modalService.create({
+			nzTitle: 'Inviter des collègues',
+			nzContent: InvitationsComponent,
+			nzOkType: 'default',
+			nzOkText: 'Fermer',
+			nzCancelText: null,
+		});
 	}
 }
