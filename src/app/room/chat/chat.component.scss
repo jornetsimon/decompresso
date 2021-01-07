@@ -68,7 +68,7 @@
 	::ng-deep .ant-card-body {
 		border-radius: 0;
 	}
-	::ng-deep #chat-card .ant-card-body {
+	::ng-deep #chat-card > .ant-card-body {
 		width: 100vw;
 		padding: 0;
 

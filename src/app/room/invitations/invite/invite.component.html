@@ -1,5 +1,11 @@
-<form [formGroup]="form" fxLayout="row" fxLayoutGap="10px">
-	<div fxFlex="grow" class="mb1">
+<form
+	[formGroup]="form"
+	fxLayout="row"
+	fxLayoutGap="10px"
+	fxLayout.lt-sm="column"
+	fxLayoutGap.lt-sm="5px"
+>
+	<div fxFlex="grow">
 		<nz-form-item style="margin-bottom: 0">
 			<nz-form-control [nzHasFeedback]="!!emailFc.value && !sent">
 				<nz-input-group nzSize="large" [nzSuffix]="'@' + domain">
@@ -13,13 +19,13 @@
 			</nz-form-control>
 		</nz-form-item>
 	</div>
-	<div fxFlex="noshrink">
+	<div fxFlex="noshrink" fxFlex.lt-sm="grow" class="mb2">
 		<ng-container *ngIf="sent; else defaultButton">
 			<button
 				nz-button
 				nzType="primary"
 				nzSize="large"
-				class="success"
+				class="success width-100"
 				style="cursor: default"
 			>
 				<i nz-icon nzType="check-circle" nzTheme="outline"></i>
@@ -31,6 +37,7 @@
 				nz-button
 				nzType="primary"
 				nzSize="large"
+				class="width-100"
 				[disabled]="form.invalid"
 				(click)="sendInvite()"
 				[nzLoading]="loading"
