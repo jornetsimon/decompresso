@@ -35,14 +35,10 @@ export async function pickNickname(domain: string) {
  * Gets a random slice of the nickname pool from the user's room
  */
 export const getNicknamesSample = functions.https.onCall(async (data, context) => {
-	const uid = context.auth?.uid;
-	if (!uid) {
+	if (!(context.auth && context.auth.token.email_verified)) {
 		throw new functions.https.HttpsError('failed-precondition', 'not_authenticated');
 	}
-	const domain = (await db.doc(`${Endpoints.Users}/${uid}`).get()).data()?.domain;
-	if (!domain) {
-		throw new functions.https.HttpsError('failed-precondition', 'domain_undefined');
-	}
+	const domain = context.auth.token.domain;
 	const roomSnap = await db.doc(`${Endpoints.Rooms}/${domain}`).get();
 	const roomData = roomSnap.data();
 	if (!roomData) {
@@ -62,7 +58,7 @@ export const getNicknamesSample = functions.https.onCall(async (data, context) =
 export const changeNickname = functions.https.onCall(async (data, context) => {
 	// User
 	const uid = context.auth?.uid;
-	if (!uid) {
+	if (!(uid && context.auth?.token.email_verified)) {
 		throw new functions.https.HttpsError('failed-precondition', 'not_authenticated');
 	}
 	const userRef = db.doc(`${Endpoints.Users}/${uid}`);

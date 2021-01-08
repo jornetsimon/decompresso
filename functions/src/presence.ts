@@ -14,11 +14,7 @@ export const onUserStatusChanged = functions.database
 			last_state_update: number;
 		} = change.after.val();
 
-		// Then use other event data to create a reference to the
-		// corresponding Firestore document.
-		const userRef = db.doc(`${Endpoints.Users}/${context.params.uid}`);
-		const userData = (await userRef.get()).data();
-		const domain = userData?.domain;
+		const domain = (context.auth?.token as any)?.domain;
 		if (!domain) {
 			return null;
 		}

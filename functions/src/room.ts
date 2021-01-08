@@ -27,8 +27,7 @@ export function createChat(domain: string) {
 }
 
 export const invite = functions.https.onCall(async (data, context) => {
-	const uid = context.auth?.uid;
-	if (!uid) {
+	if (!(context.auth && context.auth.token.email_verified)) {
 		throw new functions.https.HttpsError('failed-precondition', 'not_authenticated');
 	}
 	const email = data.email;

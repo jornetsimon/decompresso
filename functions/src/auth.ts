@@ -104,19 +104,13 @@ export const deleteUser = functions.https.onCall(async (data, context) => {
 		throw new functions.https.HttpsError('failed-precondition', 'not_authenticated');
 	}
 	const uid = context.auth.uid;
-	const user = (await db.doc(`/users/${uid}`).get()).data();
-	if (!user) {
-		throw new functions.https.HttpsError('invalid-argument', 'user_does_not_exist');
-	}
+	const domain = context.auth.token.domain;
+
 	const batch = db.batch();
 	// Setting the room member as deleted
-	batch.update(db.doc(`${Endpoints.Rooms}/${user.domain}/members/${uid}`), { deleted: true });
+	batch.update(db.doc(`${Endpoints.Rooms}/${domain}/members/${uid}`), { deleted: true });
 	// Decrement the room member count
-	batch.update(
-		db.doc(`${Endpoints.Rooms}/${user.domain}`),
-		'member_count',
-		FieldValue.increment(-1)
-	);
+	batch.update(db.doc(`${Endpoints.Rooms}/${domain}`), 'member_count', FieldValue.increment(-1));
 	// Set the deletedAt timestamp in UserPersonalData
 	batch.update(db.doc(`${Endpoints.UserPersonalData}/${uid}`), {
 		deletedAt: admin.firestore.FieldValue.serverTimestamp(),
