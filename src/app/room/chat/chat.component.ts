@@ -139,7 +139,7 @@ export class ChatComponent implements AfterViewInit {
 		});
 
 		// When the chat content scrollHeight changes
-		this.feedService.feed$
+		this.feed$
 			.pipe(
 				switchMap((feed) =>
 					combineLatest([of(feed), this.chatContentResized$.pipe(first())])

@@ -33,6 +33,7 @@ import { GLOBAL_CONFIG } from '../global-config';
 import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
 import { NzRadioModule } from 'ng-zorro-antd/radio';
+import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 
 // tslint:disable-next-line:readonly-array
 const icons: IconDefinition[] = [QuestionCircleOutline];
@@ -68,6 +69,7 @@ const modules: ReadonlyArray<any> = [
 	NzTagModule,
 	NzTabsModule,
 	NzRadioModule,
+	NzCheckboxModule,
 	RoughNotationModule,
 	NgxVibrationModule.forRoot({
 		defaultPattern: GLOBAL_CONFIG.vibration.default,

@@ -143,6 +143,7 @@
 			class="login-button-container"
 		>
 			<button
+				*ngIf="type === 'signup'; else loginButtonTpl"
 				nz-button
 				type="submit"
 				class="login-button"
@@ -151,10 +152,31 @@
 				[disabled]="loginFormGroup.invalid"
 				[nzLoading]="loading"
 				ngxVibration
+				[nz-popconfirm]="cguConfirmTpl"
+				nzOkText="J'accepte"
+				nzCancelText="Annuler"
+				(nzOnConfirm)="formSubmit()"
 			>
-				<ng-container *ngIf="type === 'signup'">Créer mon compte</ng-container>
-				<ng-container *ngIf="type === 'login'">Connexion</ng-container>
+				Créer mon compte
 			</button>
+			<ng-template #cguConfirmTpl>
+				En créant un compte, vous acceptez nos
+				<a href="/cgu" target="_blank">conditions générales d'utilisation</a>
+			</ng-template>
+			<ng-template #loginButtonTpl>
+				<button
+					nz-button
+					type="submit"
+					class="login-button"
+					nzType="primary"
+					nzSize="large"
+					[disabled]="loginFormGroup.invalid"
+					[nzLoading]="loading"
+					ngxVibration
+				>
+					Connexion
+				</button>
+			</ng-template>
 			<button
 				nz-button
 				type="button"
