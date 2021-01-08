@@ -34,7 +34,6 @@ export function sendMail(
 ) {
 	const transporter = createTransporter();
 	if (mailOptions.template) {
-		console.log(mailOptions);
 		transporter.use('compile', hbs(templateOptions));
 		mailOptions.attachments = [
 			{

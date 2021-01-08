@@ -19,4 +19,16 @@
 	nzMessage="Votre salon a atteint la limite d'invitations disponibles."
 	class="center"
 ></nz-alert>
-<!--TODO: Indiquer qu'il est toujours possible de partager + boutons de partage -->
+<div class="center mt2">
+	<div style="font-weight: 500" class="mb1">
+		Vous pouvez {{ (remainingInvites$ | async) === 0 ? 'toujours' : 'aussi' }} parlez de
+		Décompresso à vos collègues et autour de vous !
+	</div>
+	<div fxLayoutAlign="center center" fxLayoutGap="5px">
+		<mas-facebook-button></mas-facebook-button>
+		<mas-twitter-button></mas-twitter-button>
+		<mas-linkedin-button></mas-linkedin-button>
+		<mas-email-button></mas-email-button>
+		<mas-whatsapp-button></mas-whatsapp-button>
+	</div>
+</div>

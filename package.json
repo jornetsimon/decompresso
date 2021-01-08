@@ -45,6 +45,7 @@
     "ng-rough-notation": "^1.1.2",
     "ng-zorro-antd": "^11.0.0",
     "ngx-device-detector": "^2.0.1",
+    "ngx-sharebuttons": "^8.0.5",
     "ngx-vibration": "^1.1.0",
     "object-hash": "^2.0.3",
     "rxjs": "~6.6.0",

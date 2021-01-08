@@ -1,0 +1,12 @@
+<button
+	nz-button
+	nzType="primary"
+	nzShape="circle"
+	[style.backgroundColor]="color"
+	[style.border-color]="color"
+	[nz-tooltip]="tooltipText"
+	[nzTooltipColor]="color"
+>
+	<i nz-icon [nzType]="icon || service" [nzTheme]="iconTheme" [shareButton]="service"></i>
+	<ng-content></ng-content>
+</button>

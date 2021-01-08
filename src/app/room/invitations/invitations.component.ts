@@ -21,7 +21,10 @@ export class InvitationsComponent {
 	remainingInvites$ = combineLatest([
 		this.room$.pipe(map((room) => room.remaining_invites)),
 		this.sentInvites$,
-	]).pipe(map(([remaining, sent]) => remaining - sent));
+	]).pipe(
+		map(([remaining, sent]) => Math.max(remaining, 0) - sent),
+		shareReplay()
+	);
 
 	instances$: Observable<ReadonlyArray<void>> = combineLatest([
 		this.remainingInvites$.pipe(distinctUntilChanged()),
