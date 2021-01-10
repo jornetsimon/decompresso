@@ -29,3 +29,12 @@ label {
 }
 .delete-account-modal {
 }
+.social_pages > * {
+	border-radius: 5px;
+	padding: 2px;
+	border: 1px solid #ffffff00;
+	transition: border 0.33s;
+	&:hover {
+		border: 1px solid #cacaca;
+	}
+}
