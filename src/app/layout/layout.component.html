@@ -85,8 +85,8 @@
 		fxLayoutAlign="center center"
 		*ngIf="!(layoutService.chatLayout$ | async)"
 	>
-		<div fxLayoutAlign="center" style="color: #bbbbbb">
-			<div style="margin-right: 1em">
+		<div fxLayoutAlign="center" fxLayoutGap="1em" style="color: #bbbbbb">
+			<div>
 				Fait avec ♥ à
 				<span class="nowrap"
 					>Annecy
@@ -100,6 +100,9 @@
 				</span>
 			</div>
 			<div class="copyright">© 2020-{{ now | date: 'yyyy' }}</div>
+			<div>
+				<a routerLink="/cgu" style="color: #bbbbbb">CGU</a>
+			</div>
 		</div>
 	</div>
 </div>
