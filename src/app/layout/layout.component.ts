@@ -14,7 +14,6 @@ import { UserService } from '@services/user.service';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LayoutComponent {
-	now = Date.now();
 	/**
 	 * The pattern to match routes for which the compact mode should be used
 	 */

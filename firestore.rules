@@ -22,7 +22,7 @@ service cloud.firestore {
 		}
 		match /chats/{domain} {
 			allow get: if isMyDomain(domain);
-			allow update: if isMyDomain(domain) && !("last_purge" in request.resource.data);
+			allow update: if isMyDomain(domain);
 		}
 		match /{path=**}/reports/{uid} {
         	allow read, write: if isAdmin();

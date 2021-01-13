@@ -10,14 +10,14 @@ import { LanguageGuard } from './shared/language.guard';
 const routes: Routes = [
 	{
 		path: '',
+		loadChildren: () => import('./home/home.module').then((m) => m.HomeModule),
+		canActivate: [HomeGuard],
+	},
+	{
+		path: '',
 		component: LayoutComponent,
 		canActivateChild: [LanguageGuard],
 		children: [
-			{
-				path: '',
-				loadChildren: () => import('./home/home.module').then((m) => m.HomeModule),
-				canActivate: [HomeGuard],
-			},
 			{
 				path: 'welcome',
 				component: WelcomeComponent,

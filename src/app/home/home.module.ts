@@ -8,12 +8,14 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { IconDefinition } from '@ant-design/icons-angular';
 import {
 	CommentOutline,
+	LoginOutline,
 	MailOutline,
 	QuestionCircleOutline,
 } from '@ant-design/icons-angular/icons';
+import { LayoutModule } from '../layout/layout.module';
 
 // tslint:disable-next-line:readonly-array
-const icons: IconDefinition[] = [QuestionCircleOutline, MailOutline, CommentOutline];
+const icons: IconDefinition[] = [QuestionCircleOutline, MailOutline, CommentOutline, LoginOutline];
 
 const homeRoutes: Routes = [
 	{
@@ -29,6 +31,7 @@ const homeRoutes: Routes = [
 		RouterModule.forChild(homeRoutes),
 		PrivateDomainEmailModule,
 		NzIconModule.forChild(icons),
+		LayoutModule,
 	],
 })
 export class HomeModule {}

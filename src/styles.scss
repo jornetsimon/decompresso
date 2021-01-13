@@ -6,6 +6,72 @@
 	display: none;
 }
 
+#header {
+	margin: max(1rem, 2.5vh) 1rem;
+	color: #231f20;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+#logo {
+	height: 100px;
+	transition: filter 0.5s, height 0.35s cubic-bezier(0.2, 0.7, 0.32, 1),
+		width 0.35s cubic-bezier(0.2, 0.7, 0.32, 1);
+	margin: 0 1em;
+}
+
+#title {
+	display: flex;
+	flex-direction: column;
+	width: 125%;
+	justify-content: center;
+	font-size: 38px;
+	transition: all 0.35s cubic-bezier(0.2, 0.7, 0.32, 1), color 0s;
+
+	font-family: 'Carter One', serif;
+
+	#app-name {
+		line-height: 1;
+		margin-top: 0.3em;
+		.first-letter {
+			font-size: 1.125em;
+		}
+	}
+	#room-name {
+		font-size: 0.75em;
+
+		line-height: 1;
+		color: dodgerblue;
+		align-self: flex-end;
+
+		animation: fadeInFromTop 500ms 0ms forwards;
+	}
+}
+
+.main-container {
+	width: 100%;
+}
+@media (max-width: 425px) {
+	.main-container.xs-padding {
+		padding-left: 5vw;
+		padding-right: 5vw;
+	}
+}
+@media (min-width: 425px) {
+	.main-container {
+		padding-left: 7.5vw;
+		padding-right: 7.5vw;
+	}
+}
+@media (min-width: 1600px) {
+	.main-container {
+		width: 1600px;
+		padding: 0 120px;
+		margin: auto;
+	}
+}
+
 ::selection {
 	color: white;
 	background: $main-color;

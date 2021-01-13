@@ -1,19 +1,5 @@
-#header {
-	margin: max(1rem, 2.5vh) 1rem;
-	color: #231f20;
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-}
 #header:hover {
 	color: #ffa500;
-}
-#logo {
-	height: 100px;
-	transition: filter 0.5s, height 0.35s cubic-bezier(0.2, 0.7, 0.32, 1),
-		width 0.35s cubic-bezier(0.2, 0.7, 0.32, 1);
-	margin: 0 1em;
 }
 #header:hover #logo {
 	filter: invert(54%) sepia(84%) saturate(511%) hue-rotate(358deg) brightness(107%) contrast(107%);
@@ -43,46 +29,8 @@
 	}
 }
 
-#links,
-#footer {
-	width: 100%;
-	transition: all 0.25s;
-}
-
 ::ng-deep .ant-menu {
 	background: none;
-}
-
-#links > button:not(:last-child) {
-	margin-right: 10px;
-}
-
-#title {
-	display: flex;
-	flex-direction: column;
-	width: 125%;
-	justify-content: center;
-	font-size: 38px;
-	transition: all 0.35s cubic-bezier(0.2, 0.7, 0.32, 1), color 0s;
-
-	font-family: 'Carter One', serif;
-
-	#app-name {
-		line-height: 1;
-		margin-top: 0.3em;
-		.first-letter {
-			font-size: 1.125em;
-		}
-	}
-	#room-name {
-		font-size: 0.75em;
-
-		line-height: 1;
-		color: dodgerblue;
-		align-self: flex-end;
-
-		animation: fadeInFromTop 500ms 0ms forwards;
-	}
 }
 
 /* When the height is limited, compact the layout */
@@ -115,23 +63,6 @@
 	@include compact;
 }
 /****/
-
-.main-container {
-	width: 100%;
-}
-@media (min-width: 425px) {
-	.main-container {
-		padding-left: 7.5vw;
-		padding-right: 7.5vw;
-	}
-}
-@media (min-width: 1600px) {
-	.main-container {
-		width: 1600px;
-		padding: 0 120px;
-		margin: auto;
-	}
-}
 
 #user-drawer-button {
 	position: fixed;
@@ -166,9 +97,6 @@
 ::ng-deep .menu .ant-menu-item {
 	margin: 0 clamp(10px, 2vw, 20px) !important;
 	font-size: clamp(10px, 3vw, 14px) !important;
-}
-.flag svg {
-	vertical-align: middle;
 }
 
 @keyframes fadein {

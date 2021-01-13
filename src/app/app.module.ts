@@ -38,6 +38,7 @@ import {
 	MessageOutline,
 	SafetyCertificateFill,
 	TwitterOutline,
+	UserOutline,
 	WhatsAppOutline,
 } from '@ant-design/icons-angular/icons';
 import { ServiceWorkerModule } from '@angular/service-worker';
@@ -67,6 +68,7 @@ registerLocaleData(fr);
 			LinkedinOutline,
 			MessageOutline,
 			WhatsAppOutline,
+			UserOutline,
 		]),
 		AngularFireModule.initializeApp(environment.firebase),
 		AngularFirestoreModule,

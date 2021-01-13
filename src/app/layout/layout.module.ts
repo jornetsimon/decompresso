@@ -16,9 +16,10 @@ import {
 	UserOutline,
 	WarningOutline,
 } from '@ant-design/icons-angular/icons';
+import { FooterComponent } from './footer/footer.component';
 
 @NgModule({
-	declarations: [LayoutComponent, UserDrawerComponent],
+	declarations: [LayoutComponent, UserDrawerComponent, FooterComponent],
 	imports: [
 		CommonModule,
 		SharedModule,
@@ -35,5 +36,6 @@ import {
 			FrownOutline,
 		]),
 	],
+	exports: [FooterComponent],
 })
 export class LayoutModule {}

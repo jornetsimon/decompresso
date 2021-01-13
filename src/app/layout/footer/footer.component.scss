@@ -1,0 +1,12 @@
+#links,
+#footer {
+	width: 100%;
+	transition: all 0.25s;
+}
+#links > button:not(:last-child) {
+	margin-right: 10px;
+}
+
+.flag svg {
+	vertical-align: middle;
+}

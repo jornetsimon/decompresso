@@ -55,51 +55,5 @@
 	<div class="main-container" fxFlex="grow" fxLayout="column">
 		<router-outlet></router-outlet>
 	</div>
-	<ul class="menu" nz-menu nzMode="horizontal">
-		<li
-			nz-menu-item
-			nzMatchRouter
-			*ngIf="(authService.isAuthenticated$ | async) || router.url !== '/'"
-		>
-			<i
-				nz-icon
-				[nzType]="(authService.isAuthenticated$ | async) ? 'message' : 'home'"
-				nzTheme="outline"
-			></i>
-			<a [routerLink]="['/', (authService.isAuthenticated$ | async) ? 'room' : '']">
-				{{ (authService.isAuthenticated$ | async) ? 'Salon' : 'Accueil' }}
-			</a>
-		</li>
-		<li nz-menu-item nzMatchRouter>
-			<i nz-icon nzType="user" nzTheme="outline"></i>
-			<a [routerLink]="['/', 'about']">Qui sommes-nous</a>
-		</li>
-		<li nz-menu-item nzMatchRouter>
-			<i nz-icon nzType="question-circle" nzTheme="outline"></i>
-			<a [routerLink]="['/', 'help']">FAQ</a>
-		</li>
-	</ul>
-	<div
-		fxFlex="0 0 50px"
-		id="footer"
-		fxLayoutAlign="center center"
-		*ngIf="!(layoutService.chatLayout$ | async)"
-	>
-		<div fxLayoutAlign="center" style="color: #bbbbbb">
-			<div style="margin-right: 1em">
-				Fait avec ♥ à
-				<span class="nowrap"
-					>Annecy
-					<i nz-icon class="flag">
-						<svg>
-							<rect width="900" height="600" fill="#ED2939" />
-							<rect width="600" height="600" fill="#fff" />
-							<rect width="300" height="600" fill="#002395" />
-						</svg>
-					</i>
-				</span>
-			</div>
-			<div class="copyright">© 2020-{{ now | date: 'yyyy' }}</div>
-		</div>
-	</div>
+	<mas-footer></mas-footer>
 </div>
