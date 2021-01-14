@@ -163,9 +163,16 @@
 	}
 }
 
+.content:not(.compact) .menu {
+	padding-top: 2em;
+}
 ::ng-deep .menu .ant-menu-item {
 	margin: 0 clamp(10px, 2vw, 20px) !important;
 	font-size: clamp(10px, 3vw, 14px) !important;
+
+	i {
+		margin-right: 5px;
+	}
 }
 .flag svg {
 	vertical-align: middle;

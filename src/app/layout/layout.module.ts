@@ -13,6 +13,7 @@ import {
 	MenuOutline,
 	MessageOutline,
 	QuestionCircleOutline,
+	ReadOutline,
 	UserOutline,
 	WarningOutline,
 } from '@ant-design/icons-angular/icons';
@@ -33,6 +34,7 @@ import {
 			ApiTwoTone,
 			LockOutline,
 			FrownOutline,
+			ReadOutline,
 		]),
 	],
 })
