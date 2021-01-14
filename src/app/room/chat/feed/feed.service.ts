@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { combineLatest, Observable } from 'rxjs';
-import { map, share, tap, withLatestFrom } from 'rxjs/operators';
+import { map, shareReplay, tap, withLatestFrom } from 'rxjs/operators';
 import { RoomService } from '@services/room.service';
 import { UserService } from '@services/user.service';
 import { FeedBuilder } from './feed-builder';
@@ -59,7 +59,7 @@ export class FeedService {
 		tap(() => {
 			this.feedLoadCount++;
 		}),
-		share()
+		shareReplay()
 	);
 
 	constructor(private roomService: RoomService, private userService: UserService) {}

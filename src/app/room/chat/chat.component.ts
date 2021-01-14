@@ -16,7 +16,6 @@ import {
 	filter,
 	first,
 	map,
-	shareReplay,
 	skip,
 	startWith,
 	switchMap,
@@ -58,8 +57,7 @@ export class ChatComponent implements AfterViewInit {
 			.pipe(startWith(false))
 	).pipe(
 		map((x) => !x),
-		takeWhile((show) => show, true),
-		shareReplay(1)
+		takeWhile((show) => show, true)
 	);
 
 	private chatScrollingState$: Observable<readonly [number, number, number]>;
