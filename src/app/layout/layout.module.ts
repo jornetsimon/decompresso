@@ -13,6 +13,7 @@ import {
 	MenuOutline,
 	MessageOutline,
 	QuestionCircleOutline,
+	ReadOutline,
 	UserOutline,
 	WarningOutline,
 } from '@ant-design/icons-angular/icons';
@@ -34,6 +35,7 @@ import { FooterComponent } from './footer/footer.component';
 			ApiTwoTone,
 			LockOutline,
 			FrownOutline,
+			ReadOutline,
 		]),
 	],
 	exports: [FooterComponent],

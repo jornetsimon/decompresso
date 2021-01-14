@@ -33,6 +33,10 @@ const routes: Routes = [
 				loadChildren: () => import('./help/help.module').then((m) => m.HelpModule),
 			},
 			{
+				path: 'cgu',
+				loadChildren: () => import('./cgu/cgu.module').then((m) => m.CguModule),
+			},
+			{
 				path: 'admin',
 				loadChildren: () => import('./admin/admin.module').then((m) => m.AdminModule),
 				canLoad: [AdminGuard],
@@ -50,7 +54,12 @@ const routes: Routes = [
 ];
 
 @NgModule({
-	imports: [RouterModule.forRoot(routes)],
+	imports: [
+		RouterModule.forRoot(routes, {
+			anchorScrolling: 'enabled',
+			scrollPositionRestoration: 'enabled',
+		}),
+	],
 	exports: [RouterModule],
 })
 export class AppRoutingModule {}

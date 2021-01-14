@@ -11,14 +11,15 @@ import { SigninComponent } from './signin/signin.component';
 export class HomeComponent {
 	constructor(private modalService: NzModalService) {}
 
-	openSigninModal(type: 'login' | 'signup') {
-		const modal = this.modalService.create({
+	openSigninModal() {
+		this.modalService.create({
 			nzContent: SigninComponent,
 			nzFooter: null,
 			nzMaskStyle: {
 				'background-color': 'rgb(0 0 0 / 38%);',
 			},
 			nzClassName: 'signin-modal',
+			nzCloseOnNavigation: true,
 		});
 	}
 
