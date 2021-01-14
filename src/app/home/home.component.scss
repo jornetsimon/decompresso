@@ -148,8 +148,13 @@
 	}
 }
 
-::ng-deep .signin-modal .ant-modal-body {
-	padding: 0;
+::ng-deep .signin-modal {
+	.ant-modal-content {
+		border-radius: 10px;
+	}
+	.ant-modal-body {
+		padding: 0;
+	}
 }
 
 .custom-shape-divider-bottom-1610457773 {
@@ -249,7 +254,7 @@
 
 @media (min-width: 960px) {
 	#section1 .section-title {
-		padding-top: 60px;
+		padding-top: 100px;
 	}
 }
 

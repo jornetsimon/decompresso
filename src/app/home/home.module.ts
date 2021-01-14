@@ -13,6 +13,7 @@ import {
 	QuestionCircleOutline,
 } from '@ant-design/icons-angular/icons';
 import { LayoutModule } from '../layout/layout.module';
+import { DynamicConceptComponent } from './dynamic-concept/dynamic-concept.component';
 
 // tslint:disable-next-line:readonly-array
 const icons: IconDefinition[] = [QuestionCircleOutline, MailOutline, CommentOutline, LoginOutline];
@@ -25,7 +26,7 @@ const homeRoutes: Routes = [
 ];
 
 @NgModule({
-	declarations: [HomeComponent, SigninComponent],
+	declarations: [HomeComponent, SigninComponent, DynamicConceptComponent],
 	imports: [
 		SharedModule,
 		RouterModule.forChild(homeRoutes),

@@ -1,0 +1,67 @@
+$animation-duration: 3000ms;
+$animation-delay: 50ms;
+
+#container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	svg {
+		max-width: 700px;
+		max-height: 400px;
+	}
+}
+.domain {
+	text-transform: uppercase;
+}
+.rotating-text {
+	opacity: 0;
+	text-align: center;
+}
+
+.rotating-text {
+	animation-name: slow-rotate;
+	animation-duration: $animation-duration;
+	animation-delay: $animation-delay;
+	animation-iteration-count: infinite;
+
+	&.domain {
+		animation-name: rotate;
+	}
+}
+
+@keyframes rotate {
+	0% {
+		opacity: 0;
+		transform: translate3d(0, 20px, 0);
+	}
+
+	10%,
+	90% {
+		opacity: 1;
+		transform: translate3d(0, 0, 0);
+	}
+
+	100% {
+		opacity: 0;
+		transform: translate3d(0, -5px, 0);
+	}
+}
+
+@keyframes slow-rotate {
+	0% {
+		opacity: 0;
+		transform: translate3d(0, 3px, 0);
+	}
+
+	30%,
+	90% {
+		opacity: 1;
+		transform: translate3d(0, 0, 0);
+	}
+
+	100% {
+		opacity: 0;
+		transform: translate3d(0, -5px, 0);
+	}
+}
