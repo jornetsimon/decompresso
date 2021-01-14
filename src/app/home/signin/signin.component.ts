@@ -117,6 +117,7 @@ export class SigninComponent implements OnInit {
 			const password: string = formValues.password.loginPassword;
 			this.authService.loginWithEmailPassword(email, password).then(
 				() => {
+					this.modal.closeAll();
 					this.router.navigateByUrl(`/welcome`);
 				},
 				(err: ErrorWithCode) => {
@@ -147,6 +148,7 @@ export class SigninComponent implements OnInit {
 			const password: string = formValues.password.signupPassword.password;
 			this.authService.signupWithEmailPassword(email, password).then(
 				() => {
+					this.modal.closeAll();
 					this.router.navigateByUrl(`/welcome`);
 				},
 				(err: ErrorWithCode) => {
