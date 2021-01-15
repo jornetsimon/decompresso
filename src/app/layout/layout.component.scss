@@ -94,8 +94,13 @@
 	}
 }
 
-::ng-deep .content:not(.compact) .menu {
-	padding-top: 2em;
+::ng-deep .content:not(.compact) {
+	#header {
+		margin-bottom: 30px;
+	}
+	.menu {
+		padding-top: 2em;
+	}
 }
 ::ng-deep .menu .ant-menu-item {
 	margin: 0 clamp(10px, 2vw, 20px) !important;

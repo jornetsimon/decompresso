@@ -1,0 +1,60 @@
+.container {
+	background: rgb(255 255 255 / 90%);
+	backdrop-filter: saturate(1.5) blur(7px);
+	position: fixed;
+	left: 0;
+	bottom: 20px;
+	margin: 0 20px;
+	border: 1px solid rgb(185 185 185 / 50%);
+	border-radius: 12px;
+	padding: 10px;
+	font-size: 13px;
+
+	button {
+		font-weight: 600;
+	}
+}
+@media (min-width: 600px) and (max-width: 959px) {
+	.container {
+		bottom: 10px;
+		font-size: 12px;
+	}
+}
+@media (max-width: 599px) {
+	.container {
+		font-size: 12px;
+		bottom: 0;
+		margin: 0;
+		border-radius: 12px 12px 0 0;
+		border-color: #e6e6e6;
+	}
+	.button-container {
+		width: 100%;
+		margin-top: 10px;
+		button {
+			width: 100%;
+			color: #444444;
+			background-color: ghostwhite;
+		}
+	}
+}
+
+.text {
+	padding: 0 15px 0 10px;
+	.top {
+		font-weight: bold;
+	}
+	.bottom {
+	}
+}
+
+.cookie {
+	height: 50px;
+	animation: rotation 4s linear infinite;
+}
+@keyframes rotation {
+	100% {
+		-webkit-transform: rotate(360deg);
+		transform: rotate(360deg);
+	}
+}

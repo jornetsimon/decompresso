@@ -1,4 +1,9 @@
-<div fxLayout="column" fxLayoutAlign="start center">
+<div
+	class="container"
+	fxLayout="column"
+	fxLayoutAlign="start center"
+	[class.space-for-cookies-consent]="(cookiesConsentService.accepted$ | async) === false"
+>
 	<ul class="menu" nz-menu nzMode="horizontal">
 		<li
 			nz-menu-item

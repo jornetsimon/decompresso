@@ -1550,6 +1550,13 @@
     enhanced-resolve "5.3.1"
     webpack-sources "2.0.1"
 
+"@ngx-pwa/local-storage@^11.0.2":
+  version "11.0.2"
+  resolved "https://registry.yarnpkg.com/@ngx-pwa/local-storage/-/local-storage-11.0.2.tgz#99c008daee1cc3eb2ac3e02e372bafb46d8f37de"
+  integrity sha512-daKp9tcPlIYdLErRWmk2c3psrp9c8uejeh15Ny6C5sb0uSCGhsTqMFQXj9zU8Ud4M8/4+H6r/Ic29MjZ7/2zGw==
+  dependencies:
+    tslib "^2.0.0"
+
 "@nodelib/fs.scandir@2.1.3":
   version "2.1.3"
   resolved "https://registry.yarnpkg.com/@nodelib/fs.scandir/-/fs.scandir-2.1.3.tgz#3a582bdb53804c6ba6d146579c46e52130cf4a3b"

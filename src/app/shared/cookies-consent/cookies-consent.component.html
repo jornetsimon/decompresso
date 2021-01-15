@@ -1,0 +1,29 @@
+<ng-container *ngIf="(accepted$ | async) === false">
+	<div
+		class="container"
+		fxLayout="row"
+		fxLayout.lt-sm="row wrap"
+		fxLayoutAlign="space-around center"
+	>
+		<img src="assets/cookie.svg" class="cookie" alt="Cookie" fxFlex="none" fxHide.lt-sm />
+		<div
+			class="text"
+			fxLayout="column"
+			fxLayoutAlign="center"
+			fxFlex="auto"
+			fxFlexOrder.lt-sm="1"
+		>
+			<div class="top">Nous n'utilisons les cookies qu'à des fins statistiques.</div>
+			<div class="bottom">
+				En utilisant notre plateforme, vous acceptez notre utilisation des cookies.
+				<span fxHide.gt-xs>Miam&nbsp;🍪</span>
+				<span fxHide.lt-sm>Miam.</span>
+			</div>
+		</div>
+		<div class="button-container" fxFlex="none" fxFlexOrder.lt-sm="2">
+			<button nz-button nzType="default" nzSize="small" type="button" (click)="accept()">
+				Accepter
+			</button>
+		</div>
+	</div>
+</ng-container>

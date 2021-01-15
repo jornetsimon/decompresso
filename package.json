@@ -39,6 +39,7 @@
     "@codewithdan/observable-store": "^2.2.11",
     "@ctrl/ngx-emoji-mart": "^4.1.0",
     "@ngneat/until-destroy": "^8.0.3",
+    "@ngx-pwa/local-storage": "^11.0.2",
     "basscss": "^8.0.2",
     "date-fns": "^2.16.1",
     "firebase": "^8.0.1",
