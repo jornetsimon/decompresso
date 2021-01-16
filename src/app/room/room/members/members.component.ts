@@ -10,6 +10,7 @@ import { UserService } from '@services/user.service';
 import { RoomService } from '@services/room.service';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { InvitationsComponent } from '../../invitations/invitations.component';
+import { RulesComponent } from '../../rules/rules.component';
 
 @Component({
 	selector: 'mas-members',
@@ -43,6 +44,15 @@ export class MembersComponent {
 			nzOkType: 'default',
 			nzOkText: 'Fermer',
 			nzCancelText: null,
+		});
+	}
+
+	openRulesModal() {
+		this.modalService.create({
+			nzTitle: undefined,
+			nzContent: RulesComponent,
+			nzOkText: null,
+			nzCancelText: 'Fermer',
 		});
 	}
 }

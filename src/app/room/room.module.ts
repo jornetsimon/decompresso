@@ -7,6 +7,7 @@ import { SharedModule } from '../shared/shared.module';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import {
 	CloseCircleTwoTone,
+	CrownOutline,
 	ExclamationCircleTwoTone,
 	QuestionCircleFill,
 	SendOutline,
@@ -17,6 +18,7 @@ import {
 import { MembersComponent } from './room/members/members.component';
 import { ChatModule } from './chat/chat.module';
 import { InvitationsModule } from './invitations/invitations.module';
+import { RulesComponent } from './rules/rules.component';
 
 const roomRoutes: Routes = [
 	{
@@ -28,7 +30,7 @@ const roomRoutes: Routes = [
 ];
 
 @NgModule({
-	declarations: [RoomComponent, MembersComponent],
+	declarations: [RoomComponent, MembersComponent, RulesComponent],
 	imports: [
 		CommonModule,
 		SharedModule,
@@ -41,6 +43,7 @@ const roomRoutes: Routes = [
 			CloseCircleTwoTone,
 			ExclamationCircleTwoTone,
 			SmileOutline,
+			CrownOutline,
 		]),
 		ChatModule,
 		InvitationsModule,
