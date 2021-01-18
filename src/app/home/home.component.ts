@@ -1,6 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { SigninComponent } from './signin/signin.component';
+import { fromEvent } from 'rxjs';
+import { debounceTime, first } from 'rxjs/operators';
+import { BreakpointObserver } from '@angular/cdk/layout';
 
 @Component({
 	selector: 'mas-home',
@@ -9,7 +12,10 @@ import { SigninComponent } from './signin/signin.component';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent {
-	constructor(private modalService: NzModalService) {}
+	constructor(
+		private modalService: NzModalService,
+		private breakpointObserver: BreakpointObserver
+	) {}
 
 	openSigninModal() {
 		this.modalService.create({
@@ -24,6 +30,15 @@ export class HomeComponent {
 	}
 
 	scrollTop() {
+		if (this.breakpointObserver.isMatched('(max-width: 959px)')) {
+			fromEvent(window, 'scroll')
+				.pipe(debounceTime(100), first())
+				.subscribe({
+					complete: () => {
+						this.openSigninModal();
+					},
+				});
+		}
 		window.scrollTo({
 			behavior: 'smooth',
 			top: 0,
