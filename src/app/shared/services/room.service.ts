@@ -67,7 +67,12 @@ export class RoomService extends ObservableStore<StoreState> {
 		map((members) =>
 			members.filter((member, index, array) => {
 				// Exclude duplicates by nickname that are deleted (for users that recreated an account)
-				return !(member.deleted && !!array.find((m) => m.nickname === member.nickname));
+				return !(
+					member.deleted &&
+					!!array
+						.filter((m) => m.uid !== member.uid)
+						.find((m) => m.nickname === member.nickname)
+				);
 			})
 		)
 	);
