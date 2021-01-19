@@ -17,7 +17,7 @@ import { WhatsappButtonComponent } from './whatsapp-button.component';
 const customConfig: NgxShareButtonsConfig = {
 	gaTracking: true,
 	title: 'Décompresso - Le chat anonyme au bureau',
-	description: 'Rejoins-moi pour chatter anonymement avec les collègues !',
+	description: 'Rejoignez-moi pour chatter anonymement avec les collègues !',
 	url: 'https://decompresso-fr.web.app',
 	autoSetMeta: false,
 };

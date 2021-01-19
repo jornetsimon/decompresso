@@ -1,4 +1,7 @@
 <div class="header" *ngIf="remainingInvites$ | async">
+	<div *ngIf="isFirstUser" class="pb1" style="font-weight: 200">
+		Vous êtes le premier arrivé 🥇
+	</div>
 	<div class="title">Invitez donc quelques collègues à vous rejoindre !</div>
 	<div class="subtitle">
 		Nous nous occuperons de leur envoyer un message

@@ -27,7 +27,7 @@ export class DynamicConceptComponent {
 		'total.fr',
 	];
 	private poolIndex = 0;
-	domain$ = timer(0, 3000).pipe(
+	domain$ = timer(0, 7000).pipe(
 		map(() => {
 			const index = this.poolIndex;
 			this.poolIndex = index + 1 < this.domainPool.length ? index + 1 : 0;

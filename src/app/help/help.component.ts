@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { DeviceDetectorService } from 'ngx-device-detector';
 
 @Component({
 	selector: 'mas-help',
@@ -7,5 +8,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HelpComponent {
-	constructor() {}
+	isTouchDevice = this.deviceDetectorService.isMobile() || this.deviceDetectorService.isTablet();
+	constructor(private deviceDetectorService: DeviceDetectorService) {}
 }

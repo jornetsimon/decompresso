@@ -70,6 +70,7 @@ export class UserDrawerComponent {
 						}),
 						tap({
 							next: () => {
+								window.localStorage.removeItem('is-known');
 								this.modalService.success({
 									nzTitle: 'Votre compte a bien été supprimé',
 									nzContent: 'Nous vous souhaitons une belle continuation 👋',

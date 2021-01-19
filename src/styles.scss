@@ -52,8 +52,8 @@
 .main-container {
 	width: 100%;
 }
-@media (max-width: 425px) {
-	.main-container.xs-padding {
+@media (max-width: 424px) {
+	.xs-padding {
 		padding-left: 5vw;
 		padding-right: 5vw;
 	}
@@ -149,6 +149,10 @@ q {
 		margin-left: initial;
 		margin-top: -1px;
 	}
+}
+
+.ant-alert-with-description {
+	padding: 15px;
 }
 
 blockquote {

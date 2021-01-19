@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { RoomService } from '@services/room.service';
 import { distinctUntilChanged, first, map, scan, shareReplay, startWith } from 'rxjs/operators';
 import { combineLatest, Observable, Subject } from 'rxjs';
@@ -10,6 +10,7 @@ import { combineLatest, Observable, Subject } from 'rxjs';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InvitationsComponent {
+	@Input() isFirstUser: boolean;
 	private readonly maxInvitesDisplayed = 3;
 	room$ = this.roomService.room$.pipe(first(), shareReplay());
 	sentInvitesSub = new Subject();

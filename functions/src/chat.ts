@@ -65,7 +65,7 @@ export const onReportCreated = functions.firestore
 		}?domain=${encodeURIComponent(domain)}`;
 
 		const mailOptions = {
-			from: 'app@decompresso.fr',
+			from: 'Décompresso App <app@decompresso.fr>',
 			to: 'support@decompresso.fr',
 			subject: `[Signalement] ${domain}`,
 			html: `
@@ -101,15 +101,14 @@ export const onReportModified = functions.firestore
 				throw new Error('no_email_associated_with_message_author');
 			}
 
-			// TODO: lien vers la page de règles
 			return sendMail({
-				from: 'support@decompresso.fr',
+				from: 'Décompresso <support@decompresso.fr>',
 				to: messageAuthorEmail,
-				subject: `[Décompresso] Modération de votre message`,
+				subject: `Modération de votre message sur Décompresso`,
 				html: `Bonjour,
 				<p>Nous vous informons que l'un de vos messages a fait l'objet d'une modération : </p>
 				<blockquote>${message.content}</blockquote>
-				<p>Nous vous rappelons qu'à défaut du respect des <a href="#">règles de Décompresso</a>, vous pourrez faire l'objet de nouvelles modérations de contenu, qui pourront également conduire à votre exclusion du salon.</p>
+				<p>Nous vous rappelons qu'à défaut du respect des <a href="https://decompresso.fr/cgu">règles de Décompresso</a>, vous pourrez faire l'objet de nouvelles modérations de contenu, qui pourront également conduire à votre exclusion du salon.</p>
 				<p>Cordialement,<br/>
 				L'équipe Décompresso.</p>
 				`,

@@ -18,6 +18,7 @@
 	}
 	.welcome {
 		font-size: 18px;
+		text-align: center;
 	}
 	.domain {
 		white-space: nowrap;
@@ -50,6 +51,13 @@
 		}
 	}
 }
+@media (max-width: 424px) {
+	.result {
+		padding-left: 5vw;
+		padding-right: 5vw;
+	}
+}
+
 .nickname-list {
 	border-radius: 5px;
 	background-color: #f9fbff;

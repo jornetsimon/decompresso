@@ -99,7 +99,7 @@
 					que vous faites bien partie de
 					<span class="domain">{{ domainFromEmail(authResult.authUser.email!) }}</span>
 				</div>
-				<div class="px3 my3" fxFlexAlign="center center">
+				<div class="my3" fxFlexAlign="center center">
 					<nz-alert
 						*ngIf="!(isEmailVerified$ | async); else verificationDoneTpl"
 						nzType="info"

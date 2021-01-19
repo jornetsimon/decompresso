@@ -1,5 +1,5 @@
-$animation-duration: 3000ms;
-$animation-delay: 50ms;
+$animation-duration: 7000ms;
+$animation-delay: 0ms;
 
 #container {
 	display: flex;
@@ -63,5 +63,22 @@ $animation-delay: 50ms;
 	100% {
 		opacity: 0;
 		transform: translate3d(0, -5px, 0);
+	}
+}
+
+#dash-circle {
+	transform-box: fill-box;
+	-webkit-transform-origin: center center;
+	-moz-transform-origin: center center;
+	-o-transform-origin: center center;
+	transform-origin: center center;
+	animation: rotation 120s linear infinite;
+	animation-direction: reverse;
+}
+
+@keyframes rotation {
+	100% {
+		-webkit-transform: rotate(360deg);
+		transform: rotate(360deg);
 	}
 }

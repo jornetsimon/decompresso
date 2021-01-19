@@ -38,9 +38,9 @@ export const invite = functions.https.onCall(async (data, context) => {
 	}
 
 	return sendMail({
-		from: 'bonjour@decompresso.fr',
+		from: 'Décompresso <bonjour@decompresso.fr>',
 		to: email,
-		subject: `Un collègue vous a invité à le rejoindre sur Décompresso !`,
+		subject: `Un collègue vous invite à le rejoindre sur Décompresso !`,
 		template: 'invite',
 		context: {
 			domain: userDomain,

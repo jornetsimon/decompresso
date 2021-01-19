@@ -8,7 +8,10 @@
 </a>
 <div class="relative" style="background-color: white">
 	<div class="main-container relative" style="padding-bottom: 2em">
-		<div id="headline" class="my3">Le chat anonyme du&nbsp;bureau</div>
+		<div id="headline">
+			Le chat anonyme du&nbsp;bureau
+			<div class="sub">et aussi de l'asso, de l'université...</div>
+		</div>
 		<div id="floating-signin-container" class="absolute">
 			<mas-signin></mas-signin>
 		</div>
@@ -38,11 +41,11 @@
 </div>
 <div id="section1" class="relative">
 	<div style="background-color: #50bbdd">
-		<div class="main-container xs-padding" style="padding-bottom: 29px">
+		<div class="main-container xs-padding">
 			<div
 				fxLayout="row"
 				fxLayout.lt-md="column"
-				fxLayoutGap="7.5vmin"
+				fxLayoutGap="4vmin"
 				fxLayoutGap.lt-md="3vmin"
 				style="padding: 10px 0"
 			>
@@ -50,16 +53,19 @@
 					<mas-dynamic-concept class="width-100"></mas-dynamic-concept>
 				</div>
 				<div fxFlex="1 1 50%" fxLayout="column" fxLayoutAlign="center center">
-					<div style="color: white">
+					<div class="center" style="color: white">
 						<div class="section-title">
-							Une nouvelle manière de découvrir vos collègues
+							Une nouvelle manière de chatter avec vos&nbsp;collègues.
 						</div>
-						<div class="section-subtitle">
-							Rejoignez Décompresso et retrouvez tous vos collègues déjà inscrits pour
-							décompresser... mais de façon
-							<span style="font-weight: bold; letter-spacing: 1px; font-size: 1.1em">
-								incognito&nbsp;!
-							</span>
+						<div class="section-subtitle" fxLayout="row wrap">
+							<div fxFlex="1 1 auto">
+								<div class="title">Tous ensemble</div>
+								<div class="description">autour de notre email commun</div>
+							</div>
+							<div fxFlex="1 1 auto">
+								<div class="title">Tous incognito</div>
+								<div class="description">avec chacun son pseudo</div>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -99,7 +105,7 @@
 						<div class="section-title">Récréez du lien de façon décomplexée&nbsp;!</div>
 						<div class="section-subtitle">
 							Oubliez la hiérarchie et partagez simplement un moment de convivialité.
-							Découvrez ou redécouvrez les gens qui vous entourent au travail sans
+							Découvrez ou redécouvrez les gens qui vous entourent au travail, sans
 							étiquette.
 						</div>
 					</div>
@@ -150,7 +156,7 @@
 					<div class="list">
 						<ul>
 							<li><strong>gratuite</strong> et qui le restera</li>
-							<li><strong>simple</strong> et familière</li>
+							<li><strong>simple</strong> et accessible</li>
 							<li><strong>indépendante</strong> de votre structure pro</li>
 						</ul>
 					</div>
@@ -176,20 +182,28 @@
 	<div style="background-color: white">
 		<div class="main-container xs-padding">
 			<div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="5vmin" style="padding: 50px 0">
-				<div fxFlex="0 0 60%" fxLayout="column" fxLayoutAlign="center center">
+				<div
+					fxFlex="0 0 60%"
+					fxLayout="column"
+					fxLayoutGap="30px"
+					fxLayoutAlign="center start"
+				>
 					<div>
-						<div class="section-title" style="font-size: 26px; margin-bottom: 1em">
-							Parce que la meilleur façon de protéger vos données, c'est encore de ne
+						<div class="section-title">
+							Pour nous, la meilleur façon de protéger vos données, c'est encore de ne
 							pas les collecter&nbsp;!
 						</div>
-						<div style="font-size: 17px; line-height: 125%">
-							La seule dont on a besoin ? Votre adresse mail.
-							<br /><br />
-							Pourquoi ? Créer votre compte et vous mettre en relation avec vos
-							collègues. (Il serait dommage de vous retrouver chez les voisins).
-							<br /><br />
-							Et les conversations ? Un historique hebdomadaire : dimanche soir on
-							efface tout... et lundi on recommence !
+						<div class="section-content">
+							La
+							<span class="dot-underline">seule</span> information nécessaire :
+							<span class="dot-underline">votre email professionnel</span>.
+						</div>
+					</div>
+					<div>
+						<div class="section-title">Des discussions éphémères</div>
+						<div class="section-content">
+							Un historique hebdomadaire : dimanche soir on efface tout... et lundi on
+							recommence !
 						</div>
 					</div>
 				</div>
@@ -203,7 +217,9 @@
 				</div>
 			</div>
 			<div fxLayoutAlign="center">
-				<button class="signup-button" (click)="scrollTop()">Je m'inscris</button>
+				<button class="signup-button" (click)="scrollTop()">
+					<span class="text">Je m'inscris</span>
+				</button>
 			</div>
 		</div>
 	</div>
