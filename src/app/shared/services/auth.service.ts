@@ -140,7 +140,7 @@ export class AuthService extends ObservableStore<StoreState> {
 	}> {
 		return this.authCredential$.pipe(
 			filter((authUser) => !!authUser),
-			timeoutWith(10000, throwError(new Error('missing_auth_user'))),
+			timeoutWith(30000, throwError(new Error('missing_auth_user'))),
 			take(1),
 			switchMap((authUser: FirebaseUser) => {
 				if (!authUser.emailVerified) {
