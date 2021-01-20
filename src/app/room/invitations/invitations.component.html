@@ -22,6 +22,12 @@
 	nzMessage="Votre salon a atteint la limite d'invitations disponibles."
 	class="center"
 ></nz-alert>
+<div class="center mt1" *ngIf="isFirstUser">
+	<nz-alert
+		nzType="info"
+		nzMessage="Dès qu'un collègue aura rejoint le salon, le chat sera débloqué 🙂"
+	></nz-alert>
+</div>
 <div class="center mt2">
 	<div style="font-weight: 500" class="mb1">
 		Vous pouvez {{ (remainingInvites$ | async) === 0 ? 'toujours' : 'aussi' }} parlez de
