@@ -15,9 +15,9 @@ service cloud.firestore {
 			}
 			match /reports/{uid} {
 				allow create: if isMyDomain(domain)
-					&& resource.data.report_author == request.auth.uid
-					&& exists(/databases/$(database)/documents/users/$(resource.data.message_author))
-					&& resource.data.moderation == 'pending';
+					&& request.resource.data.report_author.uid == request.auth.uid
+					&& exists(/databases/$(database)/documents/users/$(request.resource.data.message_author.uid))
+					&& request.resource.data.moderation == 'pending';
 			}
 		}
 		match /chats/{domain} {
