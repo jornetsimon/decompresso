@@ -1,1 +1,45 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-smile"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 208.76 208.76">
+	<defs>
+		<style>.cls-1, .cls-2 {
+			fill: none;
+		}
+
+		.cls-1 {
+			stroke: #231f20;
+			stroke-width: 16px;
+		}
+
+		.cls-1, .cls-2, .cls-4 {
+			stroke-miterlimit: 10;
+		}
+
+		.cls-2, .cls-4 {
+			stroke: #231f20;
+		}
+
+		.cls-2 {
+			stroke-width: 8px;
+		}
+
+		.cls-3, .cls-4 {
+			fill: #231f20;
+		}
+
+		.cls-4 {
+			stroke-width: 17.47px;
+		}</style>
+	</defs>
+	<g id="Calque_1" data-name="Calque 1">
+		<circle class="cls-1" cx="104.38" cy="104.38" r="96.38" />
+		<path class="cls-2" d="M239,379" transform="translate(-183.62 -264.24)" />
+	</g>
+	<g id="Calque_2" data-name="Calque 2">
+		<ellipse class="cls-3" cx="283.01" cy="345.06" rx="18.75" ry="10.67"
+				 transform="translate(-262.42 342.06) rotate(-86.47)" />
+		<ellipse class="cls-3" cx="254.86" cy="343.08" rx="18.75" ry="10.67"
+				 transform="translate(-286.86 312.11) rotate(-86.47)" />
+		<path class="cls-4"
+			  d="M286.9,399.14c1.32,3.54-11.48,14.67-25.51,13.69S236.11,399,237.87,395.68c1.12-2.1,6.93.49,24.52,1.73S286.07,396.89,286.9,399.14Z"
+			  transform="translate(-183.62 -264.24)" />
+	</g>
+</svg>
