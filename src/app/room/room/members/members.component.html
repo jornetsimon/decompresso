@@ -7,24 +7,29 @@
 					{{ members.length | i18nPlural: { '=1': 'membre', other: 'membres' } }}
 				</strong>
 			</nz-list-header>
-			<nz-list-item *ngFor="let member of members; trackBy: trackByMemberFn">
-				<div>
-					<ng-container
-						*ngIf="
-							member.nickname === (userService.user$ | async)?.nickname;
-							else connectionStatusTpl
-						"
-					>
-						<i
-							nz-icon
-							nzType="smile"
-							nzTheme="twotone"
-							nz-tooltip="C'est moi !"
-							nzTooltipColor="blue"
-						></i>
-					</ng-container>
-					<ng-template #connectionStatusTpl>
-						<!--<nz-badge
+			<cdk-virtual-scroll-viewport
+				itemSize="39"
+				[style.height]="39 * members.length + 'px'"
+				class="members-infinite-container"
+			>
+				<nz-list-item *cdkVirtualFor="let member of members; trackBy: trackByMemberFn">
+					<div>
+						<ng-container
+							*ngIf="
+								member.nickname === (userService.user$ | async)?.nickname;
+								else connectionStatusTpl
+							"
+						>
+							<i
+								nz-icon
+								nzType="smile"
+								nzTheme="twotone"
+								nz-tooltip="C'est moi !"
+								nzTooltipColor="blue"
+							></i>
+						</ng-container>
+						<ng-template #connectionStatusTpl>
+							<!--<nz-badge
 							*ngIf="!member.deleted"
 							[nzStatus]="member.state === 'online' ? 'success' : 'error'"
 							[nz-tooltip]="connectionStatusTooltipTpl"
@@ -39,18 +44,20 @@
 								{{ member.last_state_update | timestampToDate: 'relative' }}
 							</ng-template>
 						</ng-template>-->
-					</ng-template>
-				</div>
-				<span
-					[style.color]="member.color"
-					[class.strikethrough]="member.deleted"
-					[nz-tooltip]="memberTooltip(member)"
-					[nzTooltipColor]="tooltipConfig.color"
-				>
-					{{ member.nickname }}
-				</span>
-			</nz-list-item>
+						</ng-template>
+					</div>
+					<span
+						[style.color]="member.color"
+						[class.strikethrough]="member.deleted"
+						[nz-tooltip]="memberTooltip(member)"
+						[nzTooltipColor]="tooltipConfig.color"
+					>
+						{{ member.nickname }}
+					</span>
+				</nz-list-item>
+			</cdk-virtual-scroll-viewport>
 		</nz-list>
+
 		<div>
 			<button nz-button nzType="default" class="my2" (click)="openInvitationsModal()">
 				<i nz-icon nzType="mail" nzTheme="outline"></i>

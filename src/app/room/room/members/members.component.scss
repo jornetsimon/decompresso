@@ -1,3 +1,10 @@
+.container {
+	text-align: center;
+
+	> *:not(:last-child) {
+		margin-bottom: 10px;
+	}
+}
 ::ng-deep .ant-list {
 	background-color: white;
 }
@@ -8,4 +15,8 @@
 }
 .ant-list-item > *:not(:first-child) {
 	margin-left: 1em;
+}
+
+.members-list {
+	width: 100%;
 }

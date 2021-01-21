@@ -19,6 +19,7 @@ import { MembersComponent } from './room/members/members.component';
 import { ChatModule } from './chat/chat.module';
 import { InvitationsModule } from './invitations/invitations.module';
 import { RulesComponent } from './rules/rules.component';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 const roomRoutes: Routes = [
 	{
@@ -47,6 +48,7 @@ const roomRoutes: Routes = [
 		]),
 		ChatModule,
 		InvitationsModule,
+		ScrollingModule,
 	],
 })
 export class RoomModule {}
