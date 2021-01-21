@@ -104,7 +104,7 @@ export const onReportModified = functions.firestore
 			return sendMail({
 				from: 'Décompresso <support@decompresso.fr>',
 				to: messageAuthorEmail,
-				subject: `Modération de votre message sur Décompresso`,
+				subject: `[Personnel et confidentiel] Modération de votre message sur Décompresso`,
 				html: `Bonjour,
 				<p>Nous vous informons que l'un de vos messages a fait l'objet d'une modération : </p>
 				<blockquote>${message.content}</blockquote>

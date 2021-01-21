@@ -188,11 +188,11 @@ export class FeedBuilder {
 						type: 'system',
 						timestamp: dateToTimestamp(this.lastPurge),
 						color: '#767676',
-						content: `Dernière purge effectuée ${format(this.lastPurge, 'EEEE', {
+						content: `Dernière chasse d'eau effectuée ${format(this.lastPurge, 'EEEE', {
 							locale: fr,
 							weekStartsOn: 1,
 						})} matin`,
-						icon: '🧹',
+						icon: '🌪',
 					},
 			  ]
 			: [];
