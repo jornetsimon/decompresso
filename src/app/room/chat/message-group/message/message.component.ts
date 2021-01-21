@@ -35,6 +35,7 @@ export class MessageComponent implements AfterViewInit {
 	@ViewChild('bubble') bubbleRef: ElementRef<HTMLDivElement>;
 
 	private mentionRegex = getRegExp('@');
+	private urlRegex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)/;
 	vibrationConfig = GLOBAL_CONFIG.vibration;
 	highlightForDeletion: boolean;
 	highlightForReport: boolean;
@@ -205,9 +206,8 @@ export class MessageComponent implements AfterViewInit {
 		if (this.message.moderated) {
 			return `<span class="italic">Le contenu de ce message a été modéré.</span>`;
 		}
-		return content.replace(
-			this.mentionRegex,
-			(match) => `<span class="mention">${match.trim()}</span>`
-		);
+		return content
+			.replace(this.mentionRegex, (match) => `<span class="mention">${match.trim()}</span>`)
+			.replace(this.urlRegex, (match) => `<a href="${match}" target="_blank">${match}</a>`);
 	}
 }

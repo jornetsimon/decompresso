@@ -82,6 +82,12 @@
 			background-color: rgb(255 255 255 / 20%);
 			color: white;
 		}
+
+		::ng-deep a {
+			font-size: 80%;
+			text-decoration: underline;
+			color: white;
+		}
 	}
 	.bubble:not(:last-child) {
 		margin-bottom: 2px;
