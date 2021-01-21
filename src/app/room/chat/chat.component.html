@@ -56,15 +56,6 @@
 		>
 			<nz-tag [nzColor]="'#f50'" (click)="scrollToBottomOfChat()"> nouveaux messages </nz-tag>
 		</div>
-		<nz-badge
-			*ngIf="stickToChatBottom$ | async as stickToChatBottom"
-			nzStatus="processing"
-			id="stick-chat"
-			[nz-tooltip]="
-				stickToChatBottom ? 'Les derniers messages s\'affichent à la suite' : undefined
-			"
-			nzTooltipColor="blue"
-		></nz-badge>
 		<mas-message-form (messageSent)="onNewMessageSent()"></mas-message-form>
 	</div>
 </nz-card>
