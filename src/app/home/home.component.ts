@@ -4,6 +4,7 @@ import { SigninComponent } from './signin/signin.component';
 import { fromEvent } from 'rxjs';
 import { debounceTime, first } from 'rxjs/operators';
 import { BreakpointObserver } from '@angular/cdk/layout';
+import { AngularFireAnalytics } from '@angular/fire/analytics';
 
 @Component({
 	selector: 'mas-home',
@@ -14,10 +15,12 @@ import { BreakpointObserver } from '@angular/cdk/layout';
 export class HomeComponent {
 	constructor(
 		private modalService: NzModalService,
-		private breakpointObserver: BreakpointObserver
+		private breakpointObserver: BreakpointObserver,
+		private analytics: AngularFireAnalytics
 	) {}
 
 	openSigninModal() {
+		this.analytics.logEvent('signup_modal_opened');
 		this.modalService.create({
 			nzContent: SigninComponent,
 			nzFooter: null,
