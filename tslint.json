@@ -13,7 +13,7 @@
 		"component-class-suffix": true,
 		"contextual-lifecycle": true,
 		"directive-class-suffix": true,
-		"directive-selector": [true, "attribute", "mas", "camelCase"],
+		"directive-selector": false,
 		"component-selector": [true, "element", "mas", "kebab-case"],
 		"eofline": true,
 		"import-blacklist": [true, "rxjs/Rx"],

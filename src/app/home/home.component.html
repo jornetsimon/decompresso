@@ -16,7 +16,12 @@
 			<mas-signin></mas-signin>
 		</div>
 		<div id="login-button-container" class="absolute" fxLayout="column" fxLayoutAlign="center">
-			<button nz-button nzType="primary" (click)="openSigninModal()">
+			<button
+				nz-button
+				nzType="primary"
+				(click)="openSigninModal()"
+				gaEvent="signup_modal_opened"
+			>
 				<span class="button-text">
 					<i nz-icon nzType="login" nzTheme="outline"></i>
 					<br />
