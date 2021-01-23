@@ -48,6 +48,7 @@ import {
 	AngularFireAnalyticsModule,
 	COLLECTION_ENABLED,
 	CONFIG as AnalyticsConfig,
+	DEBUG_MODE as ANALYTICS_DEBUG_MODE,
 	ScreenTrackingService,
 } from '@angular/fire/analytics';
 
@@ -112,9 +113,10 @@ registerLocaleData(fr);
 				anonymize_ip: true,
 			},
 		},
+		{ provide: ANALYTICS_DEBUG_MODE, useValue: !environment.production },
 		{
 			provide: COLLECTION_ENABLED,
-			useValue: localStorage.getItem('cookies-consent') === 'true',
+			useValue: localStorage.getItem('cookies-consent') === 'true' && environment.production,
 		},
 		ScreenTrackingService,
 	],

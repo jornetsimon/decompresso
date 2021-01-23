@@ -16,7 +16,8 @@
 		"paths": {
 			"@services/*": ["shared/services/*"],
 			"@model/*": ["shared/model/*"],
-			"@utilities/*": ["shared/utilities/*"]
+			"@utilities/*": ["shared/utilities/*"],
+			"@analytics/*": ["shared/analytics/*"]
 		},
 		"strictNullChecks": true
 	},

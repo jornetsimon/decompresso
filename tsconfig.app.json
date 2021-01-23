@@ -8,7 +8,8 @@
 		"paths": {
 			"@services/*": ["shared/services/*"],
 			"@model/*": ["shared/model/*"],
-			"@utilities/*": ["shared/utilities/*"]
+			"@utilities/*": ["shared/utilities/*"],
+			"@analytics/*": ["shared/analytics/*"]
 		}
 	},
 	"files": ["src/main.ts", "src/polyfills.ts"],

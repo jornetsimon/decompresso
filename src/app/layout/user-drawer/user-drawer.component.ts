@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { UserService } from '@services/user.service';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { finalize, switchMap, tap } from 'rxjs/operators';
+import { AnalyticsService } from '@analytics/analytics.service';
 
 @Component({
 	selector: 'mas-user-drawer',
@@ -25,7 +26,8 @@ export class UserDrawerComponent {
 		private userService: UserService,
 		private message: NzMessageService,
 		private modalService: NzModalService,
-		private router: Router
+		private router: Router,
+		private analyticsService: AnalyticsService
 	) {}
 
 	closeDrawer() {
@@ -35,6 +37,7 @@ export class UserDrawerComponent {
 
 	logout() {
 		this.closeDrawer();
+		this.analyticsService.logEvent('logout', 'account');
 		this.authService.logout().subscribe({
 			next: () => {
 				this.router.navigateByUrl('/');
@@ -55,6 +58,7 @@ export class UserDrawerComponent {
 			nzOkLoading: deletionLoading,
 			nzOnOk: () => {
 				deletionLoading = true;
+				this.analyticsService.logEvent('delete_account', 'account');
 				return this.authService
 					.deleteUser()
 					.pipe(

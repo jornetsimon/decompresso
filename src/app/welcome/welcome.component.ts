@@ -18,6 +18,8 @@ import { Router } from '@angular/router';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { ErrorWithCode } from '@utilities/errors';
 import { of } from 'rxjs';
+import { AnalyticsService } from '@analytics/analytics.service';
+import { GaCategoryEnum } from '@analytics/ga-category.enum';
 
 @UntilDestroy()
 @Component({
@@ -40,6 +42,7 @@ export class WelcomeComponent {
 				switch (authResult.authType) {
 					case AuthType.Created:
 						/*this.message.success('Votre compte a bien été créé');*/
+						this.analyticsService.logEvent('verify_email', GaCategoryEnum.SIGN_UP);
 						break;
 					case AuthType.LoggedIn:
 						if (authResult.user) {
@@ -110,7 +113,8 @@ export class WelcomeComponent {
 		private message: NzMessageService,
 		private modal: NzModalService,
 		private router: Router,
-		private cd: ChangeDetectorRef
+		private cd: ChangeDetectorRef,
+		private analyticsService: AnalyticsService
 	) {
 		// Redirect to room if the user was simply logged in
 		this.loginOrCreateAccount$

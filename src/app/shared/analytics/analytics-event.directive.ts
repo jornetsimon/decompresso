@@ -1,17 +1,21 @@
 import { Directive, HostListener, Input } from '@angular/core';
-import { AngularFireAnalytics } from '@angular/fire/analytics';
 import { GaEventEnum } from './ga-event.enum';
 import { GaBind } from './ga-bind.type';
+import { AnalyticsService } from '@analytics/analytics.service';
+import { GaCategoryEnum } from '@analytics/ga-category.enum';
 
 @Directive({
 	selector: '[gaEvent]',
 })
 export class AnalyticsEventDirective {
-	constructor(private analyticsService: AngularFireAnalytics) {}
+	constructor(private analyticsService: AnalyticsService) {}
 
 	@Input() gaBind: GaBind = 'click';
 	@Input() gaEvent: GaEventEnum | string;
 	@Input() gaParams: { [key: string]: any };
+	@Input() gaCategory: GaCategoryEnum | string;
+	@Input() gaLabel: string;
+	@Input() gaValue: any;
 
 	@HostListener('click')
 	onClick() {
@@ -47,7 +51,12 @@ export class AnalyticsEventDirective {
 				throw new Error('You must provide a gaAction attribute to identify this event.');
 			}
 
-			this.analyticsService.logEvent(this.gaEvent);
+			this.analyticsService.logEvent(
+				this.gaEvent,
+				this.gaCategory,
+				this.gaLabel,
+				this.gaValue
+			);
 		} catch (err) {
 			console.warn(err);
 		}

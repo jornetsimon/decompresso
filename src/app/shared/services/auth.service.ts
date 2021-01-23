@@ -23,6 +23,9 @@ import { User } from '@model/user';
 import { DataService } from './data.service';
 import firebase from 'firebase';
 import { PresenceService } from '@services/presence.service';
+import { AngularFireAnalytics } from '@angular/fire/analytics';
+
+const md5 = require('md5');
 
 export type FirebaseUser = firebase.User;
 export type FirebaseUserCredential = firebase.auth.UserCredential;
@@ -79,7 +82,8 @@ export class AuthService extends ObservableStore<StoreState> {
 		private fns: AngularFireFunctions,
 		private auth: AngularFireAuth,
 		private dataService: DataService,
-		private presenceService: PresenceService
+		private presenceService: PresenceService,
+		private angularFireAnalytics: AngularFireAnalytics
 	) {
 		super({});
 
@@ -95,6 +99,11 @@ export class AuthService extends ObservableStore<StoreState> {
 					this.setState(
 						{ auth_credential: serialize(auth_credential) },
 						'AUTH_CREDENTIAL_CHANGE'
+					);
+					// Update user identifier in Analytics
+					// We use an MD5 hash to preserve user anonymity
+					this.angularFireAnalytics.setUserId(
+						auth_credential?.uid ? md5(auth_credential.uid) : ''
 					);
 				}),
 				// Map the auth credential to its user data in DB
@@ -117,6 +126,10 @@ export class AuthService extends ObservableStore<StoreState> {
 				// Update user state
 				tap((user: User | null) => {
 					this.setState({ user }, 'AUTH_USER_CHANGE');
+					// Update user properties in Analytics
+					this.angularFireAnalytics.setUserProperties({
+						user_domain: user?.domain,
+					});
 				}),
 				untilDestroyed(this)
 			)

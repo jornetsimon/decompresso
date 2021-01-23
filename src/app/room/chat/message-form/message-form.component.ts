@@ -30,6 +30,7 @@ import { User } from '@model/user';
 import { UserService } from '@services/user.service';
 import { EmojiData } from '@ctrl/ngx-emoji-mart/ngx-emoji';
 import { ActivityService } from '@services/activity.service';
+import { AnalyticsService } from '@analytics/analytics.service';
 
 @UntilDestroy()
 @Component({
@@ -98,7 +99,8 @@ export class MessageFormComponent implements AfterViewInit {
 		private userService: UserService,
 		private deviceService: DeviceDetectorService,
 		private activityService: ActivityService,
-		private changeDetectorRef: ChangeDetectorRef
+		private changeDetectorRef: ChangeDetectorRef,
+		private analyticsService: AnalyticsService
 	) {
 		this.roomHasMultipleMembers$
 			.pipe(untilDestroyed(this))
@@ -141,7 +143,10 @@ export class MessageFormComponent implements AfterViewInit {
 				this.sendMessage();
 			});
 
-		this.isInactive$.subscribe(() => {
+		this.isInactive$.subscribe((inactive) => {
+			if (inactive) {
+				this.analyticsService.logEvent('inactive');
+			}
 			this.changeDetectorRef.detectChanges();
 		});
 	}

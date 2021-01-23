@@ -20,7 +20,7 @@
 				nz-button
 				nzType="primary"
 				(click)="openSigninModal()"
-				gaEvent="signup_modal_opened"
+				gaEvent="open_signup_modal"
 			>
 				<span class="button-text">
 					<i nz-icon nzType="login" nzTheme="outline"></i>
@@ -223,7 +223,7 @@
 				</div>
 			</div>
 			<div fxLayoutAlign="center">
-				<button class="signup-button" (click)="scrollTop()">
+				<button class="signup-button" (click)="scrollTop()" gaEvent="bottom_signup_button">
 					<span class="text">Je m'inscris</span>
 				</button>
 			</div>
