@@ -23,8 +23,20 @@
 						</div>
 					</section>
 				</div>
-				<div fxFlex="none">
+				<div fxFlex="none" class="relative" style="margin-top: 50px">
 					<div fxLayout="column" fxLayoutAlign="center center">
+						<button
+							class="pwa-button"
+							[class.flip-out-hor-top]="userInstalledApp"
+							*ngIf="showAddPwaButton"
+							(click)="showPwaInstallPrompt()"
+						>
+							<i nz-icon nzType="appstore-add" nzTheme="outline"></i>
+							<span fxLayout="column" fxLayoutAlign="center start">
+								<span class="promo"></span>
+								<span>Installer l'application</span>
+							</span>
+						</button>
 						<button
 							nz-button
 							nzType="default"
