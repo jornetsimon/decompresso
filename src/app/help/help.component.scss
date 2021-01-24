@@ -43,3 +43,23 @@ h1 {
 	color: white;
 	box-shadow: 0 2px 3px 0 #9e9e9e8c;
 }
+
+.target {
+	animation-name: highlight;
+	animation-duration: 7s;
+	animation-delay: 0s;
+}
+@keyframes highlight {
+	0% {
+		background-color: initial;
+	}
+	5% {
+		background-color: #ffa;
+	}
+	70% {
+		background-color: #ffa;
+	}
+	100% {
+		background-color: initial;
+	}
+}
