@@ -2,7 +2,10 @@
 	<div class="content">
 		<span class="icon">{{ entry.icon }}</span>
 		<span class="text" [style.color]="entry.color">
-			{{ entry.content }}
+			{{ entry.content
+			}}<span *ngIf="entry.icon === '🌪'"
+				>. <a routerLink="/help" fragment="purge" class="nowrap"> En savoir plus </a>
+			</span>
 		</span>
 	</div>
 </div>
