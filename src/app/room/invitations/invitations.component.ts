@@ -1,7 +1,17 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { RoomService } from '@services/room.service';
-import { distinctUntilChanged, first, map, scan, shareReplay, startWith } from 'rxjs/operators';
+import {
+	distinctUntilChanged,
+	first,
+	map,
+	scan,
+	shareReplay,
+	startWith,
+	take,
+} from 'rxjs/operators';
 import { combineLatest, Observable, Subject } from 'rxjs';
+import { AnalyticsService } from '@analytics/analytics.service';
+import { GaCategoryEnum } from '@analytics/ga-category.enum';
 
 @Component({
 	selector: 'mas-invitations',
@@ -9,7 +19,7 @@ import { combineLatest, Observable, Subject } from 'rxjs';
 	styleUrls: ['./invitations.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class InvitationsComponent {
+export class InvitationsComponent implements OnInit {
 	@Input() isFirstUser: boolean;
 	private readonly maxInvitesDisplayed = 3;
 	room$ = this.roomService.room$.pipe(first(), shareReplay());
@@ -46,7 +56,25 @@ export class InvitationsComponent {
 	);
 	domain$ = this.room$.pipe(map((room) => room.domain));
 
-	constructor(private roomService: RoomService) {}
+	constructor(private roomService: RoomService, private analyticsService: AnalyticsService) {}
+
+	ngOnInit() {
+		if (!this.isFirstUser) {
+			this.room$
+				.pipe(
+					map((room) => room.remaining_invites),
+					take(1)
+				)
+				.subscribe((remaining) => {
+					if (remaining === 0) {
+						this.analyticsService.logEvent(
+							'not_enough_invites',
+							GaCategoryEnum.ENGAGEMENT
+						);
+					}
+				});
+		}
+	}
 
 	onInviteSent() {
 		this.sentInvitesSub.next();
