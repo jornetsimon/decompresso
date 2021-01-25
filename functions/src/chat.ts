@@ -2,7 +2,7 @@ import * as functions from 'firebase-functions';
 import { db } from './init';
 import { Endpoints } from './index';
 import * as admin from 'firebase-admin';
-import { sendMail } from './mail';
+import EmailSender from './mail';
 
 /**
  * When the max message count is reached, delete the oldest ones
@@ -81,7 +81,7 @@ export const onReportCreated = functions.firestore
 				<a href="${moderationUrl}">Lien de modération</a>
 			`,
 		};
-		return sendMail(mailOptions);
+		return EmailSender.sendMail(mailOptions);
 	});
 
 export const onReportModified = functions.firestore
@@ -101,7 +101,7 @@ export const onReportModified = functions.firestore
 				throw new Error('no_email_associated_with_message_author');
 			}
 
-			return sendMail({
+			return EmailSender.sendMail({
 				from: 'Décompresso <support@decompresso.fr>',
 				to: messageAuthorEmail,
 				subject: `[Personnel et confidentiel] Modération de votre message sur Décompresso`,

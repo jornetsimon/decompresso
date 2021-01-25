@@ -2,7 +2,7 @@ import { db } from './init';
 import { Endpoints } from './index';
 import { nicknamePool, shuffleArray } from './nickname';
 import * as functions from 'firebase-functions';
-import { sendMail } from './mail';
+import EmailSender from './mail';
 import * as admin from 'firebase-admin';
 
 export function createRoom(domain: string) {
@@ -37,7 +37,7 @@ export const invite = functions.https.onCall(async (data, context) => {
 		throw new functions.https.HttpsError('failed-precondition', 'domain_does_not_match');
 	}
 
-	return sendMail({
+	return EmailSender.sendMail({
 		from: 'Décompresso <bonjour@decompresso.fr>',
 		to: email,
 		subject: `[Personnel et confidentiel] Un collègue vous invite à le rejoindre sur Décompresso !`,
