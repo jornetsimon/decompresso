@@ -10,6 +10,7 @@ export enum Endpoints {
 	Rooms = '/rooms',
 	RoomMembers = 'members',
 	Chats = '/chats',
+	Stats = '/stats',
 }
 
 exports.createUser = createUser;

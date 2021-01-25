@@ -27,6 +27,9 @@ service cloud.firestore {
 		match /{path=**}/reports/{uid} {
         	allow read, write: if isAdmin();
         }
+		match /stats/{domain} {
+			allow read: if isAdmin();
+		}
 
 
 		function authUidMatches(uid) {

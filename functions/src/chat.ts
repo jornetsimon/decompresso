@@ -38,18 +38,45 @@ export const purgeChat = functions.pubsub
 	.schedule('0 0 * * 1') // Every monday morning (00:00)
 	.timeZone('Europe/Paris')
 	.onRun(async (context) => {
-		console.log('RUNNING PURGE');
-		const chatRefs = await db.collection(Endpoints.Chats).get();
-		const chatJobs = chatRefs.docs.map((snapshot) => {
-			return snapshot.ref.set({
+		const chatColRef = await db.collection(Endpoints.Chats).get();
+		const now = new Date();
+		const statsDocId = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`;
+		const statsDocRef = db.doc(`${Endpoints.Stats}/${statsDocId}`);
+		const roomsDataPromise = chatColRef.docs.map(async (snapshot) => {
+			const data = snapshot.data();
+			const matches = snapshot.ref.path.split(`${Endpoints.Chats.substring(1)}/`);
+			const domain = matches[matches.length - 1];
+			const messagesCount = data.messages?.length ?? 0;
+			const reactionsCount = data.reactions?.length ?? 0;
+			const roomRef = db.doc(`${Endpoints.Rooms}/${domain}`);
+			const membersCount = (await roomRef.get()).data()?.member_count ?? 0;
+			return {
+				domain,
+				members: membersCount,
+				messages: messagesCount,
+				reactions: reactionsCount,
+			};
+		});
+		const roomsData: ReadonlyArray<{
+			domain: string;
+			members: number;
+			messages: number;
+			reactions: number;
+		}> = await Promise.all(roomsDataPromise);
+
+		const purgeJobs = roomsData.map((roomData) => {
+			return db.doc(`${Endpoints.Chats}/${roomData.domain}`).set({
 				messages: [],
 				reactions: [],
 				last_purge: admin.firestore.FieldValue.serverTimestamp(),
 			});
 		});
-
-		// Execute all jobs concurrently
-		return await Promise.all(chatJobs);
+		const stats = roomsData.reduce((acc, roomData) => {
+			const { domain, ...roomStats } = roomData;
+			acc[domain] = roomStats;
+			return acc;
+		}, {});
+		return await Promise.all([statsDocRef.set(stats), ...purgeJobs]);
 	});
 
 /**
