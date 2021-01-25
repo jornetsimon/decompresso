@@ -1,7 +1,8 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { UserService } from '@services/user.service';
 import { RoomService } from '@services/room.service';
 import { LayoutService } from '../../layout/layout.service';
+import { TitleService } from '@services/title.service';
 
 @Component({
 	selector: 'mas-room',
@@ -9,10 +10,15 @@ import { LayoutService } from '../../layout/layout.service';
 	styleUrls: ['./room.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RoomComponent {
+export class RoomComponent implements OnInit {
 	constructor(
 		public userService: UserService,
 		public roomService: RoomService,
-		public layoutService: LayoutService
+		public layoutService: LayoutService,
+		private titleService: TitleService
 	) {}
+
+	ngOnInit() {
+		this.titleService.setTitle('Salon');
+	}
 }

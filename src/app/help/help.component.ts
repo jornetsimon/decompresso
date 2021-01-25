@@ -1,7 +1,8 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { ActivatedRoute } from '@angular/router';
 import { first } from 'rxjs/operators';
+import { TitleService } from '@services/title.service';
 
 @Component({
 	selector: 'mas-help',
@@ -9,11 +10,12 @@ import { first } from 'rxjs/operators';
 	styleUrls: ['./help.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HelpComponent implements AfterViewInit {
+export class HelpComponent implements OnInit, AfterViewInit {
 	isTouchDevice = this.deviceDetectorService.isMobile() || this.deviceDetectorService.isTablet();
 	constructor(
 		private deviceDetectorService: DeviceDetectorService,
-		private route: ActivatedRoute
+		private route: ActivatedRoute,
+		private titleService: TitleService
 	) {}
 
 	ngAfterViewInit() {
@@ -22,5 +24,9 @@ export class HelpComponent implements AfterViewInit {
 				(document.querySelector(`#${fragment}`) as HTMLElement).classList.add('target');
 			}
 		});
+	}
+
+	ngOnInit() {
+		this.titleService.setTitle('FAQ');
 	}
 }

@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { TitleService } from '@services/title.service';
 
 @Component({
 	selector: 'mas-admin',
@@ -6,6 +7,10 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 	styleUrls: ['./admin.component.css'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AdminComponent {
-	constructor() {}
+export class AdminComponent implements OnInit {
+	constructor(private titleService: TitleService) {}
+
+	ngOnInit() {
+		this.titleService.setTitle('Admin');
+	}
 }
