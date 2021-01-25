@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+	ChangeDetectionStrategy,
+	ChangeDetectorRef,
+	Component,
+	EventEmitter,
+	Input,
+	Output,
+} from '@angular/core';
 import { NzDrawerPlacement } from 'ng-zorro-antd/drawer';
 import { AuthService } from '@services/auth.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
@@ -6,6 +13,9 @@ import { Router } from '@angular/router';
 import { UserService } from '@services/user.service';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { finalize, switchMap, tap } from 'rxjs/operators';
+import { AnalyticsService } from '@analytics/analytics.service';
+import { PwaService } from '@services/pwa/pwa.service';
+import { GaCategoryEnum } from '@analytics/ga-category.enum';
 
 @Component({
 	selector: 'mas-user-drawer',
@@ -19,13 +29,18 @@ export class UserDrawerComponent {
 	placement: NzDrawerPlacement = 'left';
 
 	user$ = this.userService.user$;
+	showAddPwaButton = !!this.pwaService.deferredPrompt;
+	userInstalledApp = false;
 
 	constructor(
 		private authService: AuthService,
 		private userService: UserService,
 		private message: NzMessageService,
 		private modalService: NzModalService,
-		private router: Router
+		private router: Router,
+		private analyticsService: AnalyticsService,
+		private pwaService: PwaService,
+		private cd: ChangeDetectorRef
 	) {}
 
 	closeDrawer() {
@@ -35,6 +50,7 @@ export class UserDrawerComponent {
 
 	logout() {
 		this.closeDrawer();
+		this.analyticsService.logEvent('logout', 'account');
 		this.authService.logout().subscribe({
 			next: () => {
 				this.router.navigateByUrl('/');
@@ -55,6 +71,7 @@ export class UserDrawerComponent {
 			nzOkLoading: deletionLoading,
 			nzOnOk: () => {
 				deletionLoading = true;
+				this.analyticsService.logEvent('delete_account', 'account');
 				return this.authService
 					.deleteUser()
 					.pipe(
@@ -139,6 +156,23 @@ export class UserDrawerComponent {
 					)
 					.toPromise();
 			},
+		});
+	}
+
+	/**
+	 * Show the PWA install prompt.
+	 *
+	 * @description The user can then decide to install it or not.
+	 * In case they do, hide the button afterwards
+	 */
+	showPwaInstallPrompt() {
+		this.pwaService.showPwaInstallPrompt();
+		this.pwaService.deferredPrompt.userChoice.then((choiceResult) => {
+			if (choiceResult.outcome === 'accepted') {
+				this.userInstalledApp = true;
+				this.cd.detectChanges();
+				this.analyticsService.logEvent('install_pwa_button', GaCategoryEnum.ENGAGEMENT);
+			}
 		});
 	}
 }

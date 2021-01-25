@@ -44,6 +44,13 @@ import {
 } from '@ant-design/icons-angular/icons';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { LayoutModule } from './layout/layout.module';
+import {
+	AngularFireAnalyticsModule,
+	COLLECTION_ENABLED,
+	CONFIG as AnalyticsConfig,
+	DEBUG_MODE as ANALYTICS_DEBUG_MODE,
+	ScreenTrackingService,
+} from '@angular/fire/analytics';
 
 registerLocaleData(fr);
 
@@ -79,6 +86,7 @@ registerLocaleData(fr);
 		AngularFireAuthModule,
 		ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
 		LayoutModule,
+		AngularFireAnalyticsModule,
 	],
 	providers: [
 		{ provide: NZ_I18N, useValue: fr_FR },
@@ -99,6 +107,18 @@ registerLocaleData(fr);
 			provide: USE_AUTH_EMULATOR,
 			useValue: environment.useEmulators ? ['localhost', 9099] : undefined,
 		},
+		{
+			provide: AnalyticsConfig,
+			useValue: {
+				anonymize_ip: true,
+			},
+		},
+		{ provide: ANALYTICS_DEBUG_MODE, useValue: !environment.production },
+		{
+			provide: COLLECTION_ENABLED,
+			useValue: localStorage.getItem('cookies-consent') === 'true' && environment.production,
+		},
+		ScreenTrackingService,
 	],
 	bootstrap: [AppComponent],
 })

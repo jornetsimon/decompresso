@@ -43,6 +43,7 @@
     "basscss": "^8.0.2",
     "date-fns": "^2.16.1",
     "firebase": "^8.0.1",
+    "md5": "^2.3.0",
     "ng-rough-notation": "^1.1.2",
     "ng-zorro-antd": "^11.0.0",
     "ngx-device-detector": "^2.0.1",

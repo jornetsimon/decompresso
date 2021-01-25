@@ -9,7 +9,10 @@ import { GLOBAL_CONFIG } from '../../global-config';
 import { ErrorWithCode } from '@utilities/errors';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { debounceTime, filter, map } from 'rxjs/operators';
+import { AnalyticsService } from '@analytics/analytics.service';
+import { GaCategoryEnum } from '@analytics/ga-category.enum';
+import { GaEventEnum } from '@analytics/ga-event.enum';
 
 type Type = 'login' | 'signup';
 
@@ -83,13 +86,25 @@ export class SigninComponent implements OnInit {
 		private userService: UserService,
 		private router: Router,
 		private message: NzMessageService,
-		private modal: NzModalService
+		private modal: NzModalService,
+		private analyticsService: AnalyticsService
 	) {}
 
 	ngOnInit() {
 		if (window.localStorage.getItem('is-known') === 'true') {
 			this.onTabChange(1, false);
 		}
+
+		const personalEmailEntered$ = this.emailFc?.statusChanges.pipe(
+			filter(
+				(status) => status === 'INVALID' && this.emailFc.getError('emailDomainIsPublic')
+			),
+			debounceTime(2000)
+		);
+
+		personalEmailEntered$.subscribe(() => {
+			this.analyticsService.logEvent('personal_email', GaCategoryEnum.SIGN_UP);
+		});
 	}
 
 	emailControlStatus(): 'success' | 'warning' | 'error' | 'validating' | '' {
@@ -149,6 +164,7 @@ export class SigninComponent implements OnInit {
 			this.authService.signupWithEmailPassword(email, password).then(
 				() => {
 					this.modal.closeAll();
+					this.analyticsService.logEvent(GaEventEnum.SIGN_UP, GaCategoryEnum.SIGN_UP);
 					this.router.navigateByUrl(`/welcome`);
 				},
 				(err: ErrorWithCode) => {

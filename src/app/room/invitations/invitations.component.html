@@ -31,13 +31,13 @@
 <div class="center mt2">
 	<div style="font-weight: 500" class="mb1">
 		Vous pouvez {{ (remainingInvites$ | async) === 0 ? 'toujours' : 'aussi' }} parlez de
-		Décompresso à vos collègues et autour de vous !
+		Décompresso à vos collègues et autour de vous&nbsp;!
 	</div>
 	<div fxLayoutAlign="center center" fxLayoutGap="5px">
-		<mas-facebook-button></mas-facebook-button>
-		<mas-twitter-button></mas-twitter-button>
-		<mas-linkedin-button></mas-linkedin-button>
-		<mas-email-button></mas-email-button>
-		<mas-whatsapp-button></mas-whatsapp-button>
+		<mas-facebook-button gaEvent="share" gaLabel="Facebook"></mas-facebook-button>
+		<mas-twitter-button gaEvent="share" gaLabel="Twitter"></mas-twitter-button>
+		<mas-linkedin-button gaEvent="share" gaLabel="LinkedIn"></mas-linkedin-button>
+		<mas-email-button gaEvent="share" gaLabel="Email"></mas-email-button>
+		<mas-whatsapp-button gaEvent="share" gaLabel="WhatsApp"></mas-whatsapp-button>
 	</div>
 </div>

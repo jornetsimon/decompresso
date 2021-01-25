@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { AnalyticsService } from '@analytics/analytics.service';
 
 @Component({
 	selector: 'mas-rules',
@@ -6,4 +7,9 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 	styleUrls: ['./rules.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RulesComponent {}
+export class RulesComponent implements OnInit {
+	constructor(private analyticsService: AnalyticsService) {}
+	ngOnInit(): void {
+		this.analyticsService.logEvent('content_view', undefined, `Règles du salon`);
+	}
+}

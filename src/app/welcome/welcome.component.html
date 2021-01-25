@@ -52,6 +52,8 @@
 									*ngFor="let nickname of nicknames"
 									(click)="selectNickname(nickname)"
 									[nzLoading]="loadingNickname === nickname"
+									gaEvent="change_nickname"
+									gaCategory="sign_up"
 								>
 									<i
 										nz-icon

@@ -6,6 +6,7 @@ import { UserDrawerComponent } from './user-drawer/user-drawer.component';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import {
 	ApiTwoTone,
+	AppstoreAddOutline,
 	FrownOutline,
 	HomeOutline,
 	LockOutline,
@@ -36,6 +37,7 @@ import { FooterComponent } from './footer/footer.component';
 			LockOutline,
 			FrownOutline,
 			ReadOutline,
+			AppstoreAddOutline,
 		]),
 	],
 	exports: [FooterComponent],

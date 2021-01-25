@@ -5,6 +5,8 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { finalize } from 'rxjs/operators';
 import { emailPattern } from 'shared/private-domain-email/private-domain-email.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { AnalyticsService } from '@analytics/analytics.service';
+import { GaCategoryEnum } from '@analytics/ga-category.enum';
 
 @UntilDestroy()
 @Component({
@@ -24,7 +26,11 @@ export class InviteComponent {
 	form = new FormGroup({
 		email: this.emailFc,
 	});
-	constructor(private invitationsService: InvitationsService, private message: NzMessageService) {
+	constructor(
+		private invitationsService: InvitationsService,
+		private message: NzMessageService,
+		private analyticsService: AnalyticsService
+	) {
 		this.emailFc.valueChanges.pipe(untilDestroyed(this)).subscribe((value: string) => {
 			if (value.match(emailPattern) && value.split('@')[1] === this.domain) {
 				// The value is a full email address from the domain
@@ -39,6 +45,7 @@ export class InviteComponent {
 			return;
 		}
 		this.loading = true;
+		this.analyticsService.logEvent('invite', GaCategoryEnum.ENGAGEMENT);
 		const email = this.emailFc.value + '@' + this.domain;
 		this.invitationsService
 			.sendInvitation(email)

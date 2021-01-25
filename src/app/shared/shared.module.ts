@@ -37,11 +37,16 @@ import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 import { ShareButtonsModule } from './share-buttons/share-buttons.module';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { CookiesConsentComponent } from './cookies-consent/cookies-consent.component';
+import { AnalyticsEventDirective } from '@analytics/analytics-event.directive';
 
 // tslint:disable-next-line:readonly-array
 const icons: IconDefinition[] = [QuestionCircleOutline];
 
-const components: ReadonlyArray<any> = [TimestampToDatePipe, CookiesConsentComponent];
+const components: ReadonlyArray<any> = [
+	TimestampToDatePipe,
+	CookiesConsentComponent,
+	AnalyticsEventDirective,
+];
 
 const modules: ReadonlyArray<any> = [
 	CommonModule,
