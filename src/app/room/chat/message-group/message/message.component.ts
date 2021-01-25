@@ -4,6 +4,7 @@ import {
 	Component,
 	ElementRef,
 	Input,
+	SecurityContext,
 	ViewChild,
 } from '@angular/core';
 import { ChatService } from '../../chat.service';
@@ -19,6 +20,7 @@ import { NzModalService } from 'ng-zorro-antd/modal';
 import { ReportComponent } from '../../report/report.component';
 import { RoomService } from '@services/room.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
 	selector: 'mas-message',
@@ -50,7 +52,8 @@ export class MessageComponent implements AfterViewInit {
 		private roomService: RoomService,
 		private elRef: ElementRef,
 		private modalService: NzModalService,
-		private nzMessageService: NzMessageService
+		private nzMessageService: NzMessageService,
+		private domSanitizer: DomSanitizer
 	) {}
 
 	ngAfterViewInit() {
@@ -208,6 +211,12 @@ export class MessageComponent implements AfterViewInit {
 		}
 		return content
 			.replace(this.mentionRegex, (match) => `<span class="mention">${match.trim()}</span>`)
-			.replace(this.urlRegex, (match) => `<a href="${match}" target="_blank">${match}</a>`);
+			.replace(this.urlRegex, (match) => {
+				const sanitizedUrl = this.domSanitizer.sanitize(SecurityContext.URL, match);
+				if (sanitizedUrl?.startsWith('unsafe')) {
+					return sanitizedUrl;
+				}
+				return `<a href="${sanitizedUrl}" target="_blank">${sanitizedUrl}</a>`;
+			});
 	}
 }
