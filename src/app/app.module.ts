@@ -80,7 +80,7 @@ registerLocaleData(fr);
 			ReadOutline,
 		]),
 		AngularFireModule.initializeApp(environment.firebase),
-		AngularFirestoreModule,
+		AngularFirestoreModule.enablePersistence(),
 		AngularFireDatabaseModule,
 		AngularFireFunctionsModule,
 		AngularFireAuthModule,
