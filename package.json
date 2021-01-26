@@ -1,6 +1,16 @@
 {
   "name": "decompresso",
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "author": "WonderWork",
+  "contributors": [
+    {
+      "name": "Simon Jornet",
+      "email": "simon@decompresso.fr",
+      "url": "https://github.com/jornetsimon"
+    }
+  ],
+  "homepage": "https://decompresso.fr",
+  "repository": "github:wonderworkhq/decompresso",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
