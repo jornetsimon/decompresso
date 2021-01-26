@@ -23,8 +23,9 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
             "allowedCommonJsDependencies": [
-              "@ant-design/colors",
-              "@angular/common/locales/fr"
+              "@codewithdan/observable-store",
+              "object-hash",
+              "md5"
             ],
             "aot": true,
             "assets": [

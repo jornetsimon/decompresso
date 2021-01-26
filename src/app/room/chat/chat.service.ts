@@ -26,8 +26,6 @@ import { Report } from '@model/report';
 import { dateToTimestamp } from '@utilities/timestamp';
 import firestore = firebase.firestore;
 
-const hash = require('object-hash');
-
 const FieldValue = firestore.FieldValue;
 
 @UntilDestroy()

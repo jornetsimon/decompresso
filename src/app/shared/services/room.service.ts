@@ -22,8 +22,7 @@ import { isBefore } from 'date-fns/esm';
 import { Reaction } from '@model/reaction';
 import { ActivityService } from '@services/activity.service';
 import { RoomMember } from '@model/room-member';
-
-const hash = require('object-hash');
+import hash from 'object-hash';
 
 interface StoreState {
 	room: Room;
