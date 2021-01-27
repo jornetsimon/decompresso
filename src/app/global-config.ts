@@ -1,4 +1,5 @@
 export const GLOBAL_CONFIG = {
+	launch_date: new Date(2021, 1, 1),
 	auth: {
 		minPasswordLength: 6,
 	},

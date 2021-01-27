@@ -91,6 +91,11 @@ export const createUser = functions.https.onCall(async (data, context) => {
 	});
 	batch.set(db.doc(`${Endpoints.Rooms}/${domain}/${Endpoints.RoomMembers}/${uid}`), user);
 	batch.update(db.doc(`${Endpoints.Rooms}/${domain}`), 'member_count', FieldValue.increment(1));
+	batch.set(
+		db.doc(`${Endpoints.Stats}/global`),
+		{ totalUsers: FieldValue.increment(1) },
+		{ merge: true }
+	);
 	await batch.commit();
 
 	const userSnap = await db.doc(`${Endpoints.Users}/${uid}`).get();

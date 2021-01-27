@@ -1,0 +1,25 @@
+<ng-container *ngIf="globalStats$ | async as global; else loaderTpl">
+	<div fxLayout="row wrap">
+		<div class="main-stat">
+			<div>{{ global.totalUsers | number }}</div>
+			<div>utilisateurs</div>
+		</div>
+		<div class="main-stat">
+			<div>{{ global.totalRooms | number }}</div>
+			<div>salons</div>
+		</div>
+	</div>
+	<div fxLayout="row wrap" fxLayoutAlign="space-around">
+		<nz-statistic
+			[nzValue]="(daysSinceLaunch | number) || undefined"
+			nzSuffix="jours"
+			nzTitle="Depuis lancement"
+		></nz-statistic>
+	</div>
+</ng-container>
+
+<ng-template #loaderTpl>
+	<div fxLayoutAlign="center">
+		<nz-spin nzSimple nzSize="large"></nz-spin>
+	</div>
+</ng-template>

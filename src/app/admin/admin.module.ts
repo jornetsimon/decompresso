@@ -8,9 +8,20 @@ import { ReportsComponent } from './reports/reports.component';
 import { ReportComponent } from './reports/report/report.component';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzDescriptionsModule } from 'ng-zorro-antd/descriptions';
+import { StatsComponent } from './stats/stats.component';
+import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb';
+import { NzStatisticModule } from 'ng-zorro-antd/statistic';
 
 @NgModule({
-	declarations: [AdminComponent, ReportsComponent, ReportComponent],
-	imports: [CommonModule, AdminRoutingModule, SharedModule, NzSelectModule, NzDescriptionsModule],
+	declarations: [AdminComponent, ReportsComponent, ReportComponent, StatsComponent],
+	imports: [
+		CommonModule,
+		AdminRoutingModule,
+		SharedModule,
+		NzSelectModule,
+		NzDescriptionsModule,
+		NzBreadCrumbModule,
+		NzStatisticModule,
+	],
 })
 export class AdminModule {}

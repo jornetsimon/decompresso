@@ -1,0 +1,21 @@
+.main-stat {
+	font-size: 72px;
+	line-height: 1.2em;
+
+	flex: 1 1 50%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+
+	& > *:first-child {
+		font-weight: bold;
+	}
+	& > *:last-child {
+		font-size: 0.8em;
+		font-weight: normal;
+	}
+}

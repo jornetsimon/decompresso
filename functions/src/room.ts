@@ -4,6 +4,7 @@ import { nicknamePool, shuffleArray } from './nickname';
 import * as functions from 'firebase-functions';
 import EmailSender from './mail';
 import * as admin from 'firebase-admin';
+import FieldValue = admin.firestore.FieldValue;
 
 export function createRoom(domain: string) {
 	return db
@@ -14,7 +15,15 @@ export function createRoom(domain: string) {
 			nickname_pool: shuffleArray(nicknamePool),
 			remaining_invites: 10,
 		})
-		.catch(() => null);
+		.catch(() => null)
+		.then((result) => {
+			if (result) {
+				return db
+					.doc(`${Endpoints.Stats}/global`)
+					.set({ totalRooms: FieldValue.increment(1) }, { merge: true });
+			}
+			return null;
+		});
 }
 export function createChat(domain: string) {
 	return db
