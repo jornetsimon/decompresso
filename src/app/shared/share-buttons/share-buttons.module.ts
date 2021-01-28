@@ -18,7 +18,7 @@ const customConfig: NgxShareButtonsConfig = {
 	gaTracking: true,
 	title: 'Décompresso - Le chat anonyme au bureau',
 	description: 'Rejoignez-moi pour chatter anonymement avec les collègues !',
-	url: 'https://decompresso-fr.web.app',
+	url: 'https://decompresso.fr',
 	autoSetMeta: false,
 };
 
