@@ -12,6 +12,8 @@ export class TitleService {
 		return this.title.getTitle();
 	}
 	setTitle(title: string, includeAppName = true) {
-		this.title.setTitle(`${includeAppName ? this.appName + ' - ' : ''}${title}`);
+		this.title.setTitle(
+			title ? `${includeAppName ? this.appName + ' - ' : ''}${title}` : this.appName
+		);
 	}
 }

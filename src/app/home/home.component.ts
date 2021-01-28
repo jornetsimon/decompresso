@@ -3,6 +3,7 @@ import {
 	ChangeDetectionStrategy,
 	Component,
 	ElementRef,
+	OnInit,
 	ViewChild,
 } from '@angular/core';
 import { NzModalService } from 'ng-zorro-antd/modal';
@@ -13,6 +14,7 @@ import { BreakpointObserver } from '@angular/cdk/layout';
 import { ElementReadingTracker } from '@utilities/element-reading-tracker';
 import { AnalyticsService } from '@analytics/analytics.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { TitleService } from '@services/title.service';
 
 @UntilDestroy()
 @Component({
@@ -21,7 +23,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 	styleUrls: ['./home.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HomeComponent implements AfterViewInit {
+export class HomeComponent implements OnInit, AfterViewInit {
 	@ViewChild('section1') section1Ref: ElementRef<HTMLDivElement>;
 	@ViewChild('section2') section2Ref: ElementRef<HTMLDivElement>;
 	@ViewChild('section3') section3Ref: ElementRef<HTMLDivElement>;
@@ -29,8 +31,13 @@ export class HomeComponent implements AfterViewInit {
 	constructor(
 		private modalService: NzModalService,
 		private breakpointObserver: BreakpointObserver,
-		private analyticsService: AnalyticsService
+		private analyticsService: AnalyticsService,
+		private titleService: TitleService
 	) {}
+
+	ngOnInit(): void {
+		this.titleService.setTitle('');
+	}
 
 	ngAfterViewInit(): void {
 		merge(
