@@ -2,7 +2,7 @@ import { Inject, LOCALE_ID, Pipe, PipeTransform } from '@angular/core';
 import { Timestamp } from '@utilities/timestamp';
 import { DatePipe } from '@angular/common';
 import { formatRelative, fromUnixTime } from 'date-fns/esm';
-import { fr } from 'date-fns/locale';
+import { frLocale } from '@utilities/date-fns/locales/fr/fr-locale';
 
 @Pipe({
 	name: 'timestampToDate',
@@ -21,7 +21,7 @@ export class TimestampToDatePipe implements PipeTransform {
 				return null;
 			}
 			return formatRelative(fromUnixTime(value?.seconds), new Date(), {
-				locale: fr,
+				locale: frLocale,
 				weekStartsOn: 1,
 			});
 		}

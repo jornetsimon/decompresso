@@ -20,7 +20,7 @@ import { MessageReactions } from './model/message/message-reactions';
 import { LastReadMessageFeedEntry } from './model/last-read-message.feed-entry';
 import { MessageFeedEntry } from './model/message.feed-entry';
 import { SystemFeedEntry } from './model/system.feed-entry';
-import { fr } from 'date-fns/locale';
+import { frLocale } from '@utilities/date-fns/locales/fr/fr-locale';
 
 export class FeedBuilder {
 	constructor(
@@ -189,7 +189,7 @@ export class FeedBuilder {
 						timestamp: dateToTimestamp(this.lastPurge),
 						color: '#767676',
 						content: `Dernière chasse d'eau effectuée ${format(this.lastPurge, 'EEEE', {
-							locale: fr,
+							locale: frLocale,
 							weekStartsOn: 1,
 						})} matin`,
 						icon: '🌪',
