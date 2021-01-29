@@ -60,12 +60,12 @@ export class PurgeService {
 				const hoursToPurge = differenceInHours(nextPurge, this.today);
 				return {
 					number: hoursToPurge,
-					label: `heure${hoursToPurge > 1 ? 's' : ''} avant<br/>la purge`,
+					label: `heure${hoursToPurge > 1 ? 's' : ''} avant<br/>la chasse d'eau`,
 				};
 			}
 			return {
 				number: daysToPurge,
-				label: `jour${daysToPurge > 1 ? 's' : ''} avant<br/>la purge`,
+				label: `jour${daysToPurge > 1 ? 's' : ''} avant<br/>la chasse d'eau`,
 			};
 		}),
 		tap(() => {

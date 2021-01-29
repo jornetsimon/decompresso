@@ -1,12 +1,14 @@
 <div class="purge-notification-container">
-	<div
-		class="purge-notification"
+	<a
+		class="purge-notification cursor-pointer"
 		[@slideInOutAnimation]
 		*ngIf="notification$ | async as notification"
+		routerLink="/help"
+		fragment="purge"
 	>
 		<div class="label" [innerHTML]="notification.label"></div>
 		<div class="number" [style.font-size.px]="notification.number >= 10 ? 22 : 28">
 			{{ notification.number }}
 		</div>
-	</div>
+	</a>
 </div>
