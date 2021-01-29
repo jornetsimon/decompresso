@@ -105,8 +105,9 @@ body {
 .ant-collapse,
 .ant-card,
 .ant-card-body,
-.ant-alert {
-	border-radius: 5px !important;
+.ant-alert,
+.ant-btn.ant-btn-icon-only {
+	border-radius: 5px;
 }
 
 .page-title {
