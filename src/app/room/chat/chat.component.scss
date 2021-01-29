@@ -1,7 +1,7 @@
 ::ng-deep #chat-card {
 	position: relative;
 }
-::ng-deep .ant-card {
+::ng-deep #chat-card.ant-card {
 	box-shadow: 1px 2px 12px 0 #e4e4e4;
 }
 ::ng-deep mas-purge-notification {

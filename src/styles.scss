@@ -6,6 +6,10 @@
 	display: none;
 }
 
+body {
+	background-color: #f7f7f9;
+}
+
 #header {
 	margin: max(1rem, 2.5vh) 1rem;
 	color: #231f20;
@@ -94,6 +98,14 @@
 .ant-tooltip .help {
 	float: right;
 	cursor: pointer;
+}
+
+.ant-input,
+.ant-btn,
+.ant-collapse,
+.ant-card,
+.ant-card-body {
+	border-radius: 5px !important;
 }
 
 .page-title {

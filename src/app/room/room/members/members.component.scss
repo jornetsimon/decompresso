@@ -5,10 +5,11 @@
 		margin-bottom: 10px;
 	}
 }
-::ng-deep .ant-list {
+::ng-deep mas-members .ant-list {
 	background-color: white;
+	border-radius: 4px 4px 0 0;
 }
-::ng-deep .ant-list-header {
+::ng-deep mas-members .ant-list-header {
 	background-color: dodgerblue;
 	color: white;
 	border-radius: 4px 4px 0 0;
