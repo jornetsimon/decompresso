@@ -15,6 +15,7 @@ import {
 	MessageOutline,
 	QuestionCircleOutline,
 	ReadOutline,
+	StopOutline,
 	UserOutline,
 	WarningOutline,
 } from '@ant-design/icons-angular/icons';
@@ -38,6 +39,7 @@ import { FooterComponent } from './footer/footer.component';
 			FrownOutline,
 			ReadOutline,
 			AppstoreAddOutline,
+			StopOutline,
 		]),
 	],
 	exports: [FooterComponent],

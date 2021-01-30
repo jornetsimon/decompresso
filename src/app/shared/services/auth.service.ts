@@ -271,6 +271,18 @@ export class AuthService extends ObservableStore<StoreState> {
 		);
 	}
 
+	deleteAuthUser() {
+		return this.auth.user.pipe(
+			first(),
+			switchMap((user) => {
+				if (!user) {
+					throw new Error('no_user_to_delete');
+				}
+				return user.delete();
+			})
+		);
+	}
+
 	resetPassword(email?: string): Observable<void> {
 		if (email) {
 			return from(this.auth.sendPasswordResetEmail(email));

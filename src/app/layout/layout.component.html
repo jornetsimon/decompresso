@@ -1,13 +1,27 @@
 <ng-container *ngIf="authService.isAuthenticated$ | async">
-	<button
-		id="user-drawer-button"
-		nz-button
-		(click)="layoutService.showUserDrawer = !layoutService.showUserDrawer"
-		fxLayoutAlign="center center"
-	>
-		<i nz-icon nzType="menu" nzTheme="outline"></i>
-		<span class="button-text">Mon compte</span>
-	</button>
+	<ng-container *ngIf="authService.user$ | async as user; else pendingVerificationTpl">
+		<button
+			class="user-drawer-button"
+			nz-button
+			(click)="toggleDrawer()"
+			fxLayoutAlign="center center"
+		>
+			<i nz-icon nzType="menu" nzTheme="outline"></i>
+			<span class="button-text">Mon compte</span>
+		</button>
+	</ng-container>
+	<ng-template #pendingVerificationTpl>
+		<button
+			class="user-drawer-button pending-verification"
+			nz-button
+			nzDanger
+			(click)="logout()"
+			fxLayoutAlign="center center"
+		>
+			<i nz-icon nzType="stop" nzTheme="outline"></i>
+			<span class="button-text">Annuler l'inscription</span>
+		</button>
+	</ng-template>
 
 	<mas-user-drawer
 		[visible]="layoutService.showUserDrawer"

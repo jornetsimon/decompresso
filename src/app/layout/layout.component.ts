@@ -56,4 +56,15 @@ export class LayoutComponent {
 			startWith(!!this.router.url.match(this.compactModeRouteMatchingPattern))
 		);
 	}
+
+	toggleDrawer() {
+		this.layoutService.showUserDrawer = !this.layoutService.showUserDrawer;
+	}
+	logout() {
+		this.authService.deleteAuthUser().subscribe({
+			next: () => {
+				this.router.navigateByUrl('/');
+			},
+		});
+	}
 }

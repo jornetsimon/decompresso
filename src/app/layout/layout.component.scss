@@ -64,7 +64,7 @@
 }
 /****/
 
-#user-drawer-button {
+.user-drawer-button {
 	position: fixed;
 	top: 20px;
 	left: 10px;
@@ -77,10 +77,13 @@
 		margin-left: 0.5em;
 	}
 }
-#user-drawer-button {
+.user-drawer-button {
 	z-index: 12;
 	&:hover {
 		width: 130px;
+		&.pending-verification {
+			width: 175px;
+		}
 		& .button-text {
 			display: block;
 			animation: fadein 0.3s ease-out;
@@ -89,7 +92,7 @@
 }
 
 @media (max-width: 424px) {
-	#user-drawer-button {
+	.user-drawer-button {
 		left: -5px;
 	}
 }
