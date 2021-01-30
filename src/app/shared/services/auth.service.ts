@@ -225,7 +225,15 @@ export class AuthService extends ObservableStore<StoreState> {
 	}
 	changeNickname(nickname: string) {
 		const callable = this.fns.httpsCallable('changeNickname');
-		return callable({ nickname });
+		return callable({ nickname }).pipe(
+			tap((newNickname: string) => {
+				const user: User = this.getStateProperty('user');
+				this.setState(
+					{ user: { ...user, nickname: newNickname } },
+					'AUTH_USER_NICKNAME_CHANGE'
+				);
+			})
+		);
 	}
 
 	/**

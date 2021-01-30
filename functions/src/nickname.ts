@@ -107,7 +107,9 @@ export const changeNickname = functions.https.onCall(async (data, context) => {
 		memberRef.update({
 			nickname,
 		}),
-	]);
+	]).then(() => {
+		return nickname;
+	});
 });
 
 export const nicknamePool: ReadonlyArray<string> = [
