@@ -92,12 +92,16 @@ export class ChatComponent implements AfterViewInit {
 
 		/**
 		 * Determines if the scroll position in the chat is considered as stuck to bottom
+		 * Set to false if the user is the only member in the room
 		 */
-		this.stickToChatBottom$ = this.chatScrollingState$.pipe(
-			map(([current, max, percent]) => max - current <= 50),
-			distinctUntilChanged(),
-			startWith(true)
-		);
+		this.stickToChatBottom$ = combineLatest([
+			this.roomHasMultipleMembers$,
+			this.chatScrollingState$.pipe(
+				map(([current, max, percent]) => max - current <= 50),
+				distinctUntilChanged(),
+				startWith(true)
+			),
+		]).pipe(map(([multipleMembers, scrollingState]) => multipleMembers && scrollingState));
 
 		/**
 		 * Determines when the "last message bar" should be displayed
