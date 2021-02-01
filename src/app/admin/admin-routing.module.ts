@@ -5,6 +5,7 @@ import { AdminComponent } from './admin.component';
 import { ReportsComponent } from './reports/reports.component';
 import { ReportComponent } from './reports/report/report.component';
 import { StatsComponent } from './stats/stats.component';
+import { RoomsComponent } from './stats/rooms/rooms.component';
 
 const routes: Routes = [
 	{ path: '', component: AdminComponent },
@@ -16,6 +17,10 @@ const routes: Routes = [
 	{
 		path: 'stats',
 		component: StatsComponent,
+	},
+	{
+		path: 'rooms',
+		component: RoomsComponent,
 	},
 ];
 

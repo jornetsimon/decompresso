@@ -1,0 +1,40 @@
+<div class="main-container xs-padding">
+	<h1>Salons créés les {{ numberOfDaysInPast }} derniers jours</h1>
+	<nz-list nzSize="small" class="rooms-list">
+		<nz-list-item *ngFor="let room of rooms$ | async">
+			<nz-list-item-meta [nzDescription]="metaDescriptionTpl">
+				<nz-list-item-meta-title>
+					<div
+						class="width-100"
+						fxLayout="row wrap"
+						fxLayoutAlign="space-between baseline"
+					>
+						<div class="domain">
+							<a [href]="room.domain" target="_blank" [title]="room.domain">
+								{{ room.domain }}
+							</a>
+						</div>
+						<div
+							fxLayout="row wrap"
+							fxLayoutAlign="flex-end"
+							fxLayoutGap="20px"
+							style="font-size: 16px"
+						>
+							<div *ngIf="room.remaining_invites < 10">
+								{{ 10 - room.remaining_invites }}
+								✉️
+							</div>
+							<div>
+								{{ room.member_count }}
+								👨‍💼
+							</div>
+						</div>
+					</div>
+				</nz-list-item-meta-title>
+				<ng-template #metaDescriptionTpl>
+					{{ room.createdAt | timestampToDate | date: 'dd/MM/yyyy' }}
+				</ng-template>
+			</nz-list-item-meta>
+		</nz-list-item>
+	</nz-list>
+</div>

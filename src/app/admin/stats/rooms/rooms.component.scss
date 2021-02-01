@@ -1,0 +1,19 @@
+::ng-deep .rooms-list .ant-list-item {
+	transition: background-color 0.25s;
+	&:hover {
+		background-color: #eefbff;
+		border: 1px dashed #c1c1c1;
+		border-radius: 5px;
+	}
+}
+
+.domain {
+	font-size: 16px;
+}
+
+.load-more {
+	text-align: center;
+	margin-top: 12px;
+	height: 32px;
+	line-height: 32px;
+}

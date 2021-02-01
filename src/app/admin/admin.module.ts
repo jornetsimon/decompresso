@@ -11,9 +11,16 @@ import { NzDescriptionsModule } from 'ng-zorro-antd/descriptions';
 import { StatsComponent } from './stats/stats.component';
 import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb';
 import { NzStatisticModule } from 'ng-zorro-antd/statistic';
+import { RoomsComponent } from './stats/rooms/rooms.component';
 
 @NgModule({
-	declarations: [AdminComponent, ReportsComponent, ReportComponent, StatsComponent],
+	declarations: [
+		AdminComponent,
+		ReportsComponent,
+		ReportComponent,
+		StatsComponent,
+		RoomsComponent,
+	],
 	imports: [
 		CommonModule,
 		AdminRoutingModule,

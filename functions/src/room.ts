@@ -14,6 +14,7 @@ export function createRoom(domain: string) {
 			member_count: 0,
 			nickname_pool: shuffleArray(nicknamePool),
 			remaining_invites: 10,
+			createdAt: admin.firestore.FieldValue.serverTimestamp(),
 		})
 		.catch(() => null)
 		.then((result) => {

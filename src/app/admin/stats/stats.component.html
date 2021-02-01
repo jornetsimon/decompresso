@@ -4,10 +4,10 @@
 			<div>{{ global.totalUsers | number }}</div>
 			<div>utilisateurs</div>
 		</div>
-		<div class="main-stat">
+		<a class="main-stat" routerLink="/admin/rooms">
 			<div>{{ global.totalRooms | number }}</div>
 			<div>salons</div>
-		</div>
+		</a>
 	</div>
 	<div fxLayout="row wrap" fxLayoutAlign="space-around">
 		<nz-statistic
