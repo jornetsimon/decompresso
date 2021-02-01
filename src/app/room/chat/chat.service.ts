@@ -9,7 +9,6 @@ import {
 	map,
 	scan,
 	shareReplay,
-	startWith,
 	switchMap,
 	withLatestFrom,
 } from 'rxjs/operators';
@@ -42,36 +41,14 @@ export class ChatService {
 	);
 
 	private readingStateSubject = new Subject<Message>();
+	readingState$ = this.readingStateSubject.asObservable();
+
 	/**
 	 * Emits the latest message read by the user, based on local events
 	 */
-	readingState$ = this.readingStateSubject.asObservable().pipe(
+	lastReadMessage$ = this.readingState$.pipe(
 		scan(ChatService.latestMessageReduceFn, undefined),
 		distinctUntilChanged((a, b) => a?.uid === b?.uid)
-	);
-
-	/**
-	 * Emits the latest message read by the user, either locally or stored in the database
-	 */
-	lastReadMessage$ = combineLatest([
-		this.userService.lastReadMessageStored$,
-		this.readingState$.pipe(startWith(undefined), debounceTime(500)),
-	]).pipe(
-		map(([latestStored, latestLocal]) => {
-			if (latestStored && latestLocal) {
-				return isAfter(
-					fromUnixTime(latestStored.createdAt.seconds),
-					fromUnixTime(latestLocal.createdAt.seconds)
-				)
-					? latestStored
-					: latestLocal;
-			} else {
-				if (!(latestStored || latestLocal)) {
-					return undefined;
-				}
-				return latestStored || latestLocal;
-			}
-		})
 	);
 
 	constructor(
@@ -83,8 +60,12 @@ export class ChatService {
 		/**
 		 * When the latest read message changes
 		 */
-		this.readingState$
+		this.lastReadMessage$
 			.pipe(
+				withLatestFrom(this.userService.userUid$),
+				// Ignore the user's own messages
+				filter(([lastReadMessage, userUid]) => lastReadMessage?.author !== userUid),
+				map(([lastReadMessage]) => lastReadMessage),
 				debounceTime(500),
 				withLatestFrom(this.userService.lastReadMessageStored$),
 				filter(

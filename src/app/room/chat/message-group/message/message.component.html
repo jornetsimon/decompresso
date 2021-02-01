@@ -3,7 +3,22 @@
 	[class.has-reactions]="message.reactions.like || message.reactions.dislike"
 	[class.highlight-for-deletion]="highlightForDeletion"
 	[class.highlight-for-report]="highlightForReport"
+	[fxLayoutAlign]="isMine ? 'flex-end baseline' : 'flex-start baseline'"
 >
+	<div
+		class="pending-write"
+		[ngClass]="isMine ? 'mr1' : 'ml1'"
+		[fxFlexOrder]="isMine ? 0 : 1"
+		[@inOutAnimation]
+		*ngIf="message.pendingWrite"
+	>
+		<i
+			nz-icon
+			nzType="field-time"
+			nzTheme="outline"
+			nz-tooltip="Un ou plusieurs messages en attente d'envoi"
+		></i>
+	</div>
 	<div
 		class="bubble"
 		#bubble

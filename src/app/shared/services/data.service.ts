@@ -108,4 +108,12 @@ export class DataService {
 	chat$(domain: string) {
 		return this.chatDoc(domain).valueChanges().pipe(this.tracker.logAction('chat'));
 	}
+	chatSnap$(domain: string) {
+		return this.chatDoc(domain)
+			.snapshotChanges()
+			.pipe(
+				this.tracker.logAction('chat'),
+				map((action) => action.payload)
+			);
+	}
 }

@@ -1,6 +1,11 @@
 .bubble-container {
 	position: relative;
 
+	.pending-write {
+		font-size: 14px;
+		color: grey;
+	}
+
 	.delete-icon,
 	.report-icon {
 		position: absolute;

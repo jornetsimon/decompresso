@@ -28,10 +28,12 @@ export class FeedBuilder {
 		private members: ReadonlyArray<RoomMember>,
 		private reactions: ReadonlyArray<Reaction> | undefined,
 		private userUid: string,
-		private lastReadMessage: Message | null,
+		private lastReadMessageStored: Message | null,
+		private lastReadMessage: Message | undefined,
 		private feedLoadCount: number,
 		private initializationDate: Date,
-		private lastPurge: Date | undefined
+		private lastPurge: Date | undefined,
+		private pendingWrites: boolean
 	) {}
 
 	/**
@@ -114,6 +116,11 @@ export class FeedBuilder {
 								[type]: [...(acc[type] || []), reaction],
 							};
 						}, {});
+					const isPendingWrite =
+						this.pendingWrites &&
+						message.author === this.userUid &&
+						!!this.lastReadMessage &&
+						message.createdAt.seconds > this.lastReadMessage.createdAt.seconds;
 					return {
 						...message,
 						reactions: messageReactions,
@@ -125,6 +132,7 @@ export class FeedBuilder {
 								!!messageReactions.dislike?.filter((r) => r.user === this.userUid)
 									.length || false,
 						},
+						pendingWrite: isPendingWrite,
 					};
 				}
 			)
@@ -153,9 +161,9 @@ export class FeedBuilder {
 				m.author !== this.userUid &&
 				isBefore(fromUnixTime(m.createdAt.seconds), this.initializationDate)
 		);
-		if (this.lastReadMessage && messagesFromOthers.length) {
+		if (this.lastReadMessageStored && messagesFromOthers.length) {
 			const isThereMessagesSinceLastRead = isBefore(
-				fromUnixTime(this.lastReadMessage.createdAt.seconds),
+				fromUnixTime(this.lastReadMessageStored.createdAt.seconds),
 				fromUnixTime(messagesFromOthers[messagesFromOthers.length - 1].createdAt.seconds)
 			);
 			if (isThereMessagesSinceLastRead) {
@@ -166,7 +174,7 @@ export class FeedBuilder {
 							!!entry.messages.find((message) =>
 								isAfter(
 									fromUnixTime(message.createdAt.seconds),
-									fromUnixTime(this.lastReadMessage!.createdAt.seconds)
+									fromUnixTime(this.lastReadMessageStored!.createdAt.seconds)
 								)
 							)
 					)!.timestamp;

@@ -23,6 +23,7 @@ import { Reaction } from '@model/reaction';
 import { ActivityService } from '@services/activity.service';
 import { RoomMember } from '@model/room-member';
 import hash from 'object-hash';
+import { DocumentSnapshot } from '@angular/fire/firestore';
 
 interface StoreState {
 	room: Room;
@@ -76,24 +77,31 @@ export class RoomService extends ObservableStore<StoreState> {
 		)
 	);
 
-	/**
-	 * Stream of chat data
-	 * Disconnect when the user is inactive and reconnect when they come back
-	 */
-	chat$: Observable<Chat> = this.activityService.isActive$.pipe(
+	private chatSnap$: Observable<DocumentSnapshot<Chat>> = this.activityService.isActive$.pipe(
 		distinctUntilChanged(),
 		filter((isActive) => isActive),
 		switchMap(() => this.room$.pipe(first())),
 		switchMap((room) =>
 			this.dataService
-				.chat$(room.domain)
+				.chatSnap$(room.domain)
 				.pipe(
-					expectData,
 					takeUntil(this.activityService.isActive$.pipe(filter((isActive) => !isActive)))
 				)
 		),
 		shareReplay(1)
 	);
+
+	/**
+	 * Stream of chat data
+	 * Disconnect when the user is inactive and reconnect when they come back
+	 */
+	chat$: Observable<Chat> = this.chatSnap$.pipe(
+		map((snap) => snap.data()),
+		expectData
+	);
+
+	chatHasPendingWrites$ = this.chatSnap$.pipe(map((snap) => snap.metadata.hasPendingWrites));
+
 	messages$: Observable<ReadonlyArray<Message>> = this.chat$.pipe(
 		map((chat) => chat.messages),
 		distinctUntilChanged((a, b) => hash(a || {}) === hash(b || {})),

@@ -21,12 +21,25 @@ import { ReportComponent } from '../../report/report.component';
 import { RoomService } from '@services/room.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { DomSanitizer } from '@angular/platform-browser';
+import { animate, style, transition, trigger } from '@angular/animations';
 
 @Component({
 	selector: 'mas-message',
 	templateUrl: './message.component.html',
 	styleUrls: ['./message.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	animations: [
+		trigger('inOutAnimation', [
+			transition(':enter', [
+				style({ opacity: 0 }),
+				animate('1s 2s ease-out', style({ opacity: 1 })),
+			]),
+			transition(':leave', [
+				style({ opacity: 1 }),
+				animate('1s ease-in', style({ opacity: 0 })),
+			]),
+		]),
+	],
 })
 export class MessageComponent implements AfterViewInit {
 	@Input() message: MappedMessage;
@@ -89,7 +102,7 @@ export class MessageComponent implements AfterViewInit {
 		this.bubbleVisibility
 			.pipe(
 				// Only when it is visible
-				filter((isVisible) => !this.isMine && isVisible),
+				filter((isVisible) => isVisible),
 				take(1)
 			)
 			.subscribe(() => {

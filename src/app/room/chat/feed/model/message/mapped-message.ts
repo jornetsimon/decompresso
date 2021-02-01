@@ -5,4 +5,5 @@ import { MessageReactions } from './message-reactions';
 export type MappedMessage = Message & {
 	reactions: MessageReactions;
 	myReactions: Partial<Record<ReactionType, boolean>>;
+	pendingWrite?: boolean;
 };
