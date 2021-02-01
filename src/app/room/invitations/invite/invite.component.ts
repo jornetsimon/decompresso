@@ -46,7 +46,7 @@ export class InviteComponent {
 		}
 		this.loading = true;
 		this.analyticsService.logEvent('invite', GaCategoryEnum.ENGAGEMENT);
-		const email = this.emailFc.value + '@' + this.domain;
+		const email = this.emailFc.value.toLowerCase() + '@' + this.domain;
 		this.invitationsService
 			.sendInvitation(email)
 			.pipe(

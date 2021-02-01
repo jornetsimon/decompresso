@@ -4,6 +4,10 @@
 	border-color: #52c41a;
 }
 
+input {
+	text-transform: lowercase;
+}
+
 input.ng-dirty:focus,
 input:disabled,
 input.ng-valid {
