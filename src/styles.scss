@@ -101,12 +101,12 @@ body {
 }
 
 .ant-input,
-.ant-btn,
+.ant-btn:not(.ant-btn-circle),
 .ant-collapse,
 .ant-card,
 .ant-card-body,
 .ant-alert,
-.ant-btn.ant-btn-icon-only,
+.ant-btn:not(.ant-btn-circle).ant-btn-icon-only,
 .ant-tooltip-inner {
 	border-radius: 5px;
 }
