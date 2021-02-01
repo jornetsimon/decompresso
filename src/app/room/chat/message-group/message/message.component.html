@@ -21,7 +21,10 @@
 		nzPopoverOverlayClassName="reactions-popover"
 		[ngxVibration]="vibrationConfig.soft"
 	>
-		<div style="overflow-wrap: anywhere" [innerHTML]="renderedContent(message.content)"></div>
+		<div
+			style="overflow-wrap: anywhere; word-break: break-word"
+			[innerHTML]="renderedContent(message.content)"
+		></div>
 		<ng-template #reactionsPopoverTpl>
 			<div class="reactions">
 				<div
