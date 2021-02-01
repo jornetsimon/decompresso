@@ -10,7 +10,8 @@
 			"@model/*": ["shared/model/*"],
 			"@utilities/*": ["shared/utilities/*"],
 			"@analytics/*": ["shared/analytics/*"]
-		}
+		},
+		"resolveJsonModule": true
 	},
 	"files": ["src/main.ts", "src/polyfills.ts"],
 	"include": ["src/**/*.d.ts"]

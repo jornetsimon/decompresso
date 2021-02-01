@@ -47,11 +47,14 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { LayoutModule } from './layout/layout.module';
 import {
 	AngularFireAnalyticsModule,
+	APP_NAME,
+	APP_VERSION,
 	COLLECTION_ENABLED,
 	CONFIG as AnalyticsConfig,
 	DEBUG_MODE as ANALYTICS_DEBUG_MODE,
 	ScreenTrackingService,
 } from '@angular/fire/analytics';
+import { version } from '../../package.json';
 
 registerLocaleData(fr);
 
@@ -120,6 +123,11 @@ registerLocaleData(fr);
 			provide: COLLECTION_ENABLED,
 			useValue: localStorage.getItem('cookies-consent') === 'true' && environment.production,
 		},
+		{
+			provide: APP_NAME,
+			useValue: 'Décompresso',
+		},
+		{ provide: APP_VERSION, useValue: version },
 		ScreenTrackingService,
 	],
 	bootstrap: [AppComponent],

@@ -19,7 +19,8 @@
 			"@utilities/*": ["shared/utilities/*"],
 			"@analytics/*": ["shared/analytics/*"]
 		},
-		"strictNullChecks": true
+		"strictNullChecks": true,
+		"resolveJsonModule": true
 	},
 	"angularCompilerOptions": {
 		"strictTemplates": true,
