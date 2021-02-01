@@ -29,7 +29,7 @@ export class ReportComponent {
 	firestoreConsoleReportUrl$ = this.report$.pipe(
 		map(
 			(report) =>
-				`https://console.firebase.google.com/u/1/project/${environment.firebase.projectId}/firestore/data~2Frooms~2F${report.message_author.domain}~2Freports~${report.id}`
+				`https://console.firebase.google.com/u/1/project/${environment.firebase.projectId}/firestore/data~2Frooms~2F${report.message_author.domain}~2Freports~2F${report.id}`
 		)
 	);
 	constructor(
