@@ -55,6 +55,7 @@ import {
 	ScreenTrackingService,
 } from '@angular/fire/analytics';
 import { version } from '../../package.json';
+import { AngularFireMessagingModule } from '@angular/fire/messaging';
 
 registerLocaleData(fr);
 
@@ -92,6 +93,7 @@ registerLocaleData(fr);
 		ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
 		LayoutModule,
 		AngularFireAnalyticsModule,
+		AngularFireMessagingModule,
 	],
 	providers: [
 		{ provide: NZ_I18N, useValue: fr_FR },

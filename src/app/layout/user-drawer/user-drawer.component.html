@@ -25,18 +25,46 @@
 				</div>
 				<div fxFlex="none" class="relative" style="margin-top: 50px">
 					<div fxLayout="column" fxLayoutAlign="center center">
-						<button
-							class="pwa-button"
-							[class.flip-out-hor-top]="userInstalledApp"
-							*ngIf="showAddPwaButton"
-							(click)="showPwaInstallPrompt()"
+						<div
+							class="pb2 mb3"
+							fxLayout="column"
+							fxLayoutAlign="center center"
+							fxLayoutGap="20px"
 						>
-							<i nz-icon nzType="appstore-add" nzTheme="outline"></i>
-							<span fxLayout="column" fxLayoutAlign="center start">
-								<span class="promo"></span>
-								<span>Installer l'application</span>
-							</span>
-						</button>
+							<div
+								*ngIf="
+									(pushNotificationsService.canUse$ | async) === true &&
+									(pushNotificationsService.enabled$ | async) === false
+								"
+							>
+								<button
+									class="pwa-button green"
+									[class.flip-out-hor-top]="userEnabledNotifications"
+									(click)="setupNotifications()"
+								>
+									<i nz-icon nzType="bell" nzTheme="fill"></i>
+									<span fxLayout="column" fxLayoutAlign="center start">
+										<span class="promo">Restez dans la boucle</span>
+										<span>Activer les notifications</span>
+									</span>
+								</button>
+								<div class="center additional-info green">
+									Une notification par jour max.
+								</div>
+							</div>
+							<button
+								class="pwa-button"
+								[class.flip-out-hor-top]="userInstalledApp"
+								*ngIf="showAddPwaButton"
+								(click)="showPwaInstallPrompt()"
+							>
+								<i nz-icon nzType="appstore-add" nzTheme="outline"></i>
+								<span fxLayout="column" fxLayoutAlign="center start">
+									<span class="promo"></span>
+									<span>Installer l'application</span>
+								</span>
+							</button>
+						</div>
 						<button
 							nz-button
 							nzType="default"

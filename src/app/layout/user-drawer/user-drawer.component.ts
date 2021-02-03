@@ -16,6 +16,7 @@ import { finalize, switchMap, tap } from 'rxjs/operators';
 import { AnalyticsService } from '@analytics/analytics.service';
 import { PwaService } from '@services/pwa/pwa.service';
 import { GaCategoryEnum } from '@analytics/ga-category.enum';
+import { PushNotificationsService } from '@services/push-notifications.service';
 
 @Component({
 	selector: 'mas-user-drawer',
@@ -31,6 +32,7 @@ export class UserDrawerComponent {
 	user$ = this.userService.user$;
 	showAddPwaButton = !!this.pwaService.deferredPrompt;
 	userInstalledApp = false;
+	userEnabledNotifications = false;
 
 	constructor(
 		private authService: AuthService,
@@ -40,7 +42,8 @@ export class UserDrawerComponent {
 		private router: Router,
 		private analyticsService: AnalyticsService,
 		private pwaService: PwaService,
-		private cd: ChangeDetectorRef
+		private cd: ChangeDetectorRef,
+		public pushNotificationsService: PushNotificationsService
 	) {}
 
 	closeDrawer() {
@@ -173,6 +176,23 @@ export class UserDrawerComponent {
 				this.cd.detectChanges();
 				this.analyticsService.logEvent('install_pwa_button', GaCategoryEnum.ENGAGEMENT);
 			}
+		});
+	}
+
+	setupNotifications() {
+		this.pushNotificationsService.setup().subscribe({
+			next: (success) => {
+				if (success) {
+					this.message.success('Notifications activées');
+					this.userEnabledNotifications = true;
+				} else {
+					this.message.error(`Impossible d'activer les notification pour l'instant`);
+				}
+			},
+			error: (error) => {
+				console.error(error);
+				this.message.error(`Impossible d'activer les notification pour l'instant`);
+			},
 		});
 	}
 }

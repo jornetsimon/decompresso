@@ -7,6 +7,8 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import {
 	ApiTwoTone,
 	AppstoreAddOutline,
+	BellFill,
+	BellOutline,
 	FrownOutline,
 	HomeOutline,
 	LockOutline,
@@ -40,6 +42,8 @@ import { FooterComponent } from './footer/footer.component';
 			ReadOutline,
 			AppstoreAddOutline,
 			StopOutline,
+			BellOutline,
+			BellFill,
 		]),
 	],
 	exports: [FooterComponent],

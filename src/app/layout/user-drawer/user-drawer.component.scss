@@ -56,7 +56,6 @@ label {
 	background-color: dodgerblue;
 	border: 1px solid #188dff;
 	box-shadow: 2px 2px 0 2px #0e63b7;
-	margin-bottom: 30px;
 	font-weight: bold;
 
 	display: flex;
@@ -70,14 +69,35 @@ label {
 
 	.promo {
 		font-weight: 300;
+		font-size: 0.85em;
+		line-height: 1.25em;
 	}
 
 	&:hover {
-		box-shadow: 2px 2px 0 2px #0e63b7, inset 0 0 10px 3px rgb(0 0 0 / 14%);
+		box-shadow: 2px 2px 0 2px #0e63b7, inset 0 0 10px 1px rgb(0 0 0 / 14%);
 	}
 	&:focus {
 		box-shadow: 0 0 18px 6px rgb(14 99 183 / 16%);
 		outline: none;
+	}
+}
+
+.pwa-button.green {
+	color: white;
+	background-color: #34d629;
+	border: 1px solid #32b71b;
+	box-shadow: 2px 2px 0 2px #1fb70e;
+	&:hover {
+		box-shadow: 2px 2px 0 2px #1fb70e, inset 0 0 10px 1px rgb(0 0 0 / 14%);
+	}
+}
+
+.additional-info {
+	font-size: 11px;
+	margin-top: 3px;
+
+	&.green {
+		color: #17880a;
 	}
 }
 
