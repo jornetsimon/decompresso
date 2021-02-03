@@ -32,7 +32,7 @@
 					</div>
 				</nz-list-item-meta-title>
 				<ng-template #metaDescriptionTpl>
-					{{ room.createdAt | timestampToDate | date: 'dd/MM/yyyy' }}
+					{{ room.createdAt | timestampToDate: 'dd/MM/yyyy' }}
 				</ng-template>
 			</nz-list-item-meta>
 		</nz-list-item>
