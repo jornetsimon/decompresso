@@ -1,0 +1,17 @@
+<form nz-form [formGroup]="form" nzLayout="vertical" class="notifications-form">
+	<nz-form-item>
+		<div>
+			<nz-form-label> Nouveaux messages</nz-form-label>
+			<div class="comment">1 notification / jour max.</div>
+		</div>
+		<nz-form-control>
+			<nz-switch formControlName="newMessages"></nz-switch>
+		</nz-form-control>
+	</nz-form-item>
+	<nz-form-item>
+		<nz-form-label>Des nouveaux membres rejoignent le salon</nz-form-label>
+		<nz-form-control>
+			<nz-switch formControlName="newMembers"></nz-switch>
+		</nz-form-control>
+	</nz-form-item>
+</form>

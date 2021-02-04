@@ -15,6 +15,8 @@ import {
 } from 'rxjs/operators';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { environment } from '../../../environments/environment';
+import { UserNotificationSettings } from '@model/user-notification-settings';
+import { AngularFireFunctions } from '@angular/fire/functions';
 
 @UntilDestroy()
 @Injectable({
@@ -87,14 +89,25 @@ export class PushNotificationsService {
 		private swUpdate: SwUpdate,
 		private swPush: SwPush,
 		private firebase: FirebaseApp,
-		private fireMessaging: AngularFireMessaging
+		private fireMessaging: AngularFireMessaging,
+		private fns: AngularFireFunctions
 	) {}
 
 	setup(): Observable<boolean> {
 		return from(this.requestPermission()).pipe(
 			switchMap((permission) => {
 				if (permission === 'granted') {
-					return this.setup$.pipe(map((token) => !!token));
+					return this.setup$.pipe(
+						switchMap((token) => {
+							if (!token) {
+								throw new Error('could_not_retrieve_token');
+							}
+							return this.setUserSettings({
+								new_members: true,
+								new_messages: true,
+							}).pipe(mapTo(true));
+						})
+					);
 				}
 				return of(false);
 			})
@@ -104,5 +117,10 @@ export class PushNotificationsService {
 	async requestPermission() {
 		await Notification.requestPermission();
 		return Notification.permission;
+	}
+
+	setUserSettings(settings: Partial<UserNotificationSettings>) {
+		const callable = this.fns.httpsCallable('setUserNotificationSettings');
+		return callable(settings);
 	}
 }

@@ -6,6 +6,7 @@
 		(nzOnClose)="closeDrawer()"
 		nzCloseIcon=""
 		[nzContent]="nzDrawerContent"
+		[nzOffsetX]="notificationDrawerVisible ? 180 : 0"
 	>
 		<ng-template #nzDrawerContent>
 			<div fxFlex="grow" fxLayout="column">
@@ -22,6 +23,16 @@
 							{{ user.createdAt | timestampToDate: 'dd/MM/yyyy' }}
 						</div>
 					</section>
+					<div class="center">
+						<a
+							nz-button
+							nzType="link"
+							(click)="notificationDrawerVisible = !notificationDrawerVisible"
+						>
+							<i nz-icon nzType="bell" nzTheme="fill"></i>
+							Gérer les notifications
+						</a>
+					</div>
 				</div>
 				<div fxFlex="none" class="relative" style="margin-top: 50px">
 					<div fxLayout="column" fxLayoutAlign="center center">
@@ -117,6 +128,17 @@
 				</div>
 			</div>
 		</ng-template>
+		<nz-drawer
+			[nzVisible]="notificationDrawerVisible"
+			[nzPlacement]="placement"
+			nzTitle="Mes notifications"
+			(nzOnClose)="notificationDrawerVisible = false"
+			[nzContent]="notificationDrawerContent"
+		>
+			<ng-template #notificationDrawerContent>
+				<mas-notifications-management></mas-notifications-management>
+			</ng-template>
+		</nz-drawer>
 	</nz-drawer>
 
 	<ng-template #titleTpl>

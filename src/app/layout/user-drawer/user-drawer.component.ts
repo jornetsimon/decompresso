@@ -33,6 +33,7 @@ export class UserDrawerComponent {
 	showAddPwaButton = !!this.pwaService.deferredPrompt;
 	userInstalledApp = false;
 	userEnabledNotifications = false;
+	notificationDrawerVisible: boolean;
 
 	constructor(
 		private authService: AuthService,

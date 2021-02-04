@@ -33,11 +33,11 @@ import { GLOBAL_CONFIG } from '../global-config';
 import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
 import { NzRadioModule } from 'ng-zorro-antd/radio';
-import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 import { ShareButtonsModule } from './share-buttons/share-buttons.module';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { CookiesConsentComponent } from './cookies-consent/cookies-consent.component';
 import { AnalyticsEventDirective } from '@analytics/analytics-event.directive';
+import { NzSwitchModule } from 'ng-zorro-antd/switch';
 
 // tslint:disable-next-line:readonly-array
 const icons: IconDefinition[] = [QuestionCircleOutline];
@@ -77,8 +77,8 @@ const modules: ReadonlyArray<any> = [
 	NzTagModule,
 	NzTabsModule,
 	NzRadioModule,
-	NzCheckboxModule,
 	NzDividerModule,
+	NzSwitchModule,
 	RoughNotationModule,
 	NgxVibrationModule.forRoot({
 		defaultPattern: GLOBAL_CONFIG.vibration.default,
