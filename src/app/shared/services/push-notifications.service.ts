@@ -105,6 +105,7 @@ export class PushNotificationsService {
 							return this.setUserSettings({
 								new_members: true,
 								new_messages: true,
+								token,
 							}).pipe(mapTo(true));
 						})
 					);
@@ -119,8 +120,16 @@ export class PushNotificationsService {
 		return Notification.permission;
 	}
 
-	setUserSettings(settings: Partial<UserNotificationSettings>) {
+	setUserSettings(settings: UserNotificationSettings) {
 		const callable = this.fns.httpsCallable('setUserNotificationSettings');
 		return callable(settings);
+	}
+
+	// TODO: Remove for production
+	sendNewMessagesNotification() {
+		const callable = this.fns.httpsCallable('sendNewMessagesNotification');
+		callable({}).subscribe((x) => {
+			console.log('RES', x);
+		});
 	}
 }

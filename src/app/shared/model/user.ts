@@ -10,5 +10,5 @@ export interface User {
 	deleted?: boolean;
 	state: ConnectionState;
 	last_state_update: Timestamp;
-	notifications_settings: Partial<UserNotificationSettings>;
+	notifications_settings?: UserNotificationSettings;
 }
