@@ -124,12 +124,4 @@ export class PushNotificationsService {
 		const callable = this.fns.httpsCallable('setUserNotificationSettings');
 		return callable(settings);
 	}
-
-	// TODO: Remove for production
-	sendNewMessagesNotification() {
-		const callable = this.fns.httpsCallable('sendNewMessagesNotification');
-		callable({}).subscribe((x) => {
-			console.log('RES', x);
-		});
-	}
 }

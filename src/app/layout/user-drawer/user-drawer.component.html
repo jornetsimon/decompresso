@@ -33,13 +33,6 @@
 							<i nz-icon nzType="bell" nzTheme="fill"></i>
 							Gérer mes notifications
 						</a>
-						<button
-							(click)="pushNotificationsService.sendNewMessagesNotification()"
-							*ngIf="user.domain === 'job-tunnel.com'"
-						>
-							<!--TODO: remove for production-->
-							Send test notifications
-						</button>
 					</div>
 				</div>
 				<div fxFlex="none" class="relative" style="margin-top: 50px">
