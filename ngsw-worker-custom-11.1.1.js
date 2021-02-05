@@ -2335,6 +2335,9 @@ ${msgIdle}`,
 				NOTIFICATION_OPTION_NAMES.filter((name) => desc.hasOwnProperty(name)).forEach(
 					(name) => (options[name] = desc[name])
 				);
+				// ********************************
+				// CUSTOMIZATION : notifications icon
+				// ********************************
 				options['icon'] = 'https://decompresso.fr/assets/icons/maskable_icon_x512.png';
 				yield this.scope.registration.showNotification(desc['title'], options);
 			});
