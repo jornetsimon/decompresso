@@ -11,4 +11,7 @@ export interface User {
 	state: ConnectionState;
 	last_state_update: Timestamp;
 	notifications_settings?: UserNotificationSettings;
+	last_notifications?: {
+		new_messages: Timestamp;
+	};
 }

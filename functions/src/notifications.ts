@@ -2,7 +2,7 @@ import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import { db } from './init';
 import { Endpoints } from './index';
-import { subHours } from 'date-fns';
+import { differenceInDays, set, subHours } from 'date-fns';
 import { messaging } from 'firebase-admin/lib/messaging';
 import { firestore } from 'firebase-admin/lib/firestore';
 import { undefinedFallback } from './utilities';
@@ -22,7 +22,12 @@ export const sendNewMessagesNotification = functions.https.onCall(async (data, c
 	if (!(context.auth?.token.email_verified && userDomain === 'job-tunnel.com')) {
 		return;
 	}
-	const lastCheck = subHours(Date.now(), 24);
+	const lastCheck = set(subHours(Date.now(), 24), {
+		hours: 10,
+		minutes: 0,
+		seconds: 0,
+		milliseconds: 0,
+	});
 	console.log(`Checking readings since ${lastCheck}`);
 	const membersReading = await db
 		.collection(Endpoints.Reading)
@@ -34,10 +39,15 @@ export const sendNewMessagesNotification = functions.https.onCall(async (data, c
 			membersReading.docs.map(
 				async (readingDoc): Promise<string | undefined> => {
 					const userUid = readingDoc.id;
-					const userSnap = await db.doc(`${Endpoints.Users}/${userUid}`).get();
+					const userRef = db.doc(`${Endpoints.Users}/${userUid}`);
+
+					// Check if the user exists
+					const userSnap = await userRef.get();
 					if (!userSnap.exists) {
 						return undefined;
 					}
+
+					// Check if the user allows this notification type
 					const user = userSnap.data();
 					const userToken = user?.notifications_settings?.token;
 					const userAllowsNewMessagesNotifications = undefinedFallback(
@@ -47,6 +57,29 @@ export const sendNewMessagesNotification = functions.https.onCall(async (data, c
 					if (!(userToken && userAllowsNewMessagesNotifications)) {
 						return undefined;
 					}
+
+					// Check if the last notification was not sent earlier than 3 days ago.
+					const lastNotificationDate: Date = set(
+						user?.last_notifications?.new_messages?.toDate(),
+						{
+							hours: 10,
+							minutes: 0,
+							seconds: 0,
+							milliseconds: 0,
+						}
+					);
+					if (lastNotificationDate) {
+						const daysSinceLastNotification = differenceInDays(
+							Date.now(),
+							lastNotificationDate
+						);
+						if (daysSinceLastNotification < 3) {
+							console.log('Already received a notification for this withing 3 days');
+							return undefined;
+						}
+					}
+
+					// Check if there are new messages in the chat since last check
 					const chatSnap = await db.doc(`${Endpoints.Chats}/${user?.domain}`).get();
 					const chat = chatSnap.data();
 					const lastCheckTimestamp = Timestamp.fromDate(lastCheck);
@@ -56,6 +89,17 @@ export const sendNewMessagesNotification = functions.https.onCall(async (data, c
 					if (!newMessagesSinceLastCheck) {
 						return undefined;
 					}
+
+					// Update the last notification timestamp for the user
+					await userRef.set(
+						{
+							last_notifications: {
+								new_messages: admin.firestore.FieldValue.serverTimestamp(),
+							},
+						},
+						{ merge: true }
+					);
+
 					console.log(
 						'User ' + userUid + ' will receive a notification for new messages'
 					);
