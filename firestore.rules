@@ -5,7 +5,10 @@ service cloud.firestore {
 			allow read: if authUidMatchesNoVerification(userId);
 		}
 		match /reading/{userId} {
-			allow read, write: if authUidMatches(userId);
+			allow read: if authUidMatches(userId);
+			allow create: if authUidMatches(userId)
+				&& request.resource.data.size() == 1
+				&& isMessage(request.resource.data.last_read_message);
 		}
 		match /rooms/{domain} {
 			allow get: if isMyDomain(domain);
@@ -23,7 +26,10 @@ service cloud.firestore {
 		}
 		match /chats/{domain} {
 			allow get: if isMyDomain(domain);
-			allow update: if isMyDomain(domain);
+			allow update: if isMyDomain(domain)
+				&& (request.resource.data.size() == 2 || request.resource.data.size() == 3)
+				&& request.resource.data.messages != null
+				&& request.resource.data.reactions != null;
 		}
 		match /{path=**}/reports/{uid} {
         	allow read, write: if isAdmin();
@@ -47,6 +53,13 @@ service cloud.firestore {
 		}
 		function isAdmin() {
 			return isVerified() && request.auth != null && request.auth.token.admin == true;
+		}
+
+		function isMessage(message) {
+			return message.uid is string
+				&& message.author is string
+				&& message.createdAt is timestamp
+				&& message.content is string;
 		}
 	}
 }
