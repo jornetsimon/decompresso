@@ -8,8 +8,8 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { GLOBAL_CONFIG } from '../../global-config';
 import { ErrorWithCode } from '@utilities/errors';
 import { NzModalService } from 'ng-zorro-antd/modal';
-import { Observable } from 'rxjs';
-import { debounceTime, filter, map } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { catchError, debounceTime, filter, map, mapTo } from 'rxjs/operators';
 import { AnalyticsService } from '@analytics/analytics.service';
 import { GaCategoryEnum } from '@analytics/ga-category.enum';
 import { GaEventEnum } from '@analytics/ga-event.enum';
@@ -224,13 +224,19 @@ export class SigninComponent implements OnInit {
 		if (this.emailFc.invalid) {
 			return;
 		}
-		this.authService.resetPassword(this.emailFc.value).subscribe(() => {
-			this.modal.success({
-				nzTitle: 'Email de réinitialisation de mot de passe envoyé',
-				nzContent:
-					'Vous pourrez modifier votre mot de passe en cliquant sur le lien que vous avez reçu par email sur votre boîte pro.',
-				nzOkText: 'Fermer',
+		this.authService
+			.resetPassword(this.emailFc.value)
+			.pipe(
+				catchError((err) => of(true)),
+				mapTo(true)
+			)
+			.subscribe(() => {
+				this.modal.success({
+					nzTitle: 'Email de réinitialisation de mot de passe envoyé',
+					nzContent:
+						'Vous pourrez modifier votre mot de passe en cliquant sur le lien que vous avez reçu par email sur votre boîte pro.',
+					nzOkText: 'Fermer',
+				});
 			});
-		});
 	}
 }
