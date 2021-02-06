@@ -43,8 +43,10 @@
 					>
 						Envie d'un autre pseudo ?
 					</button>
-					<ng-container *ngIf="nicknames$ | async as nicknames">
-						<ng-container *ngIf="showNicknames">
+					<ng-container *ngIf="showNicknames">
+						<ng-container
+							*ngIf="nicknames$ | async as nicknames; else loadingNicknameTpl"
+						>
 							<h3 class="m0">Je choisis mon pseudo 👇</h3>
 							<nz-button-group nzSize="large" class="vertical p2">
 								<button
@@ -66,6 +68,13 @@
 								</button>
 							</nz-button-group>
 						</ng-container>
+						<ng-template #loadingNicknameTpl>
+							<nz-spin
+								class="my2"
+								nzSimple
+								nzTip="Chargement de nouveaux pseudos..."
+							></nz-spin>
+						</ng-template>
 					</ng-container>
 				</div>
 				<div class="px3 my3" fxFlexAlign="center center">
