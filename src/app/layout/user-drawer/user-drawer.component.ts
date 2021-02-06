@@ -5,6 +5,8 @@ import {
 	EventEmitter,
 	Input,
 	Output,
+	TemplateRef,
+	ViewChild,
 } from '@angular/core';
 import { NzDrawerPlacement } from 'ng-zorro-antd/drawer';
 import { AuthService } from '@services/auth.service';
@@ -17,6 +19,7 @@ import { AnalyticsService } from '@analytics/analytics.service';
 import { PwaService } from '@services/pwa/pwa.service';
 import { GaCategoryEnum } from '@analytics/ga-category.enum';
 import { PushNotificationsService } from '@services/push-notifications.service';
+import { DeviceDetectorService } from 'ngx-device-detector';
 
 @Component({
 	selector: 'mas-user-drawer',
@@ -29,11 +32,16 @@ export class UserDrawerComponent {
 	@Output() closed = new EventEmitter<void>();
 	placement: NzDrawerPlacement = 'left';
 
+	@ViewChild('disabledNotificationsWarningTpl')
+	disabledNotificationsWarningTpl: TemplateRef<void>;
+
 	user$ = this.userService.user$;
 	showAddPwaButton = !!this.pwaService.deferredPrompt;
 	userInstalledApp = false;
 	userEnabledNotifications = false;
 	notificationDrawerVisible: boolean;
+
+	isMobile = this.deviceDetectorService.isMobile();
 
 	constructor(
 		private authService: AuthService,
@@ -44,7 +52,8 @@ export class UserDrawerComponent {
 		private analyticsService: AnalyticsService,
 		private pwaService: PwaService,
 		private cd: ChangeDetectorRef,
-		public pushNotificationsService: PushNotificationsService
+		public pushNotificationsService: PushNotificationsService,
+		private deviceDetectorService: DeviceDetectorService
 	) {}
 
 	closeDrawer() {
@@ -190,9 +199,16 @@ export class UserDrawerComponent {
 					this.message.error(`Impossible d'activer les notification pour l'instant`);
 				}
 			},
-			error: (error) => {
+			error: (error: Error) => {
 				console.error(error);
-				this.message.error(`Impossible d'activer les notification pour l'instant`);
+				if (error.message === 'notifications_denied_in_browser') {
+					this.message.warning(this.disabledNotificationsWarningTpl, {
+						nzDuration: 15000,
+						nzPauseOnHover: true,
+					});
+				} else {
+					this.message.error(`Impossible d'activer les notification pour l'instant`);
+				}
 			},
 		});
 	}

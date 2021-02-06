@@ -52,11 +52,9 @@ export class PushNotificationsService {
 			return token;
 		}),
 		shareReplay(1),
-		tap((x) => {
+		tap((token) => {
 			if (!environment.production) {
-				console.log('Cloud Messaging token enabled', x);
-			} else {
-				console.log('%c🔔 Notifications activées', 'color: green');
+				console.log('Cloud Messaging token enabled', token);
 			}
 		})
 	);
@@ -69,10 +67,9 @@ export class PushNotificationsService {
 		switchMap((serviceWorkerAssignment) =>
 			serviceWorkerAssignment
 				? this.fireMessaging.tokenChanges.pipe(
-						tap((x) => {
-							if (!environment.production) {
-								console.log('Cloud Messaging token', x);
-							} else {
+						map((token) => !!token),
+						tap((enabled) => {
+							if (enabled) {
 								console.log('%c🔔 Notifications activées', 'color: green');
 							}
 						}),
@@ -109,8 +106,9 @@ export class PushNotificationsService {
 							}).pipe(mapTo(true));
 						})
 					);
+				} else {
+					throw new Error('notifications_denied_in_browser');
 				}
-				return of(false);
 			})
 		);
 	}
