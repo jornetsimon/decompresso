@@ -1,8 +1,12 @@
 import { createUser, deleteUser } from './auth';
 import { onReportCreated, onReportModified, purgeChat, sliceMessages } from './chat';
 import { changeNickname, getNicknamesSample } from './nickname';
-import { invite, onMemberCreated } from './room';
-import { sendNewMessagesNotification, setUserNotificationSettings } from './notifications';
+import { invite } from './room';
+import {
+	onMemberCreated,
+	sendNewMessagesNotification,
+	setUserNotificationSettings,
+} from './notifications';
 
 export enum Endpoints {
 	Users = '/users',
