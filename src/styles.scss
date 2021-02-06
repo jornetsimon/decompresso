@@ -91,6 +91,10 @@ body {
 	align-items: flex-end;
 	padding: 0 40px;
 }
+.ant-message-custom-content {
+	display: flex;
+	text-align: initial;
+}
 
 .ant-tooltip-inner:has(.help) {
 	white-space: pre-wrap;
@@ -109,6 +113,9 @@ body {
 .ant-btn:not(.ant-btn-circle).ant-btn-icon-only,
 .ant-tooltip-inner {
 	border-radius: 5px;
+}
+.ant-btn-group .ant-btn {
+	border-radius: 0;
 }
 
 .page-title {
