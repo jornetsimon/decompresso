@@ -204,7 +204,7 @@ export class AuthService extends ObservableStore<StoreState> {
 			switchMap((authUser: FirebaseUser) =>
 				from(
 					authUser.sendEmailVerification({
-						url: `${window.location.origin}/welcome`,
+						url: `${window.location.origin}/post-verification`,
 						handleCodeInApp: true,
 					})
 				)

@@ -23,6 +23,13 @@ const routes: Routes = [
 				component: WelcomeComponent,
 			},
 			{
+				path: 'post-verification',
+				loadChildren: () =>
+					import('./post-verification/post-verification.module').then(
+						(m) => m.PostVerificationModule
+					),
+			},
+			{
 				path: 'room',
 				loadChildren: () => import('./room/room.module').then((m) => m.RoomModule),
 				canActivate: [AngularFireAuthGuard],

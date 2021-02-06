@@ -1,0 +1,9 @@
+<div fxLayoutAlign="center center" style="height: 100%">
+	<nz-spin
+		nzSimple
+		nzSize="large"
+		nzTip="Authentification en cours..."
+		[nzIndicator]="indicatorTemplate"
+	></nz-spin>
+	<ng-template #indicatorTemplate><i nz-icon nzType="loading" class="spinner"></i></ng-template>
+</div>
