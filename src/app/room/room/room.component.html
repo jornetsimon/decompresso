@@ -12,7 +12,49 @@
 	>
 		<span class="mr1">Le salon</span>
 	</div>
-	<button nz-button class="members-drawer-button" (click)="membersDrawer.open()">
+	<div class="feature-tags" fxHide.lt-md>
+		<nz-tag
+			*ngIf="
+				(pushNotificationsService.canUse$ | async) === true &&
+				(pushNotificationsService.enabled$ | async) === false &&
+				!dismissedNotificationsLabel
+			"
+			nzMode="closeable"
+			nzColor="#34d629"
+			class="cursor-pointer"
+			#tooltip="nzTooltip"
+			nz-tooltip="Nous vous préviendrons si vous avez raté des messages, ou si de nouveaux membres rejoignent le salon."
+			nzTooltipOverlayClassName="small"
+			(click)="setupNotifications()"
+			(nzOnClose)="
+				$event.stopPropagation();
+				tooltip.hide();
+				ignoreNotifications() //noinspection UnresolvedFunction
+			"
+		>
+			<i nz-icon nzType="bell" theme="fill"></i>
+			Activer les notifications
+		</nz-tag>
+		<nz-tag
+			*ngIf="showAddPwaButton$ | async"
+			nzMode="closeable"
+			nzColor="dodgerblue"
+			class="cursor-pointer"
+			#tooltip="nzTooltip"
+			nz-tooltip="Pratique pour accéder facilement à Décompresso&nbsp;👍"
+			nzTooltipOverlayClassName="small"
+			(click)="installPwa()"
+			(nzOnClose)="
+				$event.stopPropagation();
+				tooltip.hide();
+				ignorePwa() //noinspection UnresolvedFunction
+			"
+		>
+			<i nz-icon nzType="appstore-add" nzTheme="outline"></i>
+			Ajouter l'appli
+		</nz-tag>
+	</div>
+	<button fxFlex="none" nz-button class="members-drawer-button" (click)="membersDrawer.open()">
 		<i nz-icon nzType="team" nzTheme="outline"></i>
 		Membres
 	</button>
