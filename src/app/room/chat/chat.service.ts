@@ -23,7 +23,6 @@ import { fromUnixTime, isAfter } from 'date-fns/esm';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { MappedMessage } from './feed/model/message/mapped-message';
 import { Report } from '@model/report';
-import { dateToTimestamp } from '@utilities/timestamp';
 import firestore = firebase.firestore;
 
 const FieldValue = firestore.FieldValue;
@@ -168,11 +167,11 @@ export class ChatService {
 					if (member.uid === message.author) {
 						return throwError(new Error('report_forbidden_for_this_user'));
 					}
-					const report: Report = {
+					const report: Omit<Report, 'createdAt'> & { createdAt: Date } = {
 						report_author: member,
 						message,
 						message_author: members.find((m) => m.uid === message.author)!,
-						createdAt: dateToTimestamp(new Date()),
+						createdAt: new Date(),
 						moderation: 'pending',
 					};
 					return this.dataService.reportsCol(room.domain).add(report as any);

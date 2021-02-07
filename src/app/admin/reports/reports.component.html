@@ -5,7 +5,11 @@
 		<nz-select
 			ngModel
 			(ngModelChange)="onReportSelected($event)"
-			[nzPlaceHolder]="reports.length + ' signalements'"
+			[nzPlaceHolder]="
+				reports.length > 0
+					? reports.length + ' signalements'
+					: 'Aucun signalement à traiter'
+			"
 			nzSize="large"
 		>
 			<nz-option

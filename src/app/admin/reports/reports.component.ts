@@ -12,7 +12,9 @@ import { shareReplay } from 'rxjs/operators';
 })
 export class ReportsComponent {
 	reports$: Observable<ReadonlyArray<Report & { id: string }>> = this.afs
-		.collectionGroup<Report>('reports', (query) => query.where('moderation', '==', 'pending'))
+		.collectionGroup<Report>('reports', (query) =>
+			query.where('moderation', '==', 'pending').orderBy('createdAt')
+		)
 		.valueChanges({ idField: 'id' })
 		.pipe(shareReplay(1));
 	constructor(
