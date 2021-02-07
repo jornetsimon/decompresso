@@ -38,6 +38,7 @@ import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { CookiesConsentComponent } from './cookies-consent/cookies-consent.component';
 import { AnalyticsEventDirective } from '@analytics/analytics-event.directive';
 import { NzSwitchModule } from 'ng-zorro-antd/switch';
+import { IfAdminDirective } from './if-admin.directive';
 
 // tslint:disable-next-line:readonly-array
 const icons: IconDefinition[] = [QuestionCircleOutline];
@@ -46,6 +47,7 @@ const components: ReadonlyArray<any> = [
 	TimestampToDatePipe,
 	CookiesConsentComponent,
 	AnalyticsEventDirective,
+	IfAdminDirective,
 ];
 
 const modules: ReadonlyArray<any> = [
