@@ -37,7 +37,7 @@
 @media (max-width: 424px) {
 	$headerHeight: 90px;
 	$pageHeaderHeight: 50px;
-	$chatFooterHeight: 55px;
+	$chatFooterHeight: 65px;
 	$viewportHeight: calc(var(--vh, 1vh) * 100);
 	$chatContentHeight: calc(
 		#{$viewportHeight} - #{$headerHeight} - #{$pageHeaderHeight} - #{$chatFooterHeight}
