@@ -1,5 +1,20 @@
 {
-	"indexes": [],
+	"indexes": [
+		{
+			"collectionGroup": "reports",
+			"queryScope": "COLLECTION_GROUP",
+			"fields": [
+				{
+					"fieldPath": "moderation",
+					"order": "ASCENDING"
+				},
+				{
+					"fieldPath": "createdAt",
+					"order": "ASCENDING"
+				}
+			]
+		}
+	],
 	"fieldOverrides": [
 		{
 			"collectionGroup": "reports",
