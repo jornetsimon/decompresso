@@ -4,8 +4,25 @@
 	}
 }
 
+.members-drawer-button {
+	margin-left: 15px;
+}
 @media (min-width: 1280px) {
 	.members-drawer-button {
 		display: none;
+	}
+}
+
+.feature-tags {
+	display: flex;
+	flex-wrap: nowrap;
+	font-weight: 600;
+
+	.ant-tag {
+		padding: 2px 7px;
+		border-radius: 4px;
+		&:last-child {
+			margin: 0;
+		}
 	}
 }

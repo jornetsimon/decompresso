@@ -7,7 +7,7 @@ import { messaging } from 'firebase-admin/lib/messaging';
 import { firestore } from 'firebase-admin/lib/firestore';
 import { fromDocRef, randomIntFromInterval, undefinedFallback } from './utilities';
 import { Observable, of } from 'rxjs';
-import { map, skip, take, timeoutWith } from 'rxjs/operators';
+import { filter, map, take, timeoutWith } from 'rxjs/operators';
 import MulticastMessage = messaging.MulticastMessage;
 import Notification = messaging.Notification;
 import Timestamp = firestore.Timestamp;
@@ -159,8 +159,9 @@ export const sendNewMessagesNotification = functions.pubsub
 			});
 	});
 
-export const onMemberCreated = functions.firestore
-	.document(`/rooms/{domain}/members/{memberUid}`)
+export const onMemberCreated = functions
+	.runWith({ timeoutSeconds: 90 })
+	.firestore.document(`/rooms/{domain}/members/{memberUid}`)
 	.onCreate(async (snapshot, context) => {
 		const memberDomain = context.params.domain;
 		// TODO: testing only
@@ -176,7 +177,7 @@ export const onMemberCreated = functions.firestore
 		return user$
 			.pipe(
 				map((user) => user.nickname),
-				skip(1),
+				filter((nickname: string) => !!nickname && nickname !== member.nickname),
 				take(1),
 				timeoutWith(60000, of(member.nickname))
 			)

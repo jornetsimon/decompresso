@@ -21,6 +21,7 @@ import { GaCategoryEnum } from '@analytics/ga-category.enum';
 import { PushNotificationsService } from '@services/push-notifications.service';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { AngularFireRemoteConfig } from '@angular/fire/remote-config';
+import { EnhancementService } from '@services/enhancement.service';
 
 @Component({
 	selector: 'mas-user-drawer',
@@ -38,8 +39,6 @@ export class UserDrawerComponent {
 
 	user$ = this.userService.user$;
 	showAddPwaButton = !!this.pwaService.deferredPrompt;
-	userInstalledApp = false;
-	userEnabledNotifications = false;
 	notificationDrawerVisible: boolean;
 
 	isMobile = this.deviceDetectorService.isMobile();
@@ -62,8 +61,9 @@ export class UserDrawerComponent {
 		private pwaService: PwaService,
 		private cd: ChangeDetectorRef,
 		public pushNotificationsService: PushNotificationsService,
+		private remoteConfig: AngularFireRemoteConfig,
 		private deviceDetectorService: DeviceDetectorService,
-		private remoteConfig: AngularFireRemoteConfig
+		public enhancementService: EnhancementService
 	) {}
 
 	closeDrawer() {
@@ -182,44 +182,11 @@ export class UserDrawerComponent {
 		});
 	}
 
-	/**
-	 * Show the PWA install prompt.
-	 *
-	 * @description The user can then decide to install it or not.
-	 * In case they do, hide the button afterwards
-	 */
-	showPwaInstallPrompt() {
-		this.pwaService.showPwaInstallPrompt();
-		this.pwaService.deferredPrompt.userChoice.then((choiceResult) => {
-			if (choiceResult.outcome === 'accepted') {
-				this.userInstalledApp = true;
-				this.cd.detectChanges();
-				this.analyticsService.logEvent('install_pwa_button', GaCategoryEnum.ENGAGEMENT);
-			}
-		});
+	installPwa() {
+		this.enhancementService.installPwa().subscribe();
 	}
 
 	setupNotifications() {
-		this.pushNotificationsService.setup().subscribe({
-			next: (success) => {
-				if (success) {
-					this.message.success('Notifications activées');
-					this.userEnabledNotifications = true;
-				} else {
-					this.message.error(`Impossible d'activer les notification pour l'instant`);
-				}
-			},
-			error: (error: Error) => {
-				console.error(error);
-				if (error.message === 'notifications_denied_in_browser') {
-					this.message.warning(this.disabledNotificationsWarningTpl, {
-						nzDuration: 15000,
-						nzPauseOnHover: true,
-					});
-				} else {
-					this.message.error(`Impossible d'activer les notification pour l'instant`);
-				}
-			},
-		});
+		this.enhancementService.setupNotifications(this.disabledNotificationsWarningTpl);
 	}
 }

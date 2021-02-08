@@ -52,7 +52,9 @@
 							>
 								<button
 									class="pwa-button green"
-									[class.flip-out-hor-top]="userEnabledNotifications"
+									[class.flip-out-hor-top]="
+										enhancementService.userEnabledNotifications$ | async
+									"
 									(click)="setupNotifications()"
 								>
 									<i nz-icon nzType="bell" nzTheme="fill"></i>
@@ -61,20 +63,20 @@
 										<span>Activer les notifications</span>
 									</span>
 								</button>
-								<div class="center additional-info green">
-									Une notification par jour max.
-								</div>
+								<div class="center additional-info green"></div>
 							</div>
 							<button
 								class="pwa-button"
-								[class.flip-out-hor-top]="userInstalledApp"
+								[class.flip-out-hor-top]="
+									enhancementService.userInstalledPwa$ | async
+								"
 								*ngIf="showAddPwaButton"
-								(click)="showPwaInstallPrompt()"
+								(click)="installPwa()"
 							>
 								<i nz-icon nzType="appstore-add" nzTheme="outline"></i>
 								<span fxLayout="column" fxLayoutAlign="center start">
 									<span class="promo"></span>
-									<span>Installer l'application</span>
+									<span>Ajouter l'application</span>
 								</span>
 							</button>
 						</div>
