@@ -135,6 +135,7 @@ export class AuthService extends ObservableStore<StoreState> {
 			)
 			.subscribe();
 
+		// When the user changes (only after auth checked)
 		this.waitForAuthChecked$
 			.pipe(
 				switchMap(() => this.user$),
@@ -145,12 +146,10 @@ export class AuthService extends ObservableStore<StoreState> {
 				this.angularFireAnalytics.setUserProperties({
 					user_domain: user?.domain,
 				});
-				// Fetch and activate the remote config if the user was logged in
-				if (user) {
-					this.angularFireRemoteConfig.fetchAndActivate().then((result) => {
-						console.log('Remote config fetchAndActivate', result);
-					});
-				}
+				// Fetch and activate the remote config
+				this.angularFireRemoteConfig.fetchAndActivate().then((result) => {
+					console.log('Remote config fetchAndActivate', result);
+				});
 			});
 	}
 
