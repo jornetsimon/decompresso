@@ -20,6 +20,7 @@ import { PwaService } from '@services/pwa/pwa.service';
 import { GaCategoryEnum } from '@analytics/ga-category.enum';
 import { PushNotificationsService } from '@services/push-notifications.service';
 import { DeviceDetectorService } from 'ngx-device-detector';
+import { AngularFireRemoteConfig } from '@angular/fire/remote-config';
 
 @Component({
 	selector: 'mas-user-drawer',
@@ -43,6 +44,14 @@ export class UserDrawerComponent {
 
 	isMobile = this.deviceDetectorService.isMobile();
 
+	enableNotifications$ = this.remoteConfig.booleans.notifications.pipe(
+		tap((notifications) => {
+			if (notifications) {
+				console.log('Enabling through remote config : notifications');
+			}
+		})
+	);
+
 	constructor(
 		private authService: AuthService,
 		private userService: UserService,
@@ -53,7 +62,8 @@ export class UserDrawerComponent {
 		private pwaService: PwaService,
 		private cd: ChangeDetectorRef,
 		public pushNotificationsService: PushNotificationsService,
-		private deviceDetectorService: DeviceDetectorService
+		private deviceDetectorService: DeviceDetectorService,
+		private remoteConfig: AngularFireRemoteConfig
 	) {}
 
 	closeDrawer() {

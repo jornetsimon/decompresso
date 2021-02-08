@@ -56,6 +56,11 @@ import {
 } from '@angular/fire/analytics';
 import { version } from '../../package.json';
 import { AngularFireMessagingModule } from '@angular/fire/messaging';
+import {
+	AngularFireRemoteConfigModule,
+	DEFAULTS as REMOTE_CONFIG_DEFAULTS,
+	SETTINGS as REMOTE_CONFIG_SETTINGS,
+} from '@angular/fire/remote-config';
 
 registerLocaleData(fr);
 
@@ -94,6 +99,7 @@ registerLocaleData(fr);
 		LayoutModule,
 		AngularFireAnalyticsModule,
 		AngularFireMessagingModule,
+		AngularFireRemoteConfigModule,
 	],
 	providers: [
 		{ provide: NZ_I18N, useValue: fr_FR },
@@ -130,6 +136,12 @@ registerLocaleData(fr);
 			useValue: 'Décompresso',
 		},
 		{ provide: APP_VERSION, useValue: version },
+		{
+			provide: REMOTE_CONFIG_SETTINGS,
+			useFactory: () =>
+				environment.useEmulators ? { minimumFetchIntervalMillis: 300000 } : {},
+		},
+		{ provide: REMOTE_CONFIG_DEFAULTS, useValue: { notifications: false } },
 		ScreenTrackingService,
 	],
 	bootstrap: [AppComponent],
