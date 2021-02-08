@@ -1,0 +1,23 @@
+::ng-deep .notifications-form {
+	.ant-form-item-label {
+		padding: 0 !important;
+	}
+	.comment {
+		font-size: 0.75em;
+		color: grey;
+	}
+
+	.ant-form-item {
+		display: flex;
+		flex-wrap: nowrap;
+		flex-direction: row;
+		align-items: center;
+
+		:first-child {
+			flex: 1 1 auto;
+		}
+		:last-child {
+			flex: 0 0 auto;
+		}
+	}
+}

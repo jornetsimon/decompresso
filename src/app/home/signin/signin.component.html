@@ -150,7 +150,7 @@
 				nzType="primary"
 				nzSize="large"
 				[disabled]="loginFormGroup.invalid"
-				[nzLoading]="loading"
+				[nzLoading]="loading$ | async"
 				ngxVibration
 				[nz-popconfirm]="cguConfirmTpl"
 				nzOkText="J'accepte"
@@ -171,7 +171,7 @@
 					nzType="primary"
 					nzSize="large"
 					[disabled]="loginFormGroup.invalid"
-					[nzLoading]="loading"
+					[nzLoading]="loading$ | async"
 					ngxVibration
 				>
 					Connexion

@@ -5,6 +5,8 @@ import {
 	EventEmitter,
 	Input,
 	Output,
+	TemplateRef,
+	ViewChild,
 } from '@angular/core';
 import { NzDrawerPlacement } from 'ng-zorro-antd/drawer';
 import { AuthService } from '@services/auth.service';
@@ -15,7 +17,10 @@ import { NzModalService } from 'ng-zorro-antd/modal';
 import { finalize, switchMap, tap } from 'rxjs/operators';
 import { AnalyticsService } from '@analytics/analytics.service';
 import { PwaService } from '@services/pwa/pwa.service';
-import { GaCategoryEnum } from '@analytics/ga-category.enum';
+import { PushNotificationsService } from '@services/push-notifications.service';
+import { DeviceDetectorService } from 'ngx-device-detector';
+import { AngularFireRemoteConfig } from '@angular/fire/remote-config';
+import { EnhancementService } from '@services/enhancement.service';
 
 @Component({
 	selector: 'mas-user-drawer',
@@ -28,9 +33,22 @@ export class UserDrawerComponent {
 	@Output() closed = new EventEmitter<void>();
 	placement: NzDrawerPlacement = 'left';
 
+	@ViewChild('disabledNotificationsWarningTpl')
+	disabledNotificationsWarningTpl: TemplateRef<void>;
+
 	user$ = this.userService.user$;
 	showAddPwaButton = !!this.pwaService.deferredPrompt;
-	userInstalledApp = false;
+	notificationDrawerVisible: boolean;
+
+	isMobile = this.deviceDetectorService.isMobile();
+
+	enableNotifications$ = this.remoteConfig.booleans.notifications.pipe(
+		tap((notifications) => {
+			if (notifications) {
+				console.log('Enabling through remote config : notifications');
+			}
+		})
+	);
 
 	constructor(
 		private authService: AuthService,
@@ -40,7 +58,11 @@ export class UserDrawerComponent {
 		private router: Router,
 		private analyticsService: AnalyticsService,
 		private pwaService: PwaService,
-		private cd: ChangeDetectorRef
+		private cd: ChangeDetectorRef,
+		public pushNotificationsService: PushNotificationsService,
+		private remoteConfig: AngularFireRemoteConfig,
+		private deviceDetectorService: DeviceDetectorService,
+		public enhancementService: EnhancementService
 	) {}
 
 	closeDrawer() {
@@ -159,20 +181,11 @@ export class UserDrawerComponent {
 		});
 	}
 
-	/**
-	 * Show the PWA install prompt.
-	 *
-	 * @description The user can then decide to install it or not.
-	 * In case they do, hide the button afterwards
-	 */
-	showPwaInstallPrompt() {
-		this.pwaService.showPwaInstallPrompt();
-		this.pwaService.deferredPrompt.userChoice.then((choiceResult) => {
-			if (choiceResult.outcome === 'accepted') {
-				this.userInstalledApp = true;
-				this.cd.detectChanges();
-				this.analyticsService.logEvent('install_pwa_button', GaCategoryEnum.ENGAGEMENT);
-			}
-		});
+	installPwa() {
+		this.enhancementService.installPwa().subscribe();
+	}
+
+	setupNotifications() {
+		this.enhancementService.setupNotifications(this.disabledNotificationsWarningTpl);
 	}
 }

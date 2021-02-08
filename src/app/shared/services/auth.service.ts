@@ -24,6 +24,8 @@ import { DataService } from './data.service';
 import firebase from 'firebase';
 import { PresenceService } from '@services/presence.service';
 import { AngularFireAnalytics } from '@angular/fire/analytics';
+import { AngularFireRemoteConfig } from '@angular/fire/remote-config';
+import hash from 'object-hash';
 
 const md5 = require('md5');
 
@@ -83,7 +85,8 @@ export class AuthService extends ObservableStore<StoreState> {
 		private auth: AngularFireAuth,
 		private dataService: DataService,
 		private presenceService: PresenceService,
-		private angularFireAnalytics: AngularFireAnalytics
+		private angularFireAnalytics: AngularFireAnalytics,
+		private angularFireRemoteConfig: AngularFireRemoteConfig
 	) {
 		super({});
 
@@ -118,6 +121,7 @@ export class AuthService extends ObservableStore<StoreState> {
 						map((user) => (user ? user : null)),
 						tap((user) => {
 							if (user) {
+								// TODO: move to complete to only trigger once?
 								this.presenceService.trackPresence();
 							}
 						})
@@ -126,14 +130,27 @@ export class AuthService extends ObservableStore<StoreState> {
 				// Update user state
 				tap((user: User | null) => {
 					this.setState({ user }, 'AUTH_USER_CHANGE');
-					// Update user properties in Analytics
-					this.angularFireAnalytics.setUserProperties({
-						user_domain: user?.domain,
-					});
 				}),
 				untilDestroyed(this)
 			)
 			.subscribe();
+
+		// When the user changes (only after auth checked)
+		this.waitForAuthChecked$
+			.pipe(
+				switchMap(() => this.user$),
+				distinctUntilChanged((a, b) => hash(a || {}) === hash(b || {}))
+			)
+			.subscribe((user) => {
+				// Update user properties in Analytics
+				this.angularFireAnalytics.setUserProperties({
+					user_domain: user?.domain,
+				});
+				// Fetch and activate the remote config
+				this.angularFireRemoteConfig.fetchAndActivate().then((result) => {
+					console.log('Remote config fetchAndActivate', result);
+				});
+			});
 	}
 
 	signupWithEmailPassword(email: string, password: string) {

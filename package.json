@@ -1,6 +1,6 @@
 {
   "name": "decompresso",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "author": "WonderWork",
   "contributors": [
     {
@@ -19,7 +19,8 @@
     "emulators:export": "firebase emulators:export .firebase/seed --force",
     "build": "ng build",
     "build-staging": "ng build --configuration staging",
-    "build-prod": "ng build --prod",
+    "build-prod": "ng build --prod && npm run custom-sw",
+    "custom-sw": "cp ngsw-worker-custom-11.1.1.js dist/decompresso/ngsw-worker.js",
     "deploy-staging": "ng deploy -P default",
     "deploy-prod": "ng deploy -P prod",
     "test": "ng test",

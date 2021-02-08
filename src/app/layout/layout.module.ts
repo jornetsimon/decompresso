@@ -7,6 +7,8 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import {
 	ApiTwoTone,
 	AppstoreAddOutline,
+	BellFill,
+	ChromeFill,
 	FrownOutline,
 	HomeOutline,
 	LockOutline,
@@ -20,9 +22,15 @@ import {
 	WarningOutline,
 } from '@ant-design/icons-angular/icons';
 import { FooterComponent } from './footer/footer.component';
+import { NotificationsManagementComponent } from './notifications-management/notifications-management.component';
 
 @NgModule({
-	declarations: [LayoutComponent, UserDrawerComponent, FooterComponent],
+	declarations: [
+		LayoutComponent,
+		UserDrawerComponent,
+		FooterComponent,
+		NotificationsManagementComponent,
+	],
 	imports: [
 		CommonModule,
 		SharedModule,
@@ -40,6 +48,8 @@ import { FooterComponent } from './footer/footer.component';
 			ReadOutline,
 			AppstoreAddOutline,
 			StopOutline,
+			BellFill,
+			ChromeFill,
 		]),
 	],
 	exports: [FooterComponent],

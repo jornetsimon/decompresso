@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { AuthService } from '@services/auth.service';
 import { UntilDestroy } from '@ngneat/until-destroy';
@@ -8,7 +8,7 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { GLOBAL_CONFIG } from '../../global-config';
 import { ErrorWithCode } from '@utilities/errors';
 import { NzModalService } from 'ng-zorro-antd/modal';
-import { Observable, of } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 import { catchError, debounceTime, filter, map, mapTo } from 'rxjs/operators';
 import { AnalyticsService } from '@analytics/analytics.service';
 import { GaCategoryEnum } from '@analytics/ga-category.enum';
@@ -27,7 +27,8 @@ export class SigninComponent implements OnInit {
 	@ViewChild('newPassword') newPasswordInputRef: ElementRef<HTMLInputElement>;
 	type: Type = 'signup';
 	tabIndex = 0;
-	loading: boolean;
+	private loadingSubject = new BehaviorSubject(false);
+	loading$ = this.loadingSubject.asObservable();
 
 	emailFc = new FormControl(undefined, [Validators.required]);
 	loginFormGroup = new FormGroup({
@@ -87,7 +88,8 @@ export class SigninComponent implements OnInit {
 		private router: Router,
 		private message: NzMessageService,
 		private modal: NzModalService,
-		private analyticsService: AnalyticsService
+		private analyticsService: AnalyticsService,
+		private cd: ChangeDetectorRef
 	) {}
 
 	ngOnInit() {
@@ -124,7 +126,7 @@ export class SigninComponent implements OnInit {
 	}
 
 	formSubmit() {
-		this.loading = true;
+		this.loadingSubject.next(true);
 		const formValues = this.loginFormGroup.value;
 		const email = formValues.email;
 
@@ -136,7 +138,8 @@ export class SigninComponent implements OnInit {
 					this.router.navigateByUrl(`/welcome`);
 				},
 				(err: ErrorWithCode) => {
-					this.loading = false;
+					this.loadingSubject.next(false);
+					this.cd.detectChanges();
 					switch (err.code) {
 						case 'auth/user-not-found':
 							this.message.error('Cette adresse email nous est inconnue 🧐');
@@ -168,7 +171,7 @@ export class SigninComponent implements OnInit {
 					this.router.navigateByUrl(`/welcome`);
 				},
 				(err: ErrorWithCode) => {
-					this.loading = false;
+					this.loadingSubject.next(false);
 					switch (err.code) {
 						case 'auth/email-already-in-use':
 							this.message.error(
