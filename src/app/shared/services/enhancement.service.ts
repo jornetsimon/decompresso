@@ -6,6 +6,7 @@ import { AnalyticsService } from '@analytics/analytics.service';
 import { BehaviorSubject, from } from 'rxjs';
 import { shareReplay, takeWhile, tap } from 'rxjs/operators';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { AngularFireRemoteConfig } from '@angular/fire/remote-config';
 
 @Injectable({
 	providedIn: 'root',
@@ -13,6 +14,14 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 export class EnhancementService {
 	private userInstalledPwa = new BehaviorSubject(false);
 	private userEnabledNotifications = new BehaviorSubject(false);
+	enableNotifications$ = this.remoteConfig.booleans.notifications.pipe(
+		tap((notifications) => {
+			if (notifications) {
+				console.log('Enabling through remote config : notifications');
+			}
+		}),
+		shareReplay(1)
+	);
 	userInstalledPwa$ = this.userInstalledPwa
 		.asObservable()
 		.pipe(takeWhile((installed) => !installed, true));
@@ -23,7 +32,8 @@ export class EnhancementService {
 		public pushNotificationsService: PushNotificationsService,
 		private pwaService: PwaService,
 		private analyticsService: AnalyticsService,
-		private message: NzMessageService
+		private message: NzMessageService,
+		private remoteConfig: AngularFireRemoteConfig
 	) {}
 
 	/**

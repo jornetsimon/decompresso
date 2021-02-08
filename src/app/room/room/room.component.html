@@ -15,6 +15,7 @@
 	<div class="feature-tags" fxHide.lt-md>
 		<nz-tag
 			*ngIf="
+				(enhancementService.enableNotifications$ | async) &&
 				(pushNotificationsService.canUse$ | async) === true &&
 				(pushNotificationsService.enabled$ | async) === false &&
 				!dismissedNotificationsLabel

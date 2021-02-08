@@ -1,6 +1,5 @@
 import {
 	ChangeDetectionStrategy,
-	ChangeDetectorRef,
 	Component,
 	EventEmitter,
 	Input,
@@ -19,7 +18,6 @@ import { AnalyticsService } from '@analytics/analytics.service';
 import { PwaService } from '@services/pwa/pwa.service';
 import { PushNotificationsService } from '@services/push-notifications.service';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { AngularFireRemoteConfig } from '@angular/fire/remote-config';
 import { EnhancementService } from '@services/enhancement.service';
 
 @Component({
@@ -42,14 +40,6 @@ export class UserDrawerComponent {
 
 	isMobile = this.deviceDetectorService.isMobile();
 
-	enableNotifications$ = this.remoteConfig.booleans.notifications.pipe(
-		tap((notifications) => {
-			if (notifications) {
-				console.log('Enabling through remote config : notifications');
-			}
-		})
-	);
-
 	constructor(
 		private authService: AuthService,
 		private userService: UserService,
@@ -58,9 +48,7 @@ export class UserDrawerComponent {
 		private router: Router,
 		private analyticsService: AnalyticsService,
 		private pwaService: PwaService,
-		private cd: ChangeDetectorRef,
 		public pushNotificationsService: PushNotificationsService,
-		private remoteConfig: AngularFireRemoteConfig,
 		private deviceDetectorService: DeviceDetectorService,
 		public enhancementService: EnhancementService
 	) {}
@@ -184,7 +172,6 @@ export class UserDrawerComponent {
 	installPwa() {
 		this.enhancementService.installPwa().subscribe();
 	}
-
 	setupNotifications() {
 		this.enhancementService.setupNotifications(this.disabledNotificationsWarningTpl);
 	}

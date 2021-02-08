@@ -45,7 +45,7 @@
 						>
 							<div
 								*ngIf="
-									(enableNotifications$ | async) &&
+									(enhancementService.enableNotifications$ | async) &&
 									(pushNotificationsService.canUse$ | async) === true &&
 									(pushNotificationsService.enabled$ | async) === false
 								"
