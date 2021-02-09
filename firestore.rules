@@ -6,7 +6,7 @@ service cloud.firestore {
 		}
 		match /reading/{userId} {
 			allow read: if authUidMatches(userId);
-			allow create: if authUidMatches(userId)
+			allow create, update: if authUidMatches(userId)
 				&& request.resource.data.size() == 1
 				&& isMessage(request.resource.data.last_read_message);
 		}
