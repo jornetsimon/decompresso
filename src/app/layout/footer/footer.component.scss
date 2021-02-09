@@ -14,3 +14,11 @@
 .container.space-for-cookies-consent {
 	margin-bottom: 105px;
 }
+
+.menu {
+	overflow-x: scroll;
+	display: flex;
+	flex-wrap: nowrap;
+	max-width: 100vw;
+	padding: 0 10px 5px 10px;
+}
