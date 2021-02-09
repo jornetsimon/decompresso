@@ -1,3 +1,4 @@
+/* tslint:disable:readonly-array */
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import { db } from './init';
@@ -11,23 +12,29 @@ import { filter, map, take, timeoutWith } from 'rxjs/operators';
 import MulticastMessage = messaging.MulticastMessage;
 import Notification = messaging.Notification;
 import Timestamp = firestore.Timestamp;
+import FieldValue = admin.firestore.FieldValue;
 
-interface UserNotificationSettings {
-	new_messages: boolean;
-	new_members: boolean;
-	token: string;
-}
-
-export const setUserNotificationSettings = functions.https.onCall(
-	async (settings: Partial<UserNotificationSettings>, context) => {
-		if (!(context.auth && context.auth.token.email_verified)) {
-			throw new functions.https.HttpsError('failed-precondition', 'not_authenticated');
-		}
-		const userUid = context.auth?.uid;
-		const userRef = db.doc(`${Endpoints.Users}/${userUid}`);
-		return userRef.set({ notifications_settings: settings }, { merge: true });
+export const setUserNotificationSettings = functions.https.onCall(async (settings, context) => {
+	if (!(context.auth && context.auth.token.email_verified)) {
+		throw new functions.https.HttpsError('failed-precondition', 'not_authenticated');
 	}
-);
+	const userUid = context.auth?.uid;
+	const userRef = db.doc(`${Endpoints.Users}/${userUid}`);
+	const cleanedSettings: any = Object.keys(settings)
+		.filter((k) => settings[k] !== null)
+		.reduce((a, k) => ({ ...a, [k]: settings[k] }), {});
+	const { token, ...cleanedSettingsWithoutToken } = cleanedSettings;
+	const notifications_settings = { ...cleanedSettingsWithoutToken };
+	if (token) {
+		notifications_settings.tokens = FieldValue.arrayUnion(token);
+	}
+	return userRef.set(
+		{
+			notifications_settings,
+		},
+		{ merge: true }
+	);
+});
 
 export const sendNewMessagesNotification = functions.pubsub
 	.schedule('0 10 * * 1-6') // At 10:00 on every day-of-week from Monday through Saturday
@@ -45,10 +52,10 @@ export const sendNewMessagesNotification = functions.pubsub
 			.where('last_read_message.createdAt', '<', lastCheck)
 			.get();
 
-		const registrationTokens = (
+		const registrationTokens = ((
 			await Promise.all(
 				membersReading.docs.map(
-					async (readingDoc): Promise<string | undefined> => {
+					async (readingDoc): Promise<Array<string> | undefined> => {
 						const userUid = readingDoc.id;
 						const userRef = db.doc(`${Endpoints.Users}/${userUid}`);
 
@@ -60,17 +67,13 @@ export const sendNewMessagesNotification = functions.pubsub
 
 						// Check if the user allows this notification type
 						const user = userSnap.data();
-						const userToken = user?.notifications_settings?.token;
+						const userTokens: Array<string> | undefined =
+							user?.notifications_settings?.tokens;
 						const userAllowsNewMessagesNotifications = undefinedFallback(
 							user?.notifications_settings?.new_messages,
 							true
 						);
-						if (!(userToken && userAllowsNewMessagesNotifications)) {
-							return undefined;
-						}
-
-						// TODO: testing only
-						if (user?.domain !== 'job-tunnel.com') {
+						if (!(userTokens?.length && userAllowsNewMessagesNotifications)) {
 							return undefined;
 						}
 
@@ -121,13 +124,14 @@ export const sendNewMessagesNotification = functions.pubsub
 						console.log(
 							'User ' + userUid + ' will receive a notification for new messages'
 						);
-						return userToken;
+						return userTokens;
 					}
 				)
 			)
-		)
-			// tslint:disable-next-line:readonly-array
-			.filter((token) => !!token) as Array<string>;
+		).filter((token) => !!token) as Array<Array<string>>).reduce(
+			(acc, val) => acc.concat(val),
+			[]
+		);
 
 		// When there is no notification to send
 		if (registrationTokens.length === 0) {
@@ -164,10 +168,6 @@ export const onMemberCreated = functions
 	.firestore.document(`/rooms/{domain}/members/{memberUid}`)
 	.onCreate(async (snapshot, context) => {
 		const memberDomain = context.params.domain;
-		// TODO: testing only
-		if (memberDomain !== 'job-tunnel.com') {
-			return undefined;
-		}
 		const member = snapshot.data();
 		const memberUid = context.params.memberUid;
 		const user$: Observable<any> = fromDocRef(db.doc(`${Endpoints.Users}/${memberUid}`));
@@ -190,17 +190,20 @@ export const onMemberCreated = functions
 					.where('notifications_settings.new_members', '==', true)
 					.get();
 
-				const registrationTokens = usersSnap.docs
-					.map((userSnap): string | undefined => {
+				const registrationTokens = (usersSnap.docs
+					.map((userSnap): Array<string> | undefined => {
 						// Exclude the created member
 						if (userSnap.id === memberUid) {
 							return undefined;
 						}
 						console.log(userSnap.data()?.nickname);
-						return userSnap.data()?.notifications_settings?.token;
+						return userSnap.data()?.notifications_settings?.tokens;
 					})
 					// tslint:disable-next-line:readonly-array
-					.filter((token) => !!token) as Array<string>;
+					.filter((token) => !!token) as Array<Array<string>>).reduce(
+					(acc, val) => acc.concat(val),
+					[]
+				);
 
 				// When there is no notification to send
 				if (registrationTokens.length === 0) {

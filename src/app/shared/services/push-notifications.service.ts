@@ -5,6 +5,8 @@ import { AngularFireMessaging } from '@angular/fire/messaging';
 import { from, Observable, of } from 'rxjs';
 import {
 	catchError,
+	debounceTime,
+	filter,
 	map,
 	mapTo,
 	shareReplay,
@@ -12,11 +14,13 @@ import {
 	switchMap,
 	takeWhile,
 	tap,
+	withLatestFrom,
 } from 'rxjs/operators';
-import { UntilDestroy } from '@ngneat/until-destroy';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { environment } from '../../../environments/environment';
 import { UserNotificationSettings } from '@model/user-notification-settings';
 import { AngularFireFunctions } from '@angular/fire/functions';
+import { UserService } from '@services/user.service';
 
 @UntilDestroy()
 @Injectable({
@@ -51,7 +55,6 @@ export class PushNotificationsService {
 			}
 			return token;
 		}),
-		shareReplay(1),
 		tap((token) => {
 			if (!environment.production) {
 				console.log('Cloud Messaging token enabled', token);
@@ -67,12 +70,12 @@ export class PushNotificationsService {
 		switchMap((serviceWorkerAssignment) =>
 			serviceWorkerAssignment
 				? this.fireMessaging.tokenChanges.pipe(
-						map((token) => !!token),
-						tap((enabled) => {
-							if (enabled) {
-								console.log('%c🔔 Notifications activées', 'color: green');
+						tap((token) => {
+							if (token) {
+								console.log('%c🔔 Notifications activées', 'color: green', token);
 							}
 						}),
+						map((token) => !!token),
 						catchError((err) => of(false))
 				  )
 				: of(false)
@@ -81,29 +84,59 @@ export class PushNotificationsService {
 		takeWhile((enabled) => !enabled, true),
 		shareReplay()
 	);
+	newTokenDetected$: Observable<string> = this.fireMessaging.tokenChanges.pipe(
+		withLatestFrom(
+			this.userService.user$.pipe(map((user) => user.notifications_settings?.tokens))
+		),
+		// tslint:disable-next-line:readonly-array
+		filter(([currentToken, storedTokens]: [string | null, Array<string> | undefined]) => {
+			if (!currentToken) {
+				return false;
+			}
+			if (!storedTokens?.length) {
+				return true;
+			}
+			return !storedTokens.includes(currentToken);
+		}),
+		map(([currentToken]) => currentToken as string)
+	);
 
 	constructor(
 		private swUpdate: SwUpdate,
 		private swPush: SwPush,
 		private firebase: FirebaseApp,
 		private fireMessaging: AngularFireMessaging,
-		private fns: AngularFireFunctions
-	) {}
+		private fns: AngularFireFunctions,
+		private userService: UserService
+	) {
+		this.newTokenDetected$
+			.pipe(
+				debounceTime(1000),
+				untilDestroyed(this),
+				tap({
+					next: (newToken) => {
+						console.log('Updating token in db', newToken);
+					},
+				}),
+				switchMap((newToken) =>
+					this.setUserSettings({
+						token: newToken,
+					})
+				)
+			)
+			.subscribe();
+	}
 
 	setup(): Observable<boolean> {
 		return from(this.requestPermission()).pipe(
 			switchMap((permission) => {
 				if (permission === 'granted') {
 					return this.setup$.pipe(
-						switchMap((token) => {
+						map((token) => {
 							if (!token) {
 								throw new Error('could_not_retrieve_token');
 							}
-							return this.setUserSettings({
-								new_members: true,
-								new_messages: true,
-								token,
-							}).pipe(mapTo(true));
+							return true;
 						})
 					);
 				} else {
@@ -118,7 +151,9 @@ export class PushNotificationsService {
 		return Notification.permission;
 	}
 
-	setUserSettings(settings: UserNotificationSettings) {
+	setUserSettings(
+		settings: Partial<Omit<UserNotificationSettings, 'tokens'> & { token: string }>
+	) {
 		const callable = this.fns.httpsCallable('setUserNotificationSettings');
 		return callable(settings);
 	}
