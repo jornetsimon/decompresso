@@ -48,6 +48,7 @@ export const createUser = functions.https.onCall(async (data, context) => {
 	await createChat(domain);
 
 	let nickname: string;
+	let lock_nickname = false;
 	const existingUserPersonalDataSnap = await db
 		.collection(`${Endpoints.UserPersonalData}`)
 		.where('email', '==', email)
@@ -62,6 +63,7 @@ export const createUser = functions.https.onCall(async (data, context) => {
 			.get();
 		if (memberSnap.exists) {
 			nickname = memberSnap.get('nickname');
+			lock_nickname = true;
 		} else {
 			console.error(
 				new Error(
@@ -82,6 +84,7 @@ export const createUser = functions.https.onCall(async (data, context) => {
 		domain,
 		createdAt: admin.firestore.FieldValue.serverTimestamp(),
 		color,
+		lock_nickname,
 	};
 
 	const batch = db.batch();

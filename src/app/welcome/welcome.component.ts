@@ -20,6 +20,7 @@ import { ErrorWithCode } from '@utilities/errors';
 import { of } from 'rxjs';
 import { AnalyticsService } from '@analytics/analytics.service';
 import { GaCategoryEnum } from '@analytics/ga-category.enum';
+import { UserService } from '@services/user.service';
 
 @UntilDestroy()
 @Component({
@@ -102,6 +103,7 @@ export class WelcomeComponent {
 		share()
 	);
 
+	lock_nickname$ = this.userService.user$.pipe(map((user) => !!user.lock_nickname));
 	nicknames$ = this.authService.nicknamesSample();
 	showNicknames: boolean;
 	selectedNickname?: string;
@@ -109,6 +111,7 @@ export class WelcomeComponent {
 
 	constructor(
 		private authService: AuthService,
+		private userService: UserService,
 		private dataService: DataService,
 		private message: NzMessageService,
 		private modal: NzModalService,

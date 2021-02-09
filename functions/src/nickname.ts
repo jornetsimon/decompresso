@@ -77,6 +77,9 @@ export const changeNickname = functions.https.onCall(async (data, context) => {
 	if (!nickname) {
 		throw new functions.https.HttpsError('failed-precondition', 'nickname_not_specified');
 	}
+	if (userData?.lock_nickname === true) {
+		throw new functions.https.HttpsError('failed-precondition', 'nickname_locked');
+	}
 
 	// Room
 	const roomRef = db.doc(`${Endpoints.Rooms}/${domain}`);

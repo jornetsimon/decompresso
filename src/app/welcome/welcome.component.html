@@ -34,7 +34,7 @@
 						{{ selectedNickname || authResult.user.nickname }}
 					</span>
 				</p>
-				<div>
+				<div *ngIf="(lock_nickname$ | async) === false">
 					<button
 						nz-button
 						nzType="default"

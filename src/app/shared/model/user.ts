@@ -14,4 +14,5 @@ export interface User {
 	last_notifications?: {
 		new_messages: Timestamp;
 	};
+	lock_nickname?: boolean;
 }
