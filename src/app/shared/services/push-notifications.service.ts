@@ -84,7 +84,9 @@ export class PushNotificationsService {
 		takeWhile((enabled) => !enabled, true),
 		shareReplay()
 	);
-	newTokenDetected$: Observable<string> = this.fireMessaging.tokenChanges.pipe(
+	newTokenDetected$: Observable<string> = this.serviceWorkerRegistration$.pipe(
+		filter((serviceWorkerRegistration) => !!serviceWorkerRegistration),
+		switchMap(() => this.fireMessaging.tokenChanges),
 		withLatestFrom(
 			this.userService.user$.pipe(map((user) => user.notifications_settings?.tokens))
 		),
