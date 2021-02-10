@@ -3,7 +3,7 @@ import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import { db } from './init';
 import { Endpoints } from './index';
-import { subMinutes } from 'date-fns';
+import { differenceInDays, set, subHours } from 'date-fns';
 import { messaging } from 'firebase-admin/lib/messaging';
 import { firestore } from 'firebase-admin/lib/firestore';
 import { fromDocRef, randomIntFromInterval, undefinedFallback } from './utilities';
