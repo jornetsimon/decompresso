@@ -1,9 +1,10 @@
 import { Injectable, NgZone } from '@angular/core';
-import { BehaviorSubject, fromEvent, merge, timer } from 'rxjs';
+import { BehaviorSubject, fromEvent, merge, Observable, timer } from 'rxjs';
 import {
 	distinctUntilChanged,
 	filter,
 	map,
+	mapTo,
 	switchMap,
 	take,
 	tap,
@@ -46,14 +47,24 @@ export class ActivityService {
 		[window, 'mousemove'],
 	];
 	private eventStream$ = merge(...this.activityEvents.map((el) => fromEvent(el[0], el[1])));
+	/**
+	 * Uses the Page Visibility API
+	 * @see https://developer.mozilla.org/en-US/docs/Web/API/Page_Visibility_API
+	 */
+	private visibility$ = fromEvent(document, 'visibilitychange').pipe(
+		map(() => document.visibilityState)
+	);
+	private visible$ = this.visibility$.pipe(
+		filter((visibility) => visibility === 'visible')
+	) as Observable<'visible'>;
 
 	private intervalCount = GLOBAL_CONFIG.chat.timeout.intervalCount;
 	private checkInterval = GLOBAL_CONFIG.chat.timeout.checkInterval;
 
 	constructor(private _ngZone: NgZone) {
 		this._ngZone.runOutsideAngular(() =>
-			this.eventStream$
-				.pipe(
+			merge(
+				this.eventStream$.pipe(
 					throttleTime(500),
 					switchMap((ev) =>
 						timer(0, this.checkInterval).pipe(take(this.intervalCount + 1))
@@ -67,8 +78,9 @@ export class ActivityService {
 					map((elapsed) => elapsed === 0),
 					distinctUntilChanged(),
 					untilDestroyed(this)
-				)
-				.subscribe((isActive) => this.isActiveSubject.next(isActive))
+				),
+				this.visible$.pipe(mapTo(true))
+			).subscribe((isActive) => this.isActiveSubject.next(isActive))
 		);
 	}
 }
