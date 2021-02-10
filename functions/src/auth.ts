@@ -119,6 +119,11 @@ export const deleteUser = functions.https.onCall(async (data, context) => {
 	batch.update(db.doc(`${Endpoints.Rooms}/${domain}/members/${uid}`), { deleted: true });
 	// Decrement the room member count
 	batch.update(db.doc(`${Endpoints.Rooms}/${domain}`), 'member_count', FieldValue.increment(-1));
+	batch.set(
+		db.doc(`${Endpoints.Stats}/global`),
+		{ totalUsers: FieldValue.increment(-1) },
+		{ merge: true }
+	);
 	// Set the deletedAt timestamp in UserPersonalData
 	batch.update(db.doc(`${Endpoints.UserPersonalData}/${uid}`), {
 		deletedAt: admin.firestore.FieldValue.serverTimestamp(),
