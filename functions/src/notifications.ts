@@ -105,7 +105,7 @@ export const sendNewMessagesNotification = functions.pubsub
 						const chat = chatSnap.data();
 						const lastCheckTimestamp = Timestamp.fromDate(lastCheck);
 						const newMessagesSinceLastCheck = !!chat?.messages.find(
-							(msg) => msg.createdAt > lastCheckTimestamp
+							(msg) => msg.author !== userUid && msg.createdAt > lastCheckTimestamp
 						);
 						if (!newMessagesSinceLastCheck) {
 							return undefined;
