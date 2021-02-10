@@ -11,16 +11,18 @@
 		</button>
 	</ng-container>
 	<ng-template #pendingVerificationTpl>
-		<button
-			class="user-drawer-button pending-verification"
-			nz-button
-			nzDanger
-			(click)="logout()"
-			fxLayoutAlign="center center"
-		>
-			<i nz-icon nzType="stop" nzTheme="outline"></i>
-			<span class="button-text">Annuler l'inscription</span>
-		</button>
+		<ng-container *ngIf="!isKnown">
+			<button
+				class="user-drawer-button pending-verification"
+				nz-button
+				nzDanger
+				(click)="logout()"
+				fxLayoutAlign="center center"
+			>
+				<i nz-icon nzType="stop" nzTheme="outline"></i>
+				<span class="button-text">Annuler l'inscription</span>
+			</button>
+		</ng-container>
 	</ng-template>
 
 	<mas-user-drawer

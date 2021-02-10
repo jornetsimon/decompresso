@@ -41,6 +41,7 @@ export class LayoutComponent {
 		})
 	);
 	isOffline$ = this.userService.connectionStatus$.pipe(map((status) => status === 'offline'));
+	isKnown = window.localStorage.getItem('is-known') === 'true';
 	constructor(
 		public authService: AuthService,
 		public layoutService: LayoutService,
