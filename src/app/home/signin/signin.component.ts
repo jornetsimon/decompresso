@@ -147,6 +147,11 @@ export class SigninComponent implements OnInit {
 						case 'auth/wrong-password':
 							this.message.error('Mot de passe incorrect');
 							break;
+						case 'auth/too-many-requests':
+							this.message.warning(
+								'Trop de tentatives. Réessayez dans quelques minutes, ou utilisez le bouton pour réinitialiser votre mot de passe.'
+							);
+							break;
 						case 'auth/user-disabled':
 							this.modal.error({
 								nzTitle: 'Connexion refusée',
