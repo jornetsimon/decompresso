@@ -1,3 +1,4 @@
+/* tslint:disable:readonly-array */
 import { Injectable } from '@angular/core';
 import { SwPush, SwUpdate } from '@angular/service-worker';
 import { FirebaseApp } from '@angular/fire';
@@ -21,12 +22,14 @@ import { environment } from '../../../environments/environment';
 import { UserNotificationSettings } from '@model/user-notification-settings';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { UserService } from '@services/user.service';
+import { DeviceDetectorService, DeviceType } from 'ngx-device-detector';
 
 @UntilDestroy()
 @Injectable({
 	providedIn: 'root',
 })
 export class PushNotificationsService {
+	private deviceType = this.deviceDetectorService.deviceType as DeviceType;
 	serviceWorkerRegistration$: Observable<ServiceWorkerRegistration | undefined> = from(
 		navigator.serviceWorker.getRegistration()
 	);
@@ -90,16 +93,20 @@ export class PushNotificationsService {
 		withLatestFrom(
 			this.userService.user$.pipe(map((user) => user.notifications_settings?.tokens))
 		),
-		// tslint:disable-next-line:readonly-array
-		filter(([currentToken, storedTokens]: [string | null, Array<string> | undefined]) => {
-			if (!currentToken) {
-				return false;
+		filter(
+			([currentToken, storedTokens]: [
+				string | null,
+				Record<DeviceType, string> | undefined
+			]) => {
+				if (!currentToken) {
+					return false;
+				}
+				if (!storedTokens || Object.keys(storedTokens).length === 0) {
+					return true;
+				}
+				return !(storedTokens[this.deviceType] === currentToken);
 			}
-			if (!storedTokens?.length) {
-				return true;
-			}
-			return !storedTokens.includes(currentToken);
-		}),
+		),
 		map(([currentToken]) => currentToken as string)
 	);
 
@@ -109,7 +116,8 @@ export class PushNotificationsService {
 		private firebase: FirebaseApp,
 		private fireMessaging: AngularFireMessaging,
 		private fns: AngularFireFunctions,
-		private userService: UserService
+		private userService: UserService,
+		private deviceDetectorService: DeviceDetectorService
 	) {
 		this.newTokenDetected$
 			.pipe(
@@ -123,6 +131,7 @@ export class PushNotificationsService {
 				switchMap((newToken) =>
 					this.setUserSettings({
 						token: newToken,
+						device_type: this.deviceType,
 					})
 				)
 			)
@@ -154,7 +163,9 @@ export class PushNotificationsService {
 	}
 
 	setUserSettings(
-		settings: Partial<Omit<UserNotificationSettings, 'tokens'> & { token: string }>
+		settings: Partial<
+			Omit<UserNotificationSettings, 'tokens'> & { token: string; device_type: DeviceType }
+		>
 	) {
 		const callable = this.fns.httpsCallable('setUserNotificationSettings');
 		return callable(settings);

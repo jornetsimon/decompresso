@@ -1,5 +1,7 @@
+import { DeviceType } from 'ngx-device-detector';
+
 export interface UserNotificationSettings {
 	new_messages: boolean;
 	new_members: boolean;
-	tokens: ReadonlyArray<string>;
+	tokens: Record<DeviceType, string>;
 }

@@ -1,6 +1,6 @@
 {
   "name": "decompresso",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "author": "WonderWork",
   "contributors": [
     {
@@ -22,7 +22,7 @@
     "build-prod": "ng build --prod && npm run custom-sw",
     "custom-sw": "cp ngsw-worker-custom-11.1.1.js dist/decompresso/ngsw-worker.js",
     "deploy-staging": "ng deploy -P default",
-    "deploy-prod": "ng deploy -P prod",
+    "deploy-prod": "npm run build-prod && firebase deploy",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",

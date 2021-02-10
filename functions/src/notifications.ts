@@ -3,7 +3,7 @@ import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import { db } from './init';
 import { Endpoints } from './index';
-import { differenceInDays, set, subHours } from 'date-fns';
+import { subMinutes } from 'date-fns';
 import { messaging } from 'firebase-admin/lib/messaging';
 import { firestore } from 'firebase-admin/lib/firestore';
 import { fromDocRef, randomIntFromInterval, undefinedFallback } from './utilities';
@@ -12,7 +12,6 @@ import { filter, map, take, timeoutWith } from 'rxjs/operators';
 import MulticastMessage = messaging.MulticastMessage;
 import Notification = messaging.Notification;
 import Timestamp = firestore.Timestamp;
-import FieldValue = admin.firestore.FieldValue;
 
 export const setUserNotificationSettings = functions.https.onCall(async (settings, context) => {
 	if (!(context.auth && context.auth.token.email_verified)) {
@@ -20,13 +19,15 @@ export const setUserNotificationSettings = functions.https.onCall(async (setting
 	}
 	const userUid = context.auth?.uid;
 	const userRef = db.doc(`${Endpoints.Users}/${userUid}`);
-	const cleanedSettings: any = Object.keys(settings)
+	const cleanSettings: any = Object.keys(settings)
 		.filter((k) => settings[k] !== null)
 		.reduce((a, k) => ({ ...a, [k]: settings[k] }), {});
-	const { token, ...cleanedSettingsWithoutToken } = cleanedSettings;
-	const notifications_settings = { ...cleanedSettingsWithoutToken };
+	const { token, device_type, ...notifications_settings } = cleanSettings;
 	if (token) {
-		notifications_settings.tokens = FieldValue.arrayUnion(token);
+		if (!notifications_settings.tokens) {
+			notifications_settings.tokens = {};
+		}
+		notifications_settings.tokens[device_type] = token;
 	}
 	return userRef.set(
 		{
@@ -67,13 +68,19 @@ export const sendNewMessagesNotification = functions.pubsub
 
 						// Check if the user allows this notification type
 						const user = userSnap.data();
-						const userTokens: Array<string> | undefined =
+						const userTokens: Record<string, string> | undefined =
 							user?.notifications_settings?.tokens;
 						const userAllowsNewMessagesNotifications = undefinedFallback(
 							user?.notifications_settings?.new_messages,
 							true
 						);
-						if (!(userTokens?.length && userAllowsNewMessagesNotifications)) {
+						if (
+							!(
+								userTokens &&
+								Object.keys(userTokens).length &&
+								userAllowsNewMessagesNotifications
+							)
+						) {
 							return undefined;
 						}
 
@@ -124,7 +131,7 @@ export const sendNewMessagesNotification = functions.pubsub
 						console.log(
 							'User ' + userUid + ' will receive a notification for new messages'
 						);
-						return userTokens;
+						return Object.values(userTokens);
 					}
 				)
 			)
