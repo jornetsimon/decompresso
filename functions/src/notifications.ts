@@ -203,8 +203,14 @@ export const onMemberCreated = functions
 						if (userSnap.id === memberUid) {
 							return undefined;
 						}
-						console.log(userSnap.data()?.nickname);
-						return userSnap.data()?.notifications_settings?.tokens;
+						const user = userSnap.data();
+						const userTokens: Record<string, string> | undefined =
+							user?.notifications_settings?.tokens;
+						if (!(userTokens && Object.keys(userTokens).length)) {
+							return undefined;
+						}
+						console.log(`=> will send to ${user.nickname}`);
+						return Object.values(userTokens);
 					})
 					// tslint:disable-next-line:readonly-array
 					.filter((token) => !!token) as Array<Array<string>>).reduce(
@@ -220,21 +226,24 @@ export const onMemberCreated = functions
 					};
 				}
 
-				const generateNotificationTitle = (nickname: string, domain: string): string => {
+				const generateNotificationBody = (nickname: string, domain: string): string => {
 					const templatePool: ReadonlyArray<string> = [
 						`${nickname} a rejoint le salon ${domain} ! 👏`,
-						`Il est des nôtres ! ${nickname} fait maintenant partie du salon`,
-						`Du sang frais 🧛 : accueillons ${nickname} dans le salon`,
+						`Il est des nôtres ! ${nickname} fait maintenant partie du salon.`,
+						`Du sang frais 🧛 : accueillons ${nickname} dans le salon.`,
 						`Nouvelle recrue : ${nickname} au rapport 🪖`,
-						`Tout le monde l'attendait, il est là : ${nickname} a rejoint le salon`,
+						`Tout le monde l'attendait, il est là : ${nickname} a rejoint le salon.`,
 						`Nouveau membre ! Hourra pour ${nickname} 🙌`,
 						`La salon s'agrandit avec l'arrivée de ${nickname} 🚀`,
 					];
 					return templatePool[randomIntFromInterval(0, templatePool.length - 1)];
 				};
 				const notification: Notification = {
-					title: generateNotificationTitle(finalNickname, memberDomain),
-					body: `Venez lui dire bonjour !`,
+					title: 'Un nouveau membre a rejoint le salon',
+					body: `${generateNotificationBody(
+						finalNickname,
+						memberDomain
+					)}\nVenez lui dire bonjour !`,
 				};
 
 				const message: MulticastMessage = {
