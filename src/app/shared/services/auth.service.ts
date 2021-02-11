@@ -4,6 +4,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { combineLatest, from, Observable, of, throwError } from 'rxjs';
 import { ObservableStore } from '@codewithdan/observable-store';
 import {
+	catchError,
 	delay,
 	distinctUntilChanged,
 	filter,
@@ -300,9 +301,17 @@ export class AuthService extends ObservableStore<StoreState> {
 		);
 	}
 
-	resetPassword(email?: string): Observable<void> {
+	resetPassword(email?: string) {
 		if (email) {
-			return from(this.auth.sendPasswordResetEmail(email));
+			return from(this.auth.fetchSignInMethodsForEmail(email)).pipe(
+				catchError(() => of(null)),
+				switchMap((result) => {
+					if (result && result.length > 0) {
+						return from(this.auth.sendPasswordResetEmail(email));
+					}
+					return of(null);
+				})
+			);
 		}
 		return this.authCredential$.pipe(
 			first(),
