@@ -222,9 +222,25 @@
 					/>
 				</div>
 			</div>
-			<div fxLayoutAlign="center">
-				<button class="signup-button" (click)="scrollTop()" gaEvent="bottom_signup_button">
+			<div fxLayout="row wrap" fxLayoutAlign="center baseline">
+				<button
+					class="mx3 my2 signup-button"
+					(click)="scrollTop()"
+					gaEvent="bottom_signup_button"
+					fxFlexOrder.lt-sm="1"
+				>
 					<span class="text">Je m'inscris</span>
+				</button>
+				<button
+					nz-button
+					nzType="default"
+					nzSize="large"
+					routerLink="/help"
+					class="mx3 my2"
+					style="font-size: 18px"
+					fxFlexOrder.lt-sm="0"
+				>
+					En savoir plus
 				</button>
 			</div>
 		</div>
