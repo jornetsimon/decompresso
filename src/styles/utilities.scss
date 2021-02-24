@@ -54,3 +54,25 @@
 .visible-opacity {
 	opacity: 1;
 }
+
+.ant-btn.success {
+	$color: rgb(52, 214, 41);
+	background-color: $color;
+	border-color: $color;
+	color: white;
+
+	&:hover {
+		opacity: 0.85;
+	}
+}
+
+.ant-btn.rose {
+	$color: #e8699e;
+	background-color: $color;
+	border-color: $color;
+	color: white;
+
+	&:hover {
+		opacity: 0.85;
+	}
+}

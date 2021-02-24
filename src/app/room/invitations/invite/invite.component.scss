@@ -6,6 +6,10 @@
 
 input {
 	text-transform: lowercase;
+
+	&::placeholder {
+		text-transform: none;
+	}
 }
 
 input.ng-dirty:focus,
