@@ -7,6 +7,7 @@ import { BehaviorSubject, from } from 'rxjs';
 import { shareReplay, takeWhile, tap } from 'rxjs/operators';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { AngularFireRemoteConfig } from '@angular/fire/remote-config';
+import { DeviceDetectorService } from 'ngx-device-detector';
 
 @Injectable({
 	providedIn: 'root',
@@ -33,7 +34,8 @@ export class EnhancementService {
 		private pwaService: PwaService,
 		private analyticsService: AnalyticsService,
 		private message: NzMessageService,
-		private remoteConfig: AngularFireRemoteConfig
+		private remoteConfig: AngularFireRemoteConfig,
+		private deviceDetectorService: DeviceDetectorService
 	) {}
 
 	/**
@@ -63,6 +65,11 @@ export class EnhancementService {
 			next: (success) => {
 				if (success) {
 					this.message.success('Notifications activées');
+					this.analyticsService.logEvent(
+						'enable_notifications',
+						GaCategoryEnum.ENGAGEMENT,
+						this.deviceDetectorService.deviceType
+					);
 					this.userEnabledNotifications.next(true);
 				} else {
 					this.message.error(`Impossible d'activer les notification pour l'instant`);
