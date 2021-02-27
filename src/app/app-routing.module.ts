@@ -48,6 +48,11 @@ const routes: Routes = [
 				loadChildren: () => import('./cgu/cgu.module').then((m) => m.CguModule),
 			},
 			{
+				path: '🤩',
+				loadChildren: () =>
+					import('./publicity/publicity.module').then((m) => m.PublicityModule),
+			},
+			{
 				path: 'admin',
 				loadChildren: () => import('./admin/admin.module').then((m) => m.AdminModule),
 				canLoad: [AdminGuard],

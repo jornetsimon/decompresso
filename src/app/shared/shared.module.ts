@@ -39,6 +39,7 @@ import { CookiesConsentComponent } from './cookies-consent/cookies-consent.compo
 import { AnalyticsEventDirective } from '@analytics/analytics-event.directive';
 import { NzSwitchModule } from 'ng-zorro-antd/switch';
 import { IfAdminDirective } from './if-admin.directive';
+import { NzImageModule } from 'ng-zorro-antd/image';
 
 // tslint:disable-next-line:readonly-array
 const icons: IconDefinition[] = [QuestionCircleOutline];
@@ -81,6 +82,7 @@ const modules: ReadonlyArray<any> = [
 	NzRadioModule,
 	NzDividerModule,
 	NzSwitchModule,
+	NzImageModule,
 	RoughNotationModule,
 	NgxVibrationModule.forRoot({
 		defaultPattern: GLOBAL_CONFIG.vibration.default,
