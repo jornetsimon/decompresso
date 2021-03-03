@@ -12,6 +12,9 @@ import { StatsComponent } from './stats/stats.component';
 import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb';
 import { NzStatisticModule } from 'ng-zorro-antd/statistic';
 import { RoomsComponent } from './stats/rooms/rooms.component';
+import { InviteComponent } from './invite/invite.component';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { CheckCircleOutline } from '@ant-design/icons-angular/icons';
 
 @NgModule({
 	declarations: [
@@ -20,6 +23,7 @@ import { RoomsComponent } from './stats/rooms/rooms.component';
 		ReportComponent,
 		StatsComponent,
 		RoomsComponent,
+		InviteComponent,
 	],
 	imports: [
 		CommonModule,
@@ -29,6 +33,7 @@ import { RoomsComponent } from './stats/rooms/rooms.component';
 		NzDescriptionsModule,
 		NzBreadCrumbModule,
 		NzStatisticModule,
+		NzIconModule.forChild([CheckCircleOutline]),
 	],
 })
 export class AdminModule {}

@@ -1,0 +1,52 @@
+<div class="main-container xs-padding">
+	<div style="max-width: 400px" class="m-auto">
+		<form
+			[formGroup]="form"
+			fxLayout="row"
+			fxLayoutGap="10px"
+			fxLayout.lt-sm="column"
+			fxLayoutGap.lt-sm="5px"
+		>
+			<div fxFlex="grow">
+				<nz-form-item style="margin-bottom: 0">
+					<nz-form-control [nzHasFeedback]="!!emailFc.value && !sent">
+						<input
+							type="text"
+							nz-input
+							nzSize="large"
+							formControlName="email"
+							placeholder="Email pour invitation manuelle"
+						/>
+					</nz-form-control>
+				</nz-form-item>
+			</div>
+			<div fxFlex="noshrink" fxFlex.lt-sm="grow" class="mb2">
+				<ng-container *ngIf="sent; else defaultButton">
+					<button
+						nz-button
+						nzType="primary"
+						nzSize="large"
+						class="success width-100"
+						style="cursor: default"
+					>
+						<i nz-icon nzType="check-circle" nzTheme="outline"></i>
+						Invitation envoyée
+					</button>
+				</ng-container>
+				<ng-template #defaultButton>
+					<button
+						nz-button
+						nzType="primary"
+						nzSize="large"
+						class="width-100"
+						[disabled]="form.invalid"
+						(click)="sendInvite()"
+						[nzLoading]="loading"
+					>
+						Inviter
+					</button>
+				</ng-template>
+			</div>
+		</form>
+	</div>
+</div>

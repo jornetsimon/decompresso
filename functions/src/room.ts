@@ -40,11 +40,16 @@ export const invite = functions.https.onCall(async (data, context) => {
 	if (!(context.auth && context.auth.token.email_verified)) {
 		throw new functions.https.HttpsError('failed-precondition', 'not_authenticated');
 	}
+	const isAdmin = !!context.auth.token.admin;
 	const email = data.email;
 	const userDomain = context.auth?.token?.domain;
 	const emailDomain = email.split('@')[1];
-	if (emailDomain !== userDomain) {
-		throw new functions.https.HttpsError('failed-precondition', 'domain_does_not_match');
+
+	if (!isAdmin) {
+		// When not admin, ensure the recipient domain if the same as the user's
+		if (emailDomain !== userDomain) {
+			throw new functions.https.HttpsError('failed-precondition', 'domain_does_not_match');
+		}
 	}
 
 	return EmailSender.sendMail({
@@ -53,11 +58,14 @@ export const invite = functions.https.onCall(async (data, context) => {
 		subject: `[Personnel et confidentiel] Un collègue vous invite à le rejoindre sur Décompresso !`,
 		template: 'invite',
 		context: {
-			domain: userDomain,
+			domain: isAdmin ? emailDomain : userDomain,
 		},
-	}).then(() =>
-		db.doc(`${Endpoints.Rooms}/${userDomain}`).update({
+	}).then(() => {
+		if (isAdmin) {
+			return undefined;
+		}
+		return db.doc(`${Endpoints.Rooms}/${userDomain}`).update({
 			remaining_invites: admin.firestore.FieldValue.increment(-1),
-		})
-	);
+		});
+	});
 });
