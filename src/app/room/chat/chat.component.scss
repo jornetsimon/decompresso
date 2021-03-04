@@ -1,3 +1,8 @@
+$headerHeight: 90px;
+$pageHeaderHeight: 50px;
+$chatFooterHeight: 65px;
+$viewportHeight: calc(var(--vh, 1vh) * 100);
+
 ::ng-deep #chat-card {
 	position: relative;
 }
@@ -35,10 +40,6 @@
 	}
 }
 @media (max-width: 424px) {
-	$headerHeight: 90px;
-	$pageHeaderHeight: 50px;
-	$chatFooterHeight: 65px;
-	$viewportHeight: calc(var(--vh, 1vh) * 100);
 	$chatContentHeight: calc(
 		#{$viewportHeight} - #{$headerHeight} - #{$pageHeaderHeight} - #{$chatFooterHeight}
 	);
@@ -90,6 +91,7 @@
 	font-size: 16px;
 	margin-bottom: 10px;
 	overflow-x: hidden;
+	position: relative;
 }
 .top-reached {
 	font-size: 10px;
@@ -116,6 +118,35 @@
 
 		&:hover {
 			opacity: 1;
+		}
+	}
+}
+
+@media (min-width: 425px) {
+	#mobile-notification-banner {
+		display: none !important;
+	}
+}
+@media (max-width: 424px) {
+	$bannerOffset: calc(#{$headerHeight} + #{$pageHeaderHeight} + 10px);
+	#mobile-notification-banner {
+		position: fixed;
+		top: $bannerOffset;
+		left: 20px;
+		width: calc(100% - 40px);
+		margin: auto;
+		background-color: #34d629;
+		color: white;
+		border: 1px solid #ffffff;
+		border-radius: 5px;
+		padding: 5px;
+		cursor: pointer;
+		transition: background-color 0.5s;
+		box-shadow: 0 6px 9px 2px #ffffffdb;
+		z-index: 3;
+
+		&:hover {
+			background-color: #38de2e;
 		}
 	}
 }

@@ -4,6 +4,29 @@
 		<ng-container *ngIf="feed$ | async as feed">
 			<ng-container *ngIf="(roomHasMultipleMembers$ | async) === true; else memberAloneTpl">
 				<ng-container *ngIf="feed.length; else noMessageTpl">
+					<div
+						id="mobile-notification-banner"
+						*ngIf="
+							(enhancementService.enableNotifications$ | async) &&
+							(pushNotificationsService.canUse$ | async) === true &&
+							(pushNotificationsService.enabled$ | async) === false
+						"
+						fxLayout="row nowrap"
+						[class.flip-out-hor-top]="
+							enhancementService.userEnabledNotifications$ | async
+						"
+						(click)="enhancementService.setupNotifications()"
+					>
+						<div fxFlex="1 1 auto" fxLayoutAlign="center center">
+							<i nz-icon nzType="bell" nzTheme="fill"></i>
+						</div>
+						<div fxFlex="2 0 auto" fxLayout="column" fxLayoutAlign="center left">
+							<div style="font-size: 12px">Restez dans la boucle</div>
+							<div style="font-size: 14px" class="bold">
+								Activez les notifications
+							</div>
+						</div>
+					</div>
 					<div class="top-reached" [class.hidden-opacity]="feed.length < 10">
 						Vous avez atteint la limite de l'historique 🔭
 					</div>

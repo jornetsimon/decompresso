@@ -29,6 +29,8 @@ import { GLOBAL_CONFIG } from '../../global-config';
 import { FeedService } from './feed/feed.service';
 import { FeedEntry } from './feed/model/feed-entry';
 import { isMessageFeedEntry } from './feed/model/message.feed-entry';
+import { EnhancementService } from '@services/enhancement.service';
+import { PushNotificationsService } from '@services/push-notifications.service';
 
 @UntilDestroy()
 @Component({
@@ -72,7 +74,9 @@ export class ChatComponent implements AfterViewInit {
 	constructor(
 		private chatService: ChatService,
 		private roomService: RoomService,
-		private feedService: FeedService
+		private feedService: FeedService,
+		public pushNotificationsService: PushNotificationsService,
+		public enhancementService: EnhancementService
 	) {}
 
 	ngAfterViewInit() {
