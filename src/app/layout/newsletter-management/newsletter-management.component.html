@@ -1,0 +1,33 @@
+<form nz-form [formGroup]="form" nzLayout="vertical" class="notifications-form">
+	<nz-form-item>
+		<div>
+			<nz-form-label> Communications importantes</nz-form-label>
+		</div>
+		<nz-form-control>
+			<nz-switch formControlName="important" [nzDisabled]="true"></nz-switch>
+		</nz-form-control>
+	</nz-form-item>
+	<nz-form-item>
+		<div>
+			<nz-form-label>Nouveautés</nz-form-label>
+			<div class="comment">Fonctionnalités, services...</div>
+		</div>
+		<nz-form-control>
+			<nz-switch formControlName="new_features"></nz-switch>
+		</nz-form-control>
+	</nz-form-item>
+	<nz-form-item>
+		<nz-form-label>Autres</nz-form-label>
+		<nz-form-control>
+			<nz-switch formControlName="others"></nz-switch>
+		</nz-form-control>
+	</nz-form-item>
+</form>
+<nz-divider></nz-divider>
+<div>
+	<div class="center smaller">
+		<p>Garanti sans spam ✔️</p>
+		<p>Votre email n'est pas et ne sera jamais partagé avec aucun tiers.</p>
+		<a (click)="goToPrivacy()"> Plus d'informations sur notre politique de confidentialité. </a>
+	</div>
+</div>

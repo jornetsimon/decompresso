@@ -7,6 +7,7 @@ import {
 	sendNewMessagesNotification,
 	setUserNotificationSettings,
 } from './notifications';
+import { setUserNewsletterSettings } from './user';
 
 export enum Endpoints {
 	Users = '/users',
@@ -30,4 +31,5 @@ exports.changeNickname = changeNickname;
 exports.invite = invite;
 exports.sendNewMessagesNotification = sendNewMessagesNotification;
 exports.setUserNotificationSettings = setUserNotificationSettings;
+exports.setUserNewsletterSettings = setUserNewsletterSettings;
 exports.onMemberCreated = onMemberCreated;

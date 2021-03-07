@@ -6,7 +6,7 @@
 		(nzOnClose)="closeDrawer()"
 		nzCloseIcon=""
 		[nzContent]="nzDrawerContent"
-		[nzOffsetX]="notificationDrawerVisible ? 180 : 0"
+		[nzOffsetX]="notificationDrawerVisible || newsletterDrawerVisible ? 180 : 0"
 	>
 		<ng-template #nzDrawerContent>
 			<div fxFlex="grow" fxLayout="column">
@@ -32,6 +32,14 @@
 						>
 							<i nz-icon nzType="bell" nzTheme="fill"></i>
 							Gérer mes notifications
+						</a>
+						<a
+							nz-button
+							nzType="link"
+							(click)="newsletterDrawerVisible = !newsletterDrawerVisible"
+						>
+							<i nz-icon nzType="mail" nzTheme="fill"></i>
+							Préférences de newsletter
 						</a>
 					</div>
 				</div>
@@ -141,6 +149,19 @@
 		>
 			<ng-template #notificationDrawerContent>
 				<mas-notifications-management></mas-notifications-management>
+			</ng-template>
+		</nz-drawer>
+		<nz-drawer
+			[nzVisible]="newsletterDrawerVisible"
+			[nzPlacement]="placement"
+			nzTitle="Newsletter"
+			(nzOnClose)="newsletterDrawerVisible = false"
+			[nzContent]="newsletterDrawerContent"
+		>
+			<ng-template #newsletterDrawerContent>
+				<mas-newsletter-management
+					(closing)="newsletterDrawerVisible = false; closeDrawer()"
+				></mas-newsletter-management>
 			</ng-template>
 		</nz-drawer>
 	</nz-drawer>

@@ -13,6 +13,7 @@ import {
 	HomeOutline,
 	LockOutline,
 	LogoutOutline,
+	MailFill,
 	MenuOutline,
 	MessageOutline,
 	QuestionCircleOutline,
@@ -23,6 +24,7 @@ import {
 } from '@ant-design/icons-angular/icons';
 import { FooterComponent } from './footer/footer.component';
 import { NotificationsManagementComponent } from './notifications-management/notifications-management.component';
+import { NewsletterManagementComponent } from './newsletter-management/newsletter-management.component';
 
 @NgModule({
 	declarations: [
@@ -30,6 +32,7 @@ import { NotificationsManagementComponent } from './notifications-management/not
 		UserDrawerComponent,
 		FooterComponent,
 		NotificationsManagementComponent,
+		NewsletterManagementComponent,
 	],
 	imports: [
 		CommonModule,
@@ -50,6 +53,7 @@ import { NotificationsManagementComponent } from './notifications-management/not
 			StopOutline,
 			BellFill,
 			ChromeFill,
+			MailFill,
 		]),
 	],
 	exports: [FooterComponent],

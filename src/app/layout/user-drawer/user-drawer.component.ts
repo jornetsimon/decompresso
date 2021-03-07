@@ -37,6 +37,7 @@ export class UserDrawerComponent {
 	user$ = this.userService.user$;
 	showAddPwaButton = !!this.pwaService.deferredPrompt;
 	notificationDrawerVisible: boolean;
+	newsletterDrawerVisible: boolean;
 
 	isMobile = this.deviceDetectorService.isMobile();
 
