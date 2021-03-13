@@ -15,6 +15,8 @@ import { ElementReadingTracker } from '@utilities/element-reading-tracker';
 import { AnalyticsService } from '@analytics/analytics.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TitleService } from '@services/title.service';
+import { LanguageService } from '../transloco/language.service';
+import { CookiesConsentService } from '../shared/cookies-consent/cookies-consent.service';
 
 @UntilDestroy()
 @Component({
@@ -32,7 +34,9 @@ export class HomeComponent implements OnInit, AfterViewInit {
 		private modalService: NzModalService,
 		private breakpointObserver: BreakpointObserver,
 		private analyticsService: AnalyticsService,
-		private titleService: TitleService
+		private titleService: TitleService,
+		public languageService: LanguageService,
+		public cookiesConsentService: CookiesConsentService
 	) {}
 
 	ngOnInit(): void {

@@ -1,0 +1,28 @@
+* {
+	transition: filter 0.25s;
+}
+
+svg {
+	width: min(150px, 22vw);
+}
+
+#Shirt {
+	filter: drop-shadow(2px 4px 2px darkgrey);
+}
+
+#Switch:hover {
+	cursor: pointer;
+	#Pill {
+		filter: brightness(1.05);
+	}
+	#Handle {
+		filter: saturate(1.25) drop-shadow(0px 0px 6px rgb(61, 118, 186));
+	}
+}
+
+#HandleGroup {
+	transition: transform 400ms cubic-bezier(0.17, 1.1, 0.38, 1.03);
+	&.tgl-right {
+		transform: translate(360px, 0);
+	}
+}

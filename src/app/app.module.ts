@@ -62,6 +62,7 @@ import {
 	DEFAULTS as REMOTE_CONFIG_DEFAULTS,
 	SETTINGS as REMOTE_CONFIG_SETTINGS,
 } from '@angular/fire/remote-config';
+import { TranslocoRootModule } from './transloco/transloco-root.module';
 
 registerLocaleData(fr);
 
@@ -102,6 +103,7 @@ registerLocaleData(fr);
 		AngularFireAnalyticsModule,
 		AngularFireMessagingModule,
 		AngularFireRemoteConfigModule,
+		TranslocoRootModule,
 	],
 	providers: [
 		{ provide: NZ_I18N, useValue: fr_FR },

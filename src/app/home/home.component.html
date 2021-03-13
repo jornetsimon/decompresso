@@ -1,15 +1,21 @@
-<a id="header" routerLink="/">
+<a id="header" class="relative" routerLink="/">
 	<img src="assets/logo.svg" alt="Logo" title="Al Puccino & Pierre Colateur" id="logo" />
 	<div id="title">
 		<div id="app-name" style="align-self: center">
 			<span class="first-letter">D</span>écompresso
 		</div>
 	</div>
+	<div
+		class="language-switcher"
+		[class.cookies-offset]="(cookiesConsentService.accepted$ | async) === false"
+	>
+		<mas-language-switcher></mas-language-switcher>
+	</div>
 </a>
 <div class="relative" style="background-color: white">
 	<div class="main-container relative" style="padding-bottom: 2em">
 		<div id="headline">
-			Le chat anonyme du&nbsp;bureau
+			<span [innerHTML]="'home.headline' | transloco"></span>
 			<div class="sub">et aussi de l'asso, de l'université...</div>
 		</div>
 		<div id="floating-signin-container" class="absolute">

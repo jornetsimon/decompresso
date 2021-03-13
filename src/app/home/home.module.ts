@@ -14,6 +14,7 @@ import {
 } from '@ant-design/icons-angular/icons';
 import { LayoutModule } from '../layout/layout.module';
 import { DynamicConceptComponent } from './dynamic-concept/dynamic-concept.component';
+import { TRANSLOCO_SCOPE } from '@ngneat/transloco';
 
 // tslint:disable-next-line:readonly-array
 const icons: IconDefinition[] = [QuestionCircleOutline, MailOutline, CommentOutline, LoginOutline];
@@ -34,5 +35,6 @@ const homeRoutes: Routes = [
 		NzIconModule.forChild(icons),
 		LayoutModule,
 	],
+	providers: [{ provide: TRANSLOCO_SCOPE, useValue: 'home' }],
 })
 export class HomeModule {}

@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { filter, map, startWith } from 'rxjs/operators';
 import { RoomService } from '@services/room.service';
 import { UserService } from '@services/user.service';
+import { CookiesConsentService } from '../shared/cookies-consent/cookies-consent.service';
 
 @Component({
 	selector: 'mas-layout',
@@ -42,12 +43,19 @@ export class LayoutComponent {
 	);
 	isOffline$ = this.userService.connectionStatus$.pipe(map((status) => status === 'offline'));
 	isKnown = window.localStorage.getItem('is-known') === 'true';
+	routeMatchesRoom$ = this.router.events.pipe(
+		filter((event) => event instanceof NavigationEnd),
+		map((event: NavigationEnd) => event.url),
+		startWith(this.router.url),
+		map((url) => url.startsWith('/room/'))
+	);
 	constructor(
 		public authService: AuthService,
 		public layoutService: LayoutService,
 		public router: Router,
 		public roomService: RoomService,
-		private userService: UserService
+		private userService: UserService,
+		public cookiesConsentService: CookiesConsentService
 	) {
 		this.enableCompactMode$ = this.router.events.pipe(
 			filter((event) => event instanceof NavigationEnd),

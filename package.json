@@ -50,6 +50,7 @@
     "@ant-design/icons-angular": "^11.0.1",
     "@codewithdan/observable-store": "^2.2.11",
     "@ctrl/ngx-emoji-mart": "^4.1.0",
+    "@ngneat/transloco": "^2.20.1",
     "@ngneat/until-destroy": "^8.0.3",
     "@ngx-pwa/local-storage": "^11.1.0",
     "basscss": "^8.0.2",

@@ -39,6 +39,8 @@ import { CookiesConsentComponent } from './cookies-consent/cookies-consent.compo
 import { AnalyticsEventDirective } from '@analytics/analytics-event.directive';
 import { NzSwitchModule } from 'ng-zorro-antd/switch';
 import { IfAdminDirective } from './if-admin.directive';
+import { TranslocoModule } from '@ngneat/transloco';
+import { LanguageSwitcherModule } from '../transloco/language-switcher/language-switcher.module';
 
 // tslint:disable-next-line:readonly-array
 const icons: IconDefinition[] = [QuestionCircleOutline];
@@ -86,6 +88,8 @@ const modules: ReadonlyArray<any> = [
 		defaultPattern: GLOBAL_CONFIG.vibration.default,
 	}),
 	ShareButtonsModule,
+	TranslocoModule,
+	LanguageSwitcherModule,
 ];
 
 @NgModule({
