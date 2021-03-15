@@ -1,17 +1,20 @@
-<a id="header" class="relative" routerLink="/">
-	<img src="assets/logo.svg" alt="Logo" title="Al Puccino & Pierre Colateur" id="logo" />
-	<div id="title">
-		<div id="app-name" style="align-self: center">
-			<span class="first-letter">D</span>écompresso
+<div id="header" class="relative">
+	<a routerLink="/"
+		><img src="assets/logo.svg" alt="Logo" title="Al Puccino & Pierre Colateur" id="logo" />
+		<div id="title">
+			<div id="app-name" style="align-self: center">
+				<span class="first-letter">D</span>écompresso
+			</div>
 		</div>
-	</div>
+	</a>
 	<div
 		class="language-switcher"
 		[class.cookies-offset]="(cookiesConsentService.accepted$ | async) === false"
+		(click)="languageService.toggleLanguage()"
 	>
 		<mas-language-switcher></mas-language-switcher>
 	</div>
-</a>
+</div>
 <div class="relative" style="background-color: white">
 	<div class="main-container relative" style="padding-bottom: 2em">
 		<div id="headline">
@@ -257,3 +260,5 @@
 </div>
 
 <mas-cookies-consent></mas-cookies-consent>
+
+<mas-language-selection-modal></mas-language-selection-modal>

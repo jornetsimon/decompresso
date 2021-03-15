@@ -6,6 +6,13 @@
 }
 #header {
 	margin: max(10px, 2vh) 1rem;
+	a {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		color: #231f20;
+	}
 }
 #title {
 	width: inherit;

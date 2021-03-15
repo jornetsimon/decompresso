@@ -1,0 +1,18 @@
+<ng-container *ngIf="showLanguageSelectionModal$ | async">
+	<div id="language-selection-modal">
+		<div class="content">
+			<div class="header">Je choisis mon expérience</div>
+			<div fxLayout="row" fxLayoutAlign="center center">
+				<div class="button left" (click)="selectLanguage('fr')">
+					<img src="assets/Shirt.svg" alt="Langue classique" />
+					<div class="description">Classique</div>
+				</div>
+				<div class="separator"></div>
+				<div class="button right" (click)="selectLanguage('fun')">
+					<img src="assets/Unicorn.svg" alt="Langue fun" />
+					<div class="description">Fabulous</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</ng-container>

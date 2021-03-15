@@ -15,6 +15,7 @@ import {
 import { LayoutModule } from '../layout/layout.module';
 import { DynamicConceptComponent } from './dynamic-concept/dynamic-concept.component';
 import { TRANSLOCO_SCOPE } from '@ngneat/transloco';
+import { LanguageSelectionModalComponent } from './language-selection-modal/language-selection-modal.component';
 
 // tslint:disable-next-line:readonly-array
 const icons: IconDefinition[] = [QuestionCircleOutline, MailOutline, CommentOutline, LoginOutline];
@@ -27,7 +28,12 @@ const homeRoutes: Routes = [
 ];
 
 @NgModule({
-	declarations: [HomeComponent, SigninComponent, DynamicConceptComponent],
+	declarations: [
+		HomeComponent,
+		SigninComponent,
+		DynamicConceptComponent,
+		LanguageSelectionModalComponent,
+	],
 	imports: [
 		SharedModule,
 		RouterModule.forChild(homeRoutes),

@@ -7,6 +7,7 @@ import { filter, map, startWith } from 'rxjs/operators';
 import { RoomService } from '@services/room.service';
 import { UserService } from '@services/user.service';
 import { CookiesConsentService } from '../shared/cookies-consent/cookies-consent.service';
+import { LanguageService } from '../transloco/language.service';
 
 @Component({
 	selector: 'mas-layout',
@@ -55,7 +56,8 @@ export class LayoutComponent {
 		public router: Router,
 		public roomService: RoomService,
 		private userService: UserService,
-		public cookiesConsentService: CookiesConsentService
+		public cookiesConsentService: CookiesConsentService,
+		public languageService: LanguageService
 	) {
 		this.enableCompactMode$ = this.router.events.pipe(
 			filter((event) => event instanceof NavigationEnd),

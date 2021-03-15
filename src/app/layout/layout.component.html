@@ -73,6 +73,7 @@
 		<div
 			class="language-switcher"
 			[class.cookies-offset]="(cookiesConsentService.accepted$ | async) === false"
+			(click)="languageService.toggleLanguage()"
 			style="margin-right: 1rem; top: 40px"
 		>
 			<mas-language-switcher></mas-language-switcher>

@@ -221,7 +221,7 @@
 				stroke-linecap="round"
 			/>
 		</g>
-		<g id="HandleGroup" [class.tgl-right]="(control.valueChanges | async) === true">
+		<g id="HandleGroup" [class.tgl-right]="(state | async) === 'fun'">
 			<path
 				id="Handle"
 				d="M440 258.5C440 196.368 389.632 146 327.5 146C265.368 146 215 196.368 215 258.5C215 320.632 265.368 371 327.5 371C389.632 371 440 320.632 440 258.5Z"

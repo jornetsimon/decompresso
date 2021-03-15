@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { UntilDestroy } from '@ngneat/until-destroy';
 import { LanguageService } from '../language.service';
 
 @UntilDestroy()
@@ -11,15 +10,10 @@ import { LanguageService } from '../language.service';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LanguageSwitcherComponent {
-	control = new FormControl(false, [Validators.required]);
-	constructor(private languageService: LanguageService) {
-		this.control.valueChanges.pipe(untilDestroyed(this)).subscribe((value) => {
-			const lang = value === true ? 'fun' : 'fr';
-			this.languageService.setLanguage(lang);
-		});
-	}
+	state = this.languageService.lang$;
+	constructor(private languageService: LanguageService) {}
 
 	toggle() {
-		this.control.setValue(!this.control.value);
+		this.languageService.toggleLanguage();
 	}
 }
