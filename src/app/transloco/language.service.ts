@@ -1,3 +1,4 @@
+import { AnalyticsService } from '@analytics/analytics.service';
 import { Injectable } from '@angular/core';
 import { TranslocoService } from '@ngneat/transloco';
 import { StorageMap } from '@ngx-pwa/local-storage';
@@ -22,7 +23,11 @@ export class LanguageService {
 		map((lang) => lang !== undefined),
 		takeWhile((selected) => !selected, true)
 	);
-	constructor(private translocoService: TranslocoService, private storage: StorageMap) {
+	constructor(
+		private translocoService: TranslocoService,
+		private storage: StorageMap,
+		private analyticsService: AnalyticsService
+	) {
 		this.lang$.subscribe((lang) => {
 			const newLang = lang ?? this.defaultLang;
 			if (this.translocoService.getActiveLang() !== newLang) {
@@ -32,7 +37,11 @@ export class LanguageService {
 		});
 	}
 
-	setLanguage(lang: 'fr' | 'fun') {
+	setLanguage(lang: 'fr' | 'fun', isInitial = false) {
+		this.analyticsService.logEvent('select_language', undefined, undefined, undefined, {
+			lang,
+			isInitial,
+		});
 		this.storage.set('lang', lang).subscribe();
 	}
 

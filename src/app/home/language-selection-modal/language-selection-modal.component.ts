@@ -15,6 +15,6 @@ export class LanguageSelectionModalComponent {
 	constructor(private languageService: LanguageService) {}
 
 	selectLanguage(lang: 'fr' | 'fun') {
-		this.languageService.setLanguage(lang);
+		this.languageService.setLanguage(lang, true);
 	}
 }
