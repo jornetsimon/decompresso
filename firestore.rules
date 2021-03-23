@@ -8,7 +8,7 @@ service cloud.firestore {
 			allow read: if authUidMatches(userId);
 			allow create, update: if authUidMatches(userId)
 				&& request.resource.data.size() == 1
-				&& isMessage(request.resource.data.last_read_message);
+				&& (request.resource.data.last_read_message == null || isMessage(request.resource.data.last_read_message));
 		}
 		match /rooms/{domain} {
 			allow get: if isMyDomain(domain);
