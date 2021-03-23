@@ -1,95 +1,44 @@
-<div class="main-container xs-padding">
-	<div class="page-title">À propos de nous</div>
-	<h1>Décompresso c'est quoi ?</h1>
+<ng-container *transloco="let t; read: 'about'">
+	<div class="main-container xs-padding">
+		<div class="page-title">{{ t('page_title') }}</div>
+		<h1>{{ t('project.title') }}</h1>
+		<p [innerHTML]="t('project.content')"></p>
 
-	<p>Décompresso est né un matin de septembre 2020 au cœur du pays du reblochon 🏔.</p>
-	<p>
-		Au début de son existence une simple idée un peu loufoque pour Annabelle et Simon :
-		<strong>pouvoir communiquer au travail de façon plus libérée</strong>.
-	</p>
-	<p>
-		La Covid19 fait alors son grand retour en pays gaulois et renvoie au bercail bon nombre de
-		salariés. Un constat fait alors mouche, dans un contexte anxiogène et de limitation des
-		contacts, il faut recréer du lien dans les entreprises. La décision est prise :
-		<i>"on va faire quelque chose"</i> !
-	</p>
-	<p>L'idée : <strong>recréer la pause café via un chat anonyme</strong>.</p>
-	<p>
-		En utilisant les adresses email professionnelles, nous permettons ainsi de mettre en
-		relation toutes les personnes d'une même structure (entreprise, administration, association,
-		école ...).
-	</p>
-	<p>
-		Après quelques mois de réflexions, programmation, dessins, rédaction, fous rires et un
-		changement de nom... Décompresso a vu le jour en janvier 2021. 🥳
-	</p>
+		<h1>{{ t('team.title') }}</h1>
+		<div fxLayout="row wrap" fxLayoutAlign="center center" class="center mb2">
+			<img
+				src="assets/equipe.png"
+				id="the-team"
+				class="photo m2"
+				alt="L'équipe Décompresso"
+				height="260px"
+			/>
+			<img
+				src="assets/equipe_fun.png"
+				id="the-fun-team"
+				class="photo m2"
+				alt="L'équipe Décompresso incognito"
+				height="280px"
+				fxFlexOrder.lt-md="3"
+			/>
+			<div class="left-align my2" [innerHTML]="t('team.content')"></div>
+		</div>
 
-	<h1>L'équipe derrière le projet</h1>
-	<div fxLayout="row wrap" fxLayoutAlign="center center" class="center mb2">
-		<img
-			src="assets/equipe.png"
-			id="the-team"
-			class="photo m2"
-			alt="L'équipe Décompresso"
-			height="260px"
-		/>
-		<img
-			src="assets/equipe_fun.png"
-			id="the-fun-team"
-			class="photo m2"
-			alt="L'équipe Décompresso incognito"
-			height="280px"
-			fxFlexOrder.lt-md="3"
-		/>
-		<div class="left-align my2">
-			<p>
-				Nous sommes Annabelle et Simon, deux anciens collègues de travail, tous deux adoptés
-				par la région des Alpes.<br />
-				A l'origine de notre collaboration, une envie commune de créer quelque chose de
-				différent et centré sur les relations humaines.
-			</p>
-			<p>
-				Nos valeurs communes nous rassemblent : l'humain, l'engagement, l'envie de faire
-				bouger les choses et le respect de la vie privée.
-			</p>
-			<p class="m0">
-				Nos personnalités compatibles (la plupart du temps), nos compétences complémentaires
-				(la plupart du temps), notre bonne humeur (la plupart du temps) et nos bidonnages
-				font de notre équipe un duo qui détonne&nbsp;!
-			</p>
+		<h1>{{ t('tomorrow.title') }}</h1>
+		<p [innerHTML]="t('tomorrow.intro')"></p>
+		<ul [innerHTML]="t('tomorrow.list')"></ul>
+		<nz-divider style="margin: 50px 0"></nz-divider>
+		<div class="center" style="margin-top: 50px; margin-bottom: 20px">
+			<div style="font-family: 'Carter One', serif; font-size: 24px">Décompresso</div>
+			<div style="margin: 5px 0">un produit</div>
+			<img
+				src="assets/wonderwork@2x.png"
+				id="logo-wonderwork"
+				class="m2"
+				alt="Logo WonderWork"
+				width="360px"
+				style="max-width: 95%"
+			/>
 		</div>
 	</div>
-
-	<h1>Et demain ?</h1>
-	<p>Deux grands objectifs :</p>
-	<ul>
-		<li>
-			<p>
-				L'amélioration continue de Décompresso, et pour cela on compte sur vous !<br />
-				Toute les bonnes idées sont les bienvenues sur
-				<a href="mailto:bonjour@decompresso.fr">bonjour@decompresso.fr</a>.
-			</p>
-		</li>
-
-		<li>
-			<p>
-				Continuer à proposer des outils qui placent l'humain au centre, notamment en
-				entreprise.<br />
-				On espère donc que Décompresso soit le premier d'une longue série !
-			</p>
-		</li>
-	</ul>
-	<nz-divider style="margin: 50px 0"></nz-divider>
-	<div class="center" style="margin-top: 50px; margin-bottom: 20px">
-		<div style="font-family: 'Carter One', serif; font-size: 24px">Décompresso</div>
-		<div style="margin: 5px 0">un produit</div>
-		<img
-			src="assets/wonderwork@2x.png"
-			id="logo-wonderwork"
-			class="m2"
-			alt="Logo WonderWork"
-			width="360px"
-			style="max-width: 95%"
-		/>
-	</div>
-</div>
+</ng-container>

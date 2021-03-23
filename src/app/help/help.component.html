@@ -1,202 +1,211 @@
 <div class="main-container xs-padding">
-	<div class="page-title">Foire aux questions</div>
+	<ng-container *transloco="let t; read: 'help'">
+		<div class="page-title">{{ t('page_title') }}</div>
+	</ng-container>
 
 	<h1>Décompresso</h1>
 	<section id="target">
-		<h2>Qui peut utiliser Décompresso&nbsp;?</h2>
-		Toutes les personnes majeures ayant une adresse email d'entreprise, d'université,
-		d'association, d'administration publique, d'hôpital... tout le monde est le bienvenu chez
-		nous&nbsp;!
+		<ng-container *transloco="let t; read: 'help.target'">
+			<h2 [innerHTML]="t('title')"></h2>
+			<div [innerHTML]="t('content')"></div>
+		</ng-container>
 	</section>
 
 	<section id="privacy">
-		<h2>Comment est garanti mon anonymat&nbsp;?</h2>
-		<nz-alert
-			nzType="success"
-			nzIconType="safety-certificate"
-			nzShowIcon
-			[nzDescription]="privacyInfoTpl"
-		>
-			<ng-template #privacyInfoTpl>
-				L'intégralité de vos interactions dans le salon se fait via votre pseudo. Personne
-				n'a accès à votre adresse email pro, et celle-ci est stockée dans un espace sécurisé
-				et isolé. Décompresso est un service totalement indépendant et n'a donc aucune
-				obligation vis-à-vis de votre employeur.
-			</ng-template></nz-alert
-		>
+		<ng-container *transloco="let t; read: 'help.privacy'">
+			<h2 [innerHTML]="t('title')"></h2>
+			<nz-alert
+				nzType="success"
+				nzIconType="safety-certificate"
+				nzShowIcon
+				[nzDescription]="privacyInfoTpl"
+			>
+				<ng-template #privacyInfoTpl>
+					<div [innerHTML]="t('content')"></div>
+				</ng-template>
+			</nz-alert>
+		</ng-container>
 	</section>
 
 	<section id="segmentation">
-		<h2>Comment être sûr que seuls mes collègues peuvent rejoindre le salon&nbsp;?</h2>
-		Pour créer un salon, nous nous basons sur le nom de domaine de votre adresse email. Il
-		s'agit de la partie après le @ de votre email (exemple : <i>joanne@danone.fr</i>, le nom de
-		domaine est <i>danone.fr</i>). Toutes les personnes ayant une adresse email avec exactement
-		le même nom de domaine sont donc regroupées ensemble.
-		<section class="callout" style="border-color: #43da18">
-			Par exemple, ces personnes seront bien associées au même salon :
-			<ul>
-				<li>sofiane@<strong>danone.fr</strong></li>
-				<li>elena@<strong>danone.fr</strong></li>
-				<li>dexter@<strong>danone.fr</strong></li>
-			</ul>
-		</section>
-		<section class="callout" style="border-color: #ff1818">
-			Attention cependant, les emails des domaines suivants
-			<u>ne seront pas dans le même salon</u> :
-			<ul>
-				<li>charly@<strong>compta-danone.fr</strong></li>
-				<li>samantha@<strong>pro.danone.fr</strong></li>
-				<li>jason@<strong>danone.com</strong></li>
-			</ul>
-		</section>
-		<nz-alert nzType="info" nzShowIcon [nzDescription]="segmentationInfoTpl">
-			<ng-template #segmentationInfoTpl
-				>Afin d'être sûrs que la personne fait bien partie de l'entreprise, nous donnons
-				l'accès au salon uniquement après une procédure de validation de l'adresse email. Si
-				vous n'avez pas accès à la boite mail avec laquelle vous essayez de créer un compte,
-				la création du compte ne sera donc pas possible.</ng-template
-			></nz-alert
-		>
+		<ng-container *transloco="let t; read: 'help.segmentation'">
+			<h2 [innerHTML]="t('title')"></h2>
+			<div [innerHTML]="t('content.p1')"></div>
+			<section class="callout" style="border-color: #43da18">
+				<div [innerHTML]="t('content.callout1.intro')"></div>
+				<ul [innerHTML]="t('content.callout1.list')"></ul>
+			</section>
+			<section class="callout" style="border-color: #ff1818">
+				<div [innerHTML]="t('content.callout2.intro')"></div>
+				<ul [innerHTML]="t('content.callout2.list')"></ul>
+			</section>
+			<nz-alert nzType="info" nzShowIcon [nzDescription]="segmentationInfoTpl">
+				<ng-template #segmentationInfoTpl>
+					<div [innerHTML]="t('content.p2')"></div>
+				</ng-template>
+			</nz-alert>
+		</ng-container>
 	</section>
 
 	<section id="boss">
-		<h2>Est-ce que mon big boss peut s'inscrire&nbsp;?</h2>
-		Tout le monde peut s'inscrire, mais chacun est anonyme. Il est donc impossible de savoir qui
-		est derrière un pseudo... c'est ce qui fait le charme de Décompresso !
+		<ng-container *transloco="let t; read: 'help.boss'">
+			<h2 [innerHTML]="t('title')"></h2>
+			<div [innerHTML]="t('content')"></div>
+		</ng-container>
 	</section>
 
 	<h1>Le chat</h1>
 
 	<section id="invite">
-		<h2>Comment inviter des collègues&nbsp;?</h2>
-		La menu d'invitation se trouve sous la liste des membres du salon.
-		<br />
-		Et s'il n'y a plus d'invitation disponible ? Aucun souci : le nombre de nombre de membre du
-		salon est illimité ! Parlez de nous sur les réseaux, par email ou sur Post-it ; vos
-		collègues pourront rejoindre votre salon à n'importe quel moment.
+		<ng-container *transloco="let t; read: 'help.invite'">
+			<h2 [innerHTML]="t('title')"></h2>
+			<div [innerHTML]="t('content')"></div>
+		</ng-container>
 	</section>
 
 	<section id="purge">
-		<h2>En quoi consiste la <i>chasse d'eau</i>&nbsp;?</h2>
-		La <i>chasse d'eau</i> consiste à vider les discussions du chat. Elle intervient
-		<strong>chaque dimanche soir à minuit</strong>.<br />
-		Et le lundi matin, on rattaque sur une page blanche&nbsp;!
-		<section class="callout">
-			Les membres ayant quitté le salon dans la semaine passée sont également retirés de la
-			liste.
-		</section>
+		<ng-container *transloco="let t; read: 'help.purge'">
+			<h2 [innerHTML]="t('title')"></h2>
+			<div [innerHTML]="t('content')"></div>
+		</ng-container>
 	</section>
 
 	<section id="nickname">
-		<h2>Puis-je changer de pseudo&nbsp;?</h2>
-		À la création de votre compte il vous est attribué un pseudo unique dans votre salon. Si
-		celui-ci ne vous convient pas, vous pouvez alors en choisir un autre parmi une liste de
-		propositions. Après la validation de votre choix, celui-ci n'est plus modifiable.
+		<ng-container *transloco="let t; read: 'help.nickname'">
+			<h2 [innerHTML]="t('title')"></h2>
+			<div [innerHTML]="t('content')"></div>
+		</ng-container>
+	</section>
+
+	<section id="nickname_extra" *ifLang="'fun'">
+		<ng-container *transloco="let t; read: 'help.nickname_extra'">
+			<h2 [innerHTML]="t('title')"></h2>
+			<div class="center" [innerHTML]="t('content')"></div>
+		</ng-container>
 	</section>
 
 	<section id="likes">
-		<h2>Pouces "J'aime" et "Je n'aime pas"</h2>
-		Vous pouvez apposer un pouce sur les messages de n'importe quel membre du salon (même les
-		vôtres). Pour cela, {{ isTouchDevice ? 'restez appuyé' : 'passez votre souris ' }} sur un
-		message puis sélectionnez l'icône
-		<span class="reaction-icon">👍</span>
-		ou
-		<span class="reaction-icon">👎</span>.
+		<ng-container *transloco="let t; read: 'help.likes'">
+			<h2 [innerHTML]="t('title')"></h2>
+			<div
+				[innerHTML]="
+					t('content', {
+						action: isTouchDevice ? 'rester appuyé' : 'passer la souris '
+					})
+				"
+			></div>
+		</ng-container>
 	</section>
 
 	<section id="mention">
-		<h2>Comment mentionner une personne&nbsp;?</h2>
-		Pour mentionner un membre du salon, ajoutez à votre message
-		<span nz-typography><kbd>@</kbd></span>
-		puis sélectionner son pseudo dans la liste.
-		<span class="nowrap">
-			Exemple :
-			<span nz-typography><kbd>@MeuleuseEngourdie</kbd></span>
-		</span>
+		<ng-container *transloco="let t; read: 'help.mention'">
+			<h2 [innerHTML]="t('title')"></h2>
+			<span [innerHTML]="t('before_at')"></span>
+			&nbsp;<span nz-typography><kbd>@</kbd></span
+			>&nbsp;
+			<span [innerHTML]="t('after_at')"></span>
+			<span class="nowrap">
+				Exemple :
+				<span nz-typography><kbd>@MeuleuseEngourdie</kbd></span>
+			</span>
+		</ng-container>
 	</section>
 
 	<section id="delete-message">
-		<h2>Comment supprimer un message&nbsp;?</h2>
-		Vous pouvez supprimer l'un de vos messages via l'icône
-		<i nz-icon nzType="close-circle" nzTheme="twotone"></i> qui apparait en haut à droite des
-		vos messages {{ isTouchDevice ? 'en restant appuyé' : 'en passant la souris ' }} dessus.
+		<ng-container *transloco="let t; read: 'help.delete_message'">
+			<h2 [innerHTML]="t('title')"></h2>
+			<span [innerHTML]="t('before_icon')"></span>
+			&nbsp;<i nz-icon nzType="close-circle" nzTheme="twotone"></i>&nbsp;
+			<span
+				[innerHTML]="
+					t('after_icon', {
+						action: isTouchDevice ? 'en restant appuyé' : 'en passant la souris '
+					})
+				"
+			></span>
+		</ng-container>
 	</section>
 
 	<h1>Modération</h1>
 
 	<section id="report">
-		<h2>Comment signaler un utilisateur&nbsp;?</h2>
-		Vous pouvez signaler un message que vous estimez incorrect via l'icône
-		<i nz-icon nzType="exclamation-circle" nzTheme="twotone" twoToneColor="orange"></i>
-		qui apparait en haut à droite des messages
-		{{ isTouchDevice ? 'en restant appuyé' : 'en passant votre souris' }} dessus. Une fenêtre
-		vous demandera alors de confirmer votre choix. A réception de votre signalement, nous
-		étudierons votre demande et procéderons ou non à la modération du message.
-		<section class="callout">
-			La meilleure modération reste vous-même : rien ne vous empêche de prévenir l'utilisateur
-			concerné que son message est inapproprié via la fonction
-			<a routerLink="." fragment="mention">mention</a> dans votre message.
-		</section>
+		<ng-container *transloco="let t; read: 'help.report'">
+			<h2 [innerHTML]="t('title')"></h2>
+			<span [innerHTML]="t('before_icon')"></span>
+			&nbsp;<i nz-icon nzType="exclamation-circle" nzTheme="twotone" twoToneColor="orange"></i
+			>&nbsp;
+			<span
+				[innerHTML]="
+					t('after_icon', {
+						action: isTouchDevice ? 'en restant appuyé' : 'en passant la souris'
+					})
+				"
+			></span>
+			<section class="callout">
+				<span [innerHTML]="t('callout.before_link')"></span>
+				&nbsp;<a routerLink="." fragment="mention" [innerText]="t('callout.link')"></a
+				>&nbsp; <span [innerHTML]="t('callout.after_link')"></span>
+			</section>
+		</ng-container>
 	</section>
 
 	<section id="moderation">
-		<h2>Quel type de modération sera appliquée&nbsp;?</h2>
-		La modération d'un message suite à un signalement reste à la discrétion de l'équipe de
-		Décompresso, et le message sera ou non supprimé. En cas de contenu jugé inadapté, l'auteur
-		du message sera informé par email de la modération, qui pourra aller de la suppression du
-		message à la suppression de son compte utilisateur.
-		<section class="callout">
-			Le pseudo de l'utilisateur qui a demandé la modération ne sera jamais révélé à l'auteur
-			du message litigieux.
-		</section>
+		<ng-container *transloco="let t; read: 'help.moderation'">
+			<h2 [innerHTML]="t('title')"></h2>
+			<div [innerHTML]="t('content')"></div>
+			<section class="callout" [innerHTML]="t('callout')"></section>
+			<section *ifLang="'fun'" class="callout fun" [innerHTML]="t('callout_fun')"></section>
+		</ng-container>
 	</section>
 
 	<h1>Autres</h1>
 
 	<section id="delete-account">
-		<h2>Comment supprimer mon compte&nbsp;?</h2>
-		Vous pouvez supprimer votre compte à tout moment en passant par le menu
-		<span [class.italic]="!isTouchDevice"
-			>{{ isTouchDevice ? 'latéral' : '"Mon compte"' }} </span
-		>une fois connecté à votre salon. Nous serions ravis que vous nous laissiez un mot sur
-		<a href="mailto:support@decompresso.fr">support@decompresso.fr</a> pour nous dire ce qui
-		vous a déplu.
+		<ng-container *transloco="let t; read: 'help.delete_account'">
+			<h2 [innerHTML]="t('title')"></h2>
+			<div
+				[innerHTML]="t('content', { action: isTouchDevice ? 'latéral' : 'Mon compte' })"
+			></div>
+		</ng-container>
 	</section>
 
 	<section id="deleted-account">
-		<h2>Le compte d'un membre a été clôturé</h2>
-		<div>
-			Lorsqu'un utilisateur a quitté Décompresso, son pseudo et ses messages restent visible
-			dans votre salon jusqu'à la prochaine <i>chasse d'eau</i>. Cela vous permet de retrouver
-			un collègue les jours suivants même s'il ne fait plus partie de l'application.
-			<br />
-			<section class="callout">
-				<b>Le compte d'un utilisateur peut être clôturé pour deux raisons :</b>
-				<ul>
-					<li>Celui-ci a décider de quitter Décompresso.</li>
-					<li>
-						Son compte a été bloqué suite à une entorse aux règles d'or du salon ou aux
-						<a routerLink="/cgu">conditions générales d'utilisation</a>.
-					</li>
-				</ul>
-			</section>
-		</div>
+		<ng-container *transloco="let t; read: 'help.deleted_account'">
+			<h2 [innerHTML]="t('title')"></h2>
+			<div>
+				<span [innerHTML]="t('content')"></span>
+				<br />
+				<section class="callout">
+					<b>Le compte d'un utilisateur peut être clôturé pour deux raisons :</b>
+					<ul>
+						<li>Celui-ci a décidé de quitter Décompresso.</li>
+						<li>
+							Son compte a été bloqué suite à une entorse aux règles d'or du salon ou
+							aux
+							<a routerLink="/cgu">conditions générales d'utilisation</a>.
+						</li>
+					</ul>
+				</section>
+				<section class="callout fun" *ifLang="'fun'">
+					<ul>
+						<li>S'il écoute encore Britney Spears. Bon, ok, il peut rester...</li>
+					</ul>
+				</section>
+			</div>
+		</ng-container>
 	</section>
 
 	<section id="channels">
-		<h2>
-			Puis-je accéder à un canal de discussion restreint à mon équipe, mon magasin, ma
-			classe... ?
-		</h2>
-		Non, il n'existe pas pour le moment de groupes dans un salon. Mais peut-être demain !<br />
-		Si cette idée vous intéresse, faites-nous signe sur
-		<a href="mailto:bonjour@decompresso.fr">bonjour@decompresso.fr</a> en détaillant votre idée.
+		<ng-container *transloco="let t; read: 'help.channels'">
+			<h2 [innerHTML]="t('title')"></h2>
+			<div [innerHTML]="t('content')"></div
+		></ng-container>
 	</section>
 
 	<section id="feedback">
-		<h2>Comment communiquer avec l'équipe Décompresso&nbsp;?</h2>
-		Vous avez une idée, un commentaire (constructif de préférence 🙃) ou une question ?
-		Adressez-nous un petit mail à
-		<a href="mailto:support@decompresso.fr">support@decompresso.fr</a>.
+		<ng-container *transloco="let t; read: 'help.feedback'">
+			<h2 [innerHTML]="t('title')"></h2>
+			<div [innerHTML]="t('content')"></div>
+		</ng-container>
 	</section>
 </div>

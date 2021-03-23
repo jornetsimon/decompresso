@@ -1,0 +1,92 @@
+{
+	"page_title": "Foire aux questions",
+	"target": {
+		"title": "Qui peut utiliser Décompresso&nbsp;?",
+		"content": "Toutes les personnes majeures ayant une adresse email d'entreprise, d'université, d'association, d'administration publique, d'hôpital... tout le monde est le bienvenu chez nous ! Avoir des doigts pour taper, c'est bien aussi."
+	},
+	"privacy": {
+		"title": "Comment est garanti mon anonymat&nbsp;?",
+		"content": "L'intégralité de tes interactions dans le salon se fait via ton pseudo. Personne n'a accès à ton adresse email pro, et celle-ci est stockée dans un espace sécurisé et isolé. Décompresso est un service totalement indépendant et n'a donc aucune obligation vis-à-vis de ton employeur."
+	},
+	"segmentation": {
+		"title": "Comment être sûr que seuls mes collègues peuvent rejoindre le salon&nbsp;?",
+		"content": {
+			"p1": "Pour créer un salon, nous nous basons sur le nom de domaine de ton adresse email. Il s'agit de la partie après le @ de ton email (exemple : <i>joanne@danone.fr</i>, le nom de domaine est <i>danone.fr</i>). Toutes les personnes ayant une adresse email avec exactement le même nom de domaine sont donc regroupées ensemble.",
+			"callout1": {
+				"intro": "Par exemple, ces personnes seront bien associées au même salon :",
+				"list": "<li>dora@<strong>danone.fr</strong></li><li>franklin@<strong>danone.fr</strong></li><li>clover@<strong>danone.fr</strong></li>"
+			},
+			"callout2": {
+				"intro": "Attention cependant, les emails des domaines suivants <u>ne seront pas dans le même salon</u> :",
+				"list": "<li>riri@<strong>compta-danone.fr</strong></li><li>fifi@<strong>pro.danone.fr</strong></li><li>loulou@<strong>danone.com</strong></li>"
+			},
+			"p2": "Afin d'être sûrs que la personne fait bien partie de l'entreprise, nous donnons l'accès au salon uniquement après une procédure de validation de l'adresse email. Si tu n'as pas accès à la boîte mail avec laquelle tu essaies de créer un compte, la création du compte ne sera donc pas possible."
+		}
+	},
+	"boss": {
+		"title": "Est-ce que mon big boss peut s'inscrire&nbsp;?",
+		"content": "Oui, comme tout le monde. C'est peut-être <i>BaraqueAFrite</i>, <i>JeanBon</i> ou <i>ChaiseBancale</i>, va savoir.<br/>Impossible de savoir qui est derrière un pseudo... c'est ce qui fait le charme de Décompresso !"
+	},
+	"invite": {
+		"title": "Comment inviter des collègues&nbsp;?",
+		"content": "Le menu d'invitation se trouve sous la liste des membres du salon.<br/>Et s'il n'y a plus d'invitations disponible ? Aucun souci : le nombre de nombre de membres du salon est illimité ! Parle de nous sur les réseaux, par email ou sur Post-it ; tes collègues pourront rejoindre le salon à n'importe quel moment."
+	},
+	"purge": {
+		"title": "En quoi consiste la <i>chasse d'eau</i>&nbsp;?",
+		"content": "La <i>chasse d'eau</i> consiste à vider les discussions du chat. Elle intervient <strong>chaque dimanche soir à minuit</strong>.<br/>Surtout n'oublie pas de passer un coup de brosse après. \uD83E\uDDF9 Merci.<br/><section class='callout'>Les membres ayant quitté le salon dans la semaine passée sont également retirés de la liste.</section>"
+	},
+	"nickname": {
+		"title": "Puis-je changer de pseudo&nbsp;?",
+		"content": "À la création de ton compte, un pseudo unique t'est attribué. Si celui-ci ne te convient pas, tu peux alors en choisir un autre parmi une liste de propositions. Après la validation de ton choix, il n'est plus modifiable."
+	},
+	"nickname_extra": {
+		"title": "Et si les pseudos sont tous nuls&nbsp;?",
+		"content": "<img src='https://media1.tenor.com/images/c0819c639f5f3184d3c549b7dcb4b083/tenor.gif?itemid=17547411' alt='Oh merde' />"
+	},
+	"likes": {
+		"title": "Pouces \"J'aime\" et \"Je n'aime pas\"",
+		"content": "Tu peux apposer un pouce sur les messages de n'importe quel membre du salon (même les tiens). Pour cela, {{action}} sur un message puis sélectionner l'icône <span class='reaction-icon'>\uD83D\uDC4D</span> ou <span class='reaction-icon'>\uD83D\uDC4E</span>."
+	},
+	"mention": {
+		"title": "Comment mentionner une personne&nbsp;?",
+		"before_at": "Pour mentionner un membre du salon, ajoute à ton message",
+		"after_at": "puis sélectionne son pseudo dans la liste."
+	},
+	"delete_message": {
+		"title": "Comment supprimer un message&nbsp;?",
+		"before_icon": "Tu peux supprimer l'un de tes messages via l'icône",
+		"after_icon": "qui apparait en haut à droite ce celui-ci {{ action }} dessus."
+	},
+	"report": {
+		"title": "Comment signaler un utilisateur&nbsp;?",
+		"before_icon": "Tu as la possibilité de signaler un message que tu estimes douteux via l'icône",
+		"after_icon": "qui apparait en haut à droite des messages, {{ action }} dessus. Une fenêtre te demandera alors de confirmer ton choix. À réception du signalement, nous étudierons ta demande et procéderons ou non à la modération du message.",
+		"callout": {
+			"before_link": "Ceci étant dit, nous t'invitons également à",
+			"link": "répondre directement à ton interlocuteur",
+			"after_link": "en soulignant son comportement. Après tout, c'est pas un type qui s'appelle <i>PouletFrit</i> qui va faire la loi dans le salon, non ?"
+		}
+	},
+	"moderation": {
+		"title": "Quel type de modération sera appliquée&nbsp;?",
+		"content": "La modération d'un message suite à un signalement reste à la discrétion de l'équipe de Décompresso, et le message sera ou non supprimé. En cas de contenu jugé inadapté, l'auteur du message sera informé par email de la modération, qui pourra aller de la suppression du message à la suppression de son compte utilisateur.",
+		"callout": "Le pseudo de l'utilisateur qui a demandé la modération ne sera jamais révélé à l'auteur du message litigieux.",
+		"callout_fun": "L'option <i>karma</i> est actuellement en délibération avec les autorités cosmiques."
+	},
+	"delete_account": {
+		"title": "Comment supprimer mon compte&nbsp;?",
+		"content": "Tu peux supprimer ton compte à tout moment en passant par le menu <i>{{ action }}</i> une fois connecté au salon. N'hésite pas à nous laisser un petit mot sur <a href='mailto:support@decompresso.fr'>support@decompresso.fr</a> pour nous dire ce qui t'a déplu."
+	},
+	"deleted_account": {
+		"title": "Le compte d'un membre a été clôturé",
+		"content": "Lorsqu'un utilisateur a quitté Décompresso, son pseudo et ses messages restent visibles dans votre salon jusqu'à la prochaine <i>chasse d'eau</i>. Cela permet de retrouver un collègue les jours suivants son départ même s'il ne fait plus partie de l'application."
+	},
+	"channels": {
+		"title": "Puis-je accéder à un canal de discussion restreint à mon équipe, mon magasin, ma classe... ?",
+		"content": "Non, il n'existe pas pour le moment de groupes dans un salon. Mais peut-être demain !<br /> Si cette idée t'intéresse, fais-nous signe sur <a href='mailto:bonjour@decompresso.fr'>bonjour@decompresso.fr</a> en détaillant ton idée."
+	},
+	"feedback": {
+		"title": "Comment communiquer avec l'équipe Décompresso&nbsp;?",
+		"content": "Tu as une idée, un commentaire, une question, une lettre d'amour, ou une chanson traditionnelle scandinave sur la mer et la boisson ?<br/>Adresse-nous un petit mail à <a href='mailto:support@decompresso.fr'>support@decompresso.fr</a>."
+	}
+}

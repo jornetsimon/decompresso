@@ -21,7 +21,12 @@ export class HelpComponent implements OnInit, AfterViewInit {
 	ngAfterViewInit() {
 		this.route.fragment.pipe(first()).subscribe((fragment) => {
 			if (fragment) {
-				(document.querySelector(`#${fragment}`) as HTMLElement).classList.add('target');
+				console.log(fragment, document.querySelector(`#${fragment}`));
+				const el = document.querySelector(`#${fragment}`) as HTMLElement;
+				setTimeout(() => {
+					el.scrollIntoView({ behavior: 'smooth' });
+					el.classList.add('target');
+				}, 1500);
 			}
 		});
 	}

@@ -1,3 +1,32 @@
 {
-	"headline": "On est les best 😎"
+	"sub_headline": "qui que tu sois, quoi que tu fasses",
+	"section1": {
+		"title": "\uD83D\uDCBC + \uD83D\uDCAC + \uD83D\uDD76",
+		"sub1": {
+			"title": "Un concept si bête que personne n'y avait jamais pensé",
+			"description": "Vous, vous savez qui vous êtes. C'est déjà bien."
+		},
+		"sub2": {
+			"title": "Tous incognito",
+			"description": "chacun son pseudo \uD83D\uDD76"
+		}
+	},
+	"section2": {
+		"title": "Parle un coup, ça ira mieux",
+		"sub": "Le bureau, c'est plein de gens bizarres. Mais en même temps, tu n'as pas vraiment le choix.<br/><br/>Partage ce que tu penses, tu découvriras peut-être que tu n'es pas tout seul à penser pareil. \uD83D\uDC40"
+	},
+	"section3": {
+		"intro": "Une messagerie instantanée",
+		"list": "<li><strong>gratuite</strong> et pour toujours, c'est la maison qui offre</li><li><strong>simple</strong> et accessible, surtout si tu sais écrire</li><li><strong>indépendante</strong>, et donc sans embrouille</li>"
+	},
+	"section4": {
+		"sub1": {
+			"title": "Tes données personnelles, garde-les au chaud",
+			"description": "La <span class='dot-underline'>seule</span> information nécessaire : <span class='dot-underline'>ton email professionnel</span>.<br/>Après, tu peux aussi nous parler de ta chanteuse préférée, mais c'est toi qui vois. \uD83D\uDC69\u200D\uD83C\uDFA4 "
+		},
+		"sub2": {
+			"title": "Qui dimanche dit page blanche",
+			"description": "Chaque dimanche soir, notre <i>chasse d'eau™️</i> supprime l'historique des messages de la semaine. Comme ça même tes plus grosses bêtises disparaissent comme par magie. Elle est pas belle la vie ? ✨"
+		}
+	}
 }

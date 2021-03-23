@@ -1,3 +1,6 @@
+$section1-unicorn-color: #ff8dc6;
+$section3-unicorn-color: #0087c3;
+
 ::ng-deep mas-home {
 	flex-grow: 1;
 	display: flex;
@@ -167,6 +170,10 @@
 	}
 }
 
+.shape-fill {
+	transition: fill 0.5s;
+}
+
 .custom-shape-divider-bottom-1610457773 {
 	position: absolute;
 	bottom: 0;
@@ -174,6 +181,10 @@
 	width: 100%;
 	overflow: hidden;
 	line-height: 0;
+
+	.unicorn & .shape-fill {
+		fill: $section1-unicorn-color !important;
+	}
 }
 
 .custom-shape-divider-bottom-1610457773 svg {
@@ -194,6 +205,10 @@
 	width: 100%;
 	overflow: hidden;
 	line-height: 0;
+
+	.unicorn & .shape-fill {
+		fill: $section1-unicorn-color !important;
+	}
 }
 
 .custom-shape-divider-top-1610532935 svg {
@@ -215,6 +230,10 @@
 	overflow: hidden;
 	line-height: 0;
 	transform: rotate(180deg);
+
+	.unicorn & .shape-fill {
+		fill: $section3-unicorn-color !important;
+	}
 }
 
 .custom-shape-divider-bottom-1610533017 svg {
@@ -262,7 +281,19 @@
 	line-height: 175%;
 }
 
+#section1,
+#section2,
+#section3,
+#section4 {
+	& > div:first-child {
+		transition: background-color 0.5s;
+	}
+}
+
 #section1 {
+	.unicorn & > div:first-child {
+		background-color: $section1-unicorn-color !important;
+	}
 	.main-container {
 		padding-bottom: 29px;
 
@@ -274,6 +305,10 @@
 	.section-title {
 		font-size: clamp(28px, 2vw, 32px);
 		font-weight: 300;
+
+		.unicorn & {
+			font-size: clamp(42px, 10vw, 64px);
+		}
 	}
 	.section-subtitle {
 		padding-top: 15px;
@@ -301,13 +336,19 @@
 }
 @media (max-width: 959px) {
 	#section1 .section-title {
-		margin-top: 1em;
+		margin-top: 0.75em;
 	}
 }
 
 @media (min-width: 570px) {
 	#section3 .list {
 		padding-left: 60px;
+	}
+}
+
+#section3 {
+	.unicorn & > div:first-child {
+		background-color: $section3-unicorn-color !important;
 	}
 }
 
@@ -320,12 +361,6 @@
 	.section-content {
 		font-size: 17px;
 	}
-}
-
-.dot-underline {
-	border-bottom: 1px solid #a2a2a2;
-	border-bottom-style: dashed;
-	padding-bottom: 2px;
 }
 
 .signup-button {

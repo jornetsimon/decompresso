@@ -9,6 +9,7 @@ import {
 	ExclamationCircleTwoTone,
 	SafetyCertificateOutline,
 } from '@ant-design/icons-angular/icons';
+import { TRANSLOCO_SCOPE } from '@ngneat/transloco';
 
 const helpRoutes: Routes = [
 	{
@@ -29,5 +30,6 @@ const helpRoutes: Routes = [
 			SafetyCertificateOutline,
 		]),
 	],
+	providers: [{ provide: TRANSLOCO_SCOPE, useValue: 'help' }],
 })
 export class HelpModule {}

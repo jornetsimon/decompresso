@@ -1,0 +1,16 @@
+{
+	"page_title": "À propos de nous",
+	"project": {
+		"title": "Décompresso c'est quoi ?",
+		"content": "<p>On aurait pu te vendre Décompresso comme la révolution de la décennie, le produit qui va soulever le monde et faire trembler Mark Zuckerberg dans ses claquettes bleu marine. En fait, c&#39;est simplement l&#39;histoire de deux trentenaires qui ont voulu pimenter les journées de travail.</p>\n<p>Nous sommes en 2020, Daft Punk existe encore, Donald Trump règne sur le monde, et on nous explique qu&#39;en fait on va tous travailler de chez nous pour éviter l&#39;apocalypse. Les étudiants prennent racine dans leurs 15m2, les parents finissent par trouver refuge aux toilettes pour leurs visio-conférences, et les instagrammeurs en sont réduits à prendre des photos de leur jardin.</p>\n<p>Conséquence directe : exit les pauses café à raconter son weekend, les vannes de bureau et les débriefs en sortie de réunion. D&#39;un coup, le travail, c&#39;est tout de suite moins drôle.</p>\n<p>Alors on a voulu apporter quelque chose. Et on s&#39;est dit, tant qu&#39;à faire, autant y aller franco.</p>\n<p>L&#39;idée : <strong>réinventer la pause café avec un chat entre collègues</strong>. </p>\n<p>Whaou, on est des génies \uD83E\uDD2F. Mais comme ça existe déjà, on a ajouté un petit détail qui change tout : <strong>tout le monde est anonyme</strong>.</p>\n<p>Pour ça, on regroupe les personnes avec le domaine de leur adresse email, et on donne à chacun un pseudo. De cette manière, un chat est créé pour chaque entreprise (ou association, université...). Tu vas donc y trouver aussi bien tes collègues de bureau que ceux à l&#39;autre bout de la France. Mais la règle est toujours la même : <u>personne ne sait qui est qui</u>.</p>"
+	},
+	"team": {
+		"title": "L'équipe derrière le projet",
+		"content": "<p>Nous sommes Annabelle et Simon, deux anciens collègues de travail qui ont réussi à se supporter pendant 5 ans par un miracle inexplicable.</p>\n<p>Nos ambitions et nos valeurs nous ont rassemblés pour créer ce projet : l&#39;humain, l&#39;engagement, le respect de la vie privée et bien sûr, en bons hauts savoyards, l&#39;amour de la raclette.</p>\n<p>Nos personnalités compatibles (la plupart du temps), nos compétences complémentaires (la plupart du temps) et notre bonne humeur (la plupart du temps) font de notre équipe un duo qui détone&nbsp;!</p>"
+	},
+	"tomorrow": {
+		"title": "Et demain ?",
+		"intro": "Deux grands objectifs :",
+		"list": "<li><p>Que tu t&#39;inscrives.</p></li>\n<li><p>Améliorer Décompresso, avec ton aide.\nTu peux d&#39;ailleurs nous partager tes bonnes idées sur <a href='mailto:bonjour@decompresso.fr'>bonjour@decompresso.fr</a>.</p></li>\n<li><p>Continuer à proposer des outils qui placent l&#39;humain au centre, notamment en entreprise.</p></li>\n<li><p>Éradiquer la faim dans le monde.</p></li>\n<li><p>Trouver un vrai photographe parce que là franchement c&#39;est la loose.</p></li>"
+	}
+}

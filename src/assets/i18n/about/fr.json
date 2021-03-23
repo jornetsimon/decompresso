@@ -1,0 +1,16 @@
+{
+	"page_title": "À propos de nous",
+	"project": {
+		"title": "Décompresso c'est quoi ?",
+		"content": "<p>Décompresso est né un matin de septembre 2020 au cœur du pays du reblochon \uD83C\uDFD4. </p><p>Au début de son existence une simple idée un peu loufoque pour Annabelle et Simon : <strong>pouvoir communiquer au travail de façon plus libérée</strong>.</p><p>La Covid19 fait alors son grand retour en pays gaulois et renvoie au bercail bon nombre de salariés. Un constat fait alors mouche, dans un contexte anxiogène et de limitation des contacts, il faut recréer du lien dans les entreprises. La décision est prise : <i>\"on va faire quelque chose\"</i> !</p><p>L'idée : <strong>recréer la pause café via un chat anonyme</strong>.</p><p>En utilisant les adresses email professionnelles, nous permettons ainsi de mettre en relation toutes les personnes d'une même structure (entreprise, administration, association, école ...).</p><p>Après quelques mois de réflexions, programmation, dessins, rédaction, fous rires et un changement de nom... Décompresso a vu le jour en janvier 2021. \uD83E\uDD73</p>"
+	},
+	"team": {
+		"title": "L'équipe derrière le projet",
+		"content": "<p>Nous sommes Annabelle et Simon, deux anciens collègues de travail, tous deux adoptés par la région des Alpes.<br /> A l'origine de notre collaboration, une envie commune de créer quelque chose de différent et centré sur les relations humaines.</p><p>Nos valeurs communes nous rassemblent : l'humain, l'engagement, l'envie de faire bouger les choses et le respect de la vie privée.</p><p class='m0'>Nos personnalités compatibles (la plupart du temps), nos compétences complémentaires (la plupart du temps), notre bonne humeur (la plupart du temps) et nos bidonnages font de notre équipe un duo qui détone&nbsp;!"
+	},
+	"tomorrow": {
+		"title": "Et demain ?",
+		"intro": "Plusieurs grands objectifs :",
+		"list": "<li><p>L'amélioration continue de Décompresso, et pour cela on compte sur vous !<br /> Toute les bonnes idées sont les bienvenues sur <a href=\"mailto:bonjour@decompresso.fr\">bonjour@decompresso.fr</a>.</p></li><li><p>Continuer à proposer des outils qui placent l'humain au centre, notamment en entreprise.<br /> On espère donc que Décompresso soit le premier d'une longue série&nbsp;!</p></li>"
+	}
+}

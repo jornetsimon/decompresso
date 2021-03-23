@@ -204,6 +204,8 @@ figure figcaption {
 		content: '— ';
 	}
 }
+
+$languageSwitcherStickWidth: 767px;
 .language-switcher {
 	right: 10px;
 	position: absolute;
@@ -211,7 +213,7 @@ figure figcaption {
 	border-radius: 50px;
 	padding: 10px min(25px, 4vw);
 
-	@media (max-width: 767px) {
+	@media (max-width: $languageSwitcherStickWidth) {
 		position: fixed;
 		top: initial !important;
 		bottom: 3vh;
@@ -226,5 +228,17 @@ figure figcaption {
 		&.cookies-offset {
 			margin-bottom: 100px;
 		}
+	}
+}
+
+.dot-underline {
+	border-bottom: 1px solid #a2a2a2;
+	border-bottom-style: dashed;
+	padding-bottom: 2px;
+}
+
+.content {
+	@media (max-width: $languageSwitcherStickWidth) {
+		margin-bottom: 100px;
 	}
 }

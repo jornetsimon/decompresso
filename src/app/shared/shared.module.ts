@@ -41,6 +41,7 @@ import { NzSwitchModule } from 'ng-zorro-antd/switch';
 import { IfAdminDirective } from './if-admin.directive';
 import { TranslocoModule } from '@ngneat/transloco';
 import { LanguageSwitcherModule } from '../transloco/language-switcher/language-switcher.module';
+import { IfLangDirective } from '../transloco/if-lang.directive';
 
 // tslint:disable-next-line:readonly-array
 const icons: IconDefinition[] = [QuestionCircleOutline];
@@ -50,6 +51,7 @@ const components: ReadonlyArray<any> = [
 	CookiesConsentComponent,
 	AnalyticsEventDirective,
 	IfAdminDirective,
+	IfLangDirective,
 ];
 
 const modules: ReadonlyArray<any> = [
