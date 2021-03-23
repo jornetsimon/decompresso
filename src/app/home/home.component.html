@@ -147,7 +147,11 @@
 						</div>
 						<div fxFlex="0 0 70%" fxLayoutAlign="center center">
 							<img
-								src="assets/illustrations/chat_sample.svg"
+								[src]="
+									(languageService.lang$ | async) === 'fun'
+										? 'assets/illustrations/chat_sample_fun.svg'
+										: 'assets/illustrations/chat_sample.svg'
+								"
 								class="width-100"
 								alt="Concept"
 								style="/*min-width: 455px*/"

@@ -70,7 +70,7 @@ body {
 }
 @media (min-width: 1600px) {
 	.main-container {
-		min-width: 1600px;
+		max-width: 1600px;
 		padding: 0 120px;
 		margin: auto;
 	}
