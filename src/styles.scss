@@ -239,6 +239,6 @@ $languageSwitcherStickWidth: 767px;
 
 .content {
 	@media (max-width: $languageSwitcherStickWidth) {
-		margin-bottom: 100px;
+		padding-bottom: 100px;
 	}
 }
