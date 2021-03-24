@@ -318,14 +318,16 @@ $section3-unicorn-color: #0087c3;
 	}
 }
 
-#section2,
-#section4 {
-	.section-title {
-		color: #15e6cd;
-	}
-	.section-subtitle,
-	.section-content {
-		color: #4a5e90;
+.unicorn {
+	#section2,
+	#section4 {
+		.section-title {
+			color: #15e6cd;
+		}
+		.section-subtitle,
+		.section-content {
+			color: #4a5e90;
+		}
 	}
 }
 
