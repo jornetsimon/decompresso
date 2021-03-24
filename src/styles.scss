@@ -241,7 +241,7 @@ $languageSwitcherStickWidth: 767px;
 	padding-bottom: 2px;
 }
 
-.content {
+.content:not(.compact) {
 	@media (max-width: $languageSwitcherStickWidth) {
 		padding-bottom: 100px;
 	}
