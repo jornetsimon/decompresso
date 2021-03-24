@@ -10,7 +10,11 @@
 						fxLayoutAlign="space-between baseline"
 					>
 						<div class="domain">
-							<a [href]="room.domain" target="_blank" [title]="room.domain">
+							<a
+								[href]="'http://' + room.domain"
+								target="_blank"
+								[title]="room.domain"
+							>
 								{{ room.domain }}
 							</a>
 						</div>
