@@ -14,6 +14,9 @@ $card-radius: 10px;
 	padding: 30px;
 	border-radius: $card-radius;
 	box-shadow: -6px 12px 16px 0px rgb(0 0 0 / 15%);
+	::ng-deep .unicorn #floating-signin-container & {
+		box-shadow: -6px 12px 16px 0px rgb(117 142 205 / 15%);
+	}
 }
 @media (max-width: 424px) {
 	.card {

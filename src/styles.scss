@@ -78,7 +78,11 @@ body {
 
 ::selection {
 	color: white;
-	background: $main-color;
+	background: #50bbdd;
+
+	.unicorn & {
+		background-color: #ff8dc6;
+	}
 }
 
 .rough-annotation {

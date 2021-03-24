@@ -44,6 +44,21 @@ $section3-unicorn-color: #0087c3;
 	letter-spacing: 0.04em;
 	text-transform: uppercase;
 
+	transition: color 0.2s ease-out;
+
+	.unicorn & {
+		color: #4a5e90;
+	}
+
+	.main {
+		transition: color 0.2s ease-out;
+		.unicorn & {
+			color: #15e6cd;
+			filter: drop-shadow(0px 1px 0px #13ceb7);
+			letter-spacing: 3px;
+		}
+	}
+
 	.sub {
 		font-size: 0.25em;
 		line-height: normal;
@@ -103,16 +118,29 @@ $section3-unicorn-color: #0087c3;
 		width: 150px;
 		height: 150px;
 		color: #fff;
-		background: #1890ff;
+		background-color: #1890ff;
 		text-shadow: 0 -1px 0 #0000001f;
 		box-shadow: -4px 4px 0px 3px rgb(17 108 191);
 		border: 2px solid rgb(83 166 249);
-		transition: box-shadow 0.2s ease-out;
+		transition: box-shadow 0.2s ease-out, background-color 0.2s ease-out, border 0.2s ease-out;
+
+		.unicorn & {
+			background-color: #758ecd;
+			text-shadow: 0 -1px 0 #0000001f;
+			box-shadow: -4px 4px 0px 3px #4a5e90;
+			border: 2px solid #758ecd;
+		}
 
 		&:hover {
 			box-shadow: -4px 4px 0px 3px #116cbf, inset 0px 0px 14px 4px #116cbf,
 				-6px 6px 18px 2px rgb(213 103 253 / 50%) !important;
 			border-color: #4596e6 !important;
+
+			.unicorn & {
+				box-shadow: -4px 4px 0px 3px #4d65a0, inset 0px 0px 14px 4px #4d65a0,
+					-6px 6px 18px 2px rgb(213 103 253 / 50%) !important;
+				border-color: #637cbc !important;
+			}
 
 			.button-text {
 				filter: drop-shadow(0px 0px 1px white);
@@ -290,6 +318,17 @@ $section3-unicorn-color: #0087c3;
 	}
 }
 
+#section2,
+#section4 {
+	.section-title {
+		color: #15e6cd;
+	}
+	.section-subtitle,
+	.section-content {
+		color: #4a5e90;
+	}
+}
+
 #section1 {
 	.unicorn & > div:first-child {
 		background-color: $section1-unicorn-color !important;
@@ -374,16 +413,20 @@ $section3-unicorn-color: #0087c3;
 	border-radius: 5px;
 	transition: filter 0.5s, box-shadow 0.5s;
 	outline: none;
-	box-shadow: 2px 2px 0 2px rgb(15 144 65);
+	box-shadow: 2px 2px 0 2px #0fa794;
 
+	.unicorn & {
+		background: #15e6cd;
+		border: #13ceb7;
+	}
 	.text {
 		transition: filter 0.25s;
 	}
 
 	&:hover {
-		filter: drop-shadow(0px 0px 8px rgba(25, 204, 96, 0.75));
+		filter: drop-shadow(0px 0px 8px rgb(21 230 205 / 75%));
 		cursor: pointer;
-		border: #1cf171;
+		border: #19e0c8;
 
 		.text {
 			filter: drop-shadow(0px 0px 4px rgb(255 255 255 / 50%));
