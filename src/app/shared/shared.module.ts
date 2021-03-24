@@ -42,6 +42,7 @@ import { IfAdminDirective } from './if-admin.directive';
 import { TranslocoModule } from '@ngneat/transloco';
 import { LanguageSwitcherModule } from '../transloco/language-switcher/language-switcher.module';
 import { IfLangDirective } from '../transloco/if-lang.directive';
+import { NzImageModule } from 'ng-zorro-antd/image';
 
 // tslint:disable-next-line:readonly-array
 const icons: IconDefinition[] = [QuestionCircleOutline];
@@ -85,6 +86,7 @@ const modules: ReadonlyArray<any> = [
 	NzRadioModule,
 	NzDividerModule,
 	NzSwitchModule,
+	NzImageModule,
 	RoughNotationModule,
 	NgxVibrationModule.forRoot({
 		defaultPattern: GLOBAL_CONFIG.vibration.default,
