@@ -3,7 +3,7 @@ import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import { db } from './init';
 import { Endpoints } from './index';
-import { differenceInDays, set, subHours } from 'date-fns';
+import { set, subHours } from 'date-fns';
 import { messaging } from 'firebase-admin/lib/messaging';
 import { firestore } from 'firebase-admin/lib/firestore';
 import { fromDocRef, randomIntFromInterval, undefinedFallback } from './utilities';
@@ -82,29 +82,6 @@ export const sendNewMessagesNotification = functions.pubsub
 							)
 						) {
 							return undefined;
-						}
-
-						// Check if the last notification was not sent earlier than 3 days ago.
-						const lastNotificationDate: Date = set(
-							user?.last_notifications?.new_messages?.toDate(),
-							{
-								hours: 10,
-								minutes: 0,
-								seconds: 0,
-								milliseconds: 0,
-							}
-						);
-						if (lastNotificationDate) {
-							const daysSinceLastNotification = differenceInDays(
-								Date.now(),
-								lastNotificationDate
-							);
-							if (daysSinceLastNotification < 3) {
-								console.log(
-									'Already received a notification for this withing 3 days'
-								);
-								return undefined;
-							}
 						}
 
 						// Check if there are new messages in the chat since last check
