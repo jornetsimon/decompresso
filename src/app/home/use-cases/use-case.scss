@@ -1,0 +1,74 @@
+$base-color: #116cbf !default;
+
+::ng-deep .use-case-modal .ant-modal-body {
+	@media (max-width: 424px) {
+		padding: 24px 18px;
+	}
+	@media (min-width: 425px) {
+		padding: 30px;
+	}
+}
+::ng-deep .use-case-modal .ant-modal-content {
+	border-radius: 12px;
+}
+
+h1 {
+	font-size: 36px;
+	font-weight: 200;
+	line-height: 1.1em;
+	margin-bottom: 25px;
+}
+.app-name {
+	font-family: 'Carter One', serif;
+	margin-right: 10px;
+	white-space: nowrap;
+}
+
+.container {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+}
+
+section {
+	background-color: lighten($base-color, 55%);
+	border: 1px solid lighten($base-color, 45%);
+	border-radius: 10px;
+	margin-bottom: 20px;
+	padding: 5px 15px;
+	width: 100%;
+
+	@media (min-width: 768px) {
+		max-width: 70%;
+	}
+
+	.title {
+		display: flex;
+		flex-direction: row;
+		flex-wrap: nowrap;
+		align-items: center;
+		margin-bottom: 5px;
+		font-weight: 300;
+
+		.emoji {
+			font-size: 36px;
+			flex: 0 0 auto;
+			margin-right: 10px;
+		}
+		.name {
+			font-size: 21px;
+			flex: 1 1 auto;
+			line-height: 1.1em;
+		}
+	}
+}
+.container section:nth-child(even) {
+	align-self: flex-end;
+	background-color: $base-color;
+	border: 1px solid transparent;
+
+	color: white;
+	h2 {
+		color: white;
+	}
+}

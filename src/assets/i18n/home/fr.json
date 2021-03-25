@@ -28,5 +28,61 @@
 			"title": "Des discussions éphémères",
 			"description": "Un historique hebdomadaire : dimanche soir on efface tout... et lundi on recommence&nbsp;!"
 		}
+	},
+	"use_case": {
+		"work": {
+			"1": {
+				"emoji": "🗣",
+				"title": "Débattez librement",
+				"content": "Des grands et des petits sujets : les décisions de l'entreprise, le télétravail...<br>Donnez enfin vos avis sincère sur la dernière réunion !"
+			},
+			"2": {
+				"emoji": "🔍",
+				"title": "Sondez votre environnement",
+				"content": "Comparer les salaires, l'ambiance dans les autres services, les avantages..."
+			},
+			"3": {
+				"emoji": "💡",
+				"title": "Partagez vos idées",
+				"content": "Donnez des ailes à vos idées les plus <span class='nowrap'>folles ! \uD83D\uDD4A</span>"
+			},
+			"4": {
+				"emoji": "🦸",
+				"title": "Dénoncez les injustices",
+				"content": "Harcèlement moral, sexuel, pressions, surcharge de travail...<br><br>Faites vous entendre et trouvez du soutien."
+			},
+			"5": {
+				"emoji": "😬",
+				"title": "Confessez vos boulettes",
+				"content": "Personne ne pourra vous juger dessus, et tout le monde pourra en rire quand même."
+			}
+		},
+		"school": {
+			"1": {
+				"emoji": "🏫",
+				"title": "Le plus grand mur du campus",
+				"content": "<ul class='pl2'><li>Faites la promotion des soirées étudiantes</li><li>Demandez et partagez les contacts utiles&nbsp;: stages, petits boulots...</li><li>Récoltez des avis</li><li>Partagez les bons plans</li>"
+			},
+			"2": {
+				"emoji": "🙅‍♀️",
+				"title": "Dénoncez les injustices",
+				"content": "Harcèlement moral, sexuel, pressions, inégalités...<br>Brisez l'omerta et parlez-en anonymement pour faire changer les choses. Vous trouverez du soutien autour de vous !"
+			},
+			"3": {
+				"emoji": "🌈",
+				"title": "Transcender les classes",
+				"content": "Discutez avec des étudiants de tous horizons, départements et promos, sans distinction et sans étiquette."
+			},
+			"4": {
+				"emoji": "👋",
+				"title": "Plus jamais seul",
+				"content": "Sur Décompresso, il y toujours du monde avec qui discuter."
+			},
+			"5": {
+				"emoji": "😎",
+				"title": "Restez dans la boucle",
+				"content": "Ne rater plus rien des dernières tendances, évènements, soirées et scoops du campus."
+			}
+		}
 	}
 }

@@ -190,13 +190,14 @@ $section3-unicorn-color: #0087c3;
 	}
 }
 
-::ng-deep .signin-modal {
-	.ant-modal-content {
-		border-radius: 10px;
-	}
-	.ant-modal-body {
-		padding: 0;
-	}
+::ng-deep .signin-modal .ant-modal-content {
+	border-radius: 10px;
+}
+::ng-deep .signin-modal .ant-modal-body {
+	padding: 0;
+}
+::ng-deep .signin-modal .ant-card {
+	border-radius: 10px !important;
 }
 
 .shape-fill {

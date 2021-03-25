@@ -138,10 +138,18 @@
 						<div class="container" fxLayout="row wrap" fxLayoutAlign="center center">
 							<div fxFlex="none" class="label">Je suis :</div>
 							<div fxFlex="none" fxLayout="row wrap" fxLayoutAlign="center center">
-								<div class="profile-button" fxFlex="0 0 auto" routerLink="/work">
+								<div
+									class="profile-button"
+									fxFlex="0 0 auto"
+									(click)="openUseCaseModal('work')"
+								>
 									employé
 								</div>
-								<div class="profile-button" fxFlex="0 0 auto" routerLink="/school">
+								<div
+									class="profile-button"
+									fxFlex="0 0 auto"
+									(click)="openUseCaseModal('school')"
+								>
 									étudiant
 								</div>
 							</div>

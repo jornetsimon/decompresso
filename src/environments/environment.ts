@@ -3,7 +3,7 @@ export const environment = {
 	staging: false,
 	useEmulators: true,
 	firebase: {
-		apiKey: 'AIzaSyCJRF4Wa8HcJhdhTWpwTcsMLRvGNqzFsxE',
+		apiKey: 'AIzaSyDxhzFr3ddhFUMJS6KgsY5Wu1C1suTaqzc',
 		authDomain: 'decompresso-fr.firebaseapp.com',
 		projectId: 'decompresso-fr',
 		storageBucket: 'decompresso-fr.appspot.com',

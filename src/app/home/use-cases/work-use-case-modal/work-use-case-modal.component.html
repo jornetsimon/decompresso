@@ -1,0 +1,43 @@
+<h1 class="center">
+	<span class="app-name">Décompresso</span>
+	<span class="nowrap">au bureau</span>
+</h1>
+<ng-container *transloco="let t; read: 'home.use_case.work'">
+	<div class="container">
+		<section>
+			<div class="title">
+				<div class="emoji">{{ t('1.emoji') }}</div>
+				<div class="name" [innerHTML]="t('1.title')"></div>
+			</div>
+			<p [innerHTML]="t('1.content')"></p>
+		</section>
+		<section>
+			<div class="title">
+				<div class="emoji">{{ t('2.emoji') }}</div>
+				<div class="name" [innerHTML]="t('2.title')"></div>
+			</div>
+			<p [innerHTML]="t('2.content')"></p>
+		</section>
+		<section>
+			<div class="title">
+				<div class="emoji">{{ t('3.emoji') }}</div>
+				<div class="name" [innerHTML]="t('3.title')"></div>
+			</div>
+			<p [innerHTML]="t('3.content')"></p>
+		</section>
+		<section>
+			<div class="title">
+				<div class="emoji">{{ t('4.emoji') }}</div>
+				<div class="name" [innerHTML]="t('4.title')"></div>
+			</div>
+			<p [innerHTML]="t('4.content')"></p>
+		</section>
+		<section>
+			<div class="title">
+				<div class="emoji">{{ t('5.emoji') }}</div>
+				<div class="name" [innerHTML]="t('5.title')"></div>
+			</div>
+			<p [innerHTML]="t('5.content')"></p>
+		</section>
+	</div>
+</ng-container>
