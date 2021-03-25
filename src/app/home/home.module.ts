@@ -16,6 +16,8 @@ import { LayoutModule } from '../layout/layout.module';
 import { DynamicConceptComponent } from './dynamic-concept/dynamic-concept.component';
 import { TRANSLOCO_SCOPE } from '@ngneat/transloco';
 import { LanguageSelectionModalComponent } from './language-selection-modal/language-selection-modal.component';
+import { WorkUseCaseModalComponent } from './use-cases/work-use-case-modal/work-use-case-modal.component';
+import { SchoolUseCaseModalComponent } from './use-cases/school-use-case-modal/school-use-case-modal.component';
 
 // tslint:disable-next-line:readonly-array
 const icons: IconDefinition[] = [QuestionCircleOutline, MailOutline, CommentOutline, LoginOutline];
@@ -33,6 +35,8 @@ const homeRoutes: Routes = [
 		SigninComponent,
 		DynamicConceptComponent,
 		LanguageSelectionModalComponent,
+		WorkUseCaseModalComponent,
+		SchoolUseCaseModalComponent,
 	],
 	imports: [
 		SharedModule,

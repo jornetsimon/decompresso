@@ -8,8 +8,8 @@ import {
 } from '@angular/core';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { SigninComponent } from './signin/signin.component';
-import { fromEvent, merge } from 'rxjs';
-import { debounceTime, first, mapTo } from 'rxjs/operators';
+import { fromEvent, interval, merge } from 'rxjs';
+import { debounceTime, first, mapTo, switchMap } from 'rxjs/operators';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { ElementReadingTracker } from '@utilities/element-reading-tracker';
 import { AnalyticsService } from '@analytics/analytics.service';
@@ -17,6 +17,8 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TitleService } from '@services/title.service';
 import { LanguageService } from '../transloco/language.service';
 import { CookiesConsentService } from '../shared/cookies-consent/cookies-consent.service';
+import { SchoolUseCaseModalComponent } from './use-cases/school-use-case-modal/school-use-case-modal.component';
+import { WorkUseCaseModalComponent } from './use-cases/work-use-case-modal/work-use-case-modal.component';
 
 @UntilDestroy()
 @Component({
@@ -44,25 +46,31 @@ export class HomeComponent implements OnInit, AfterViewInit {
 	}
 
 	ngAfterViewInit(): void {
-		merge(
-			new ElementReadingTracker(this.section1Ref, 80).isRead$.pipe(
-				first((isRead) => isRead),
-				mapTo('Section 1')
-			),
-			new ElementReadingTracker(this.section2Ref, 80).isRead$.pipe(
-				first((isRead) => isRead),
-				mapTo('Section 2')
-			),
-			new ElementReadingTracker(this.section3Ref, 80).isRead$.pipe(
-				first((isRead) => isRead),
-				mapTo('Section 3')
-			),
-			new ElementReadingTracker(this.section4Ref, 80).isRead$.pipe(
-				first((isRead) => isRead),
-				mapTo('Section 4')
+		interval(1000)
+			.pipe(
+				first(() => !!this.section1Ref),
+				switchMap(() =>
+					merge(
+						new ElementReadingTracker(this.section1Ref, 80).isRead$.pipe(
+							first((isRead) => isRead),
+							mapTo('Section 1')
+						),
+						new ElementReadingTracker(this.section2Ref, 80).isRead$.pipe(
+							first((isRead) => isRead),
+							mapTo('Section 2')
+						),
+						new ElementReadingTracker(this.section3Ref, 80).isRead$.pipe(
+							first((isRead) => isRead),
+							mapTo('Section 3')
+						),
+						new ElementReadingTracker(this.section4Ref, 80).isRead$.pipe(
+							first((isRead) => isRead),
+							mapTo('Section 4')
+						)
+					)
+				),
+				untilDestroyed(this)
 			)
-		)
-			.pipe(untilDestroyed(this))
 			.subscribe((sectionName) => {
 				this.analyticsService.logEvent('content_view', undefined, sectionName, undefined, {
 					non_interaction: true,
@@ -97,6 +105,20 @@ export class HomeComponent implements OnInit, AfterViewInit {
 		window.scrollTo({
 			behavior: 'smooth',
 			top: 0,
+		});
+	}
+
+	openUseCaseModal(useCase: 'work' | 'school') {
+		const component =
+			useCase === 'school' ? SchoolUseCaseModalComponent : WorkUseCaseModalComponent;
+		this.modalService.create({
+			nzContent: component,
+			nzFooter: null,
+			nzMaskStyle: {
+				'background-color': 'rgb(0 0 0 / 38%);',
+			},
+			nzClassName: 'use-case-modal',
+			nzCloseOnNavigation: true,
 		});
 	}
 }

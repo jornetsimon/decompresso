@@ -28,5 +28,61 @@
 			"title": "Qui dimanche dit page blanche",
 			"description": "Chaque dimanche soir, notre <i>chasse d'eau™️</i> supprime l'historique des messages de la semaine. Comme ça même tes plus grosses bêtises disparaissent comme par magie. Elle est pas belle la vie ? ✨"
 		}
+	},
+	"use_case": {
+		"work": {
+			"1": {
+				"emoji": "🗣",
+				"title": "Donne enfin ton avis !",
+				"content": "Des grands et des petits sujets : les décisions de l'entreprise, le télétravail...<br>Pourquoi ton avis aurait-il moins de valeur que celui des autres ?"
+			},
+			"2": {
+				"emoji": "🙊",
+				"title": "À bas les tabous",
+				"content": "Comparer les salaires, l'ambiance dans les autres services, les avantages...<br>On va enfin pouvoir parler de tout les non-dits."
+			},
+			"3": {
+				"emoji": "💡",
+				"title": "Partage tes idées",
+				"content": "Sur un malentendu, tu risquerais de sortir l'idée du siècle."
+			},
+			"4": {
+				"emoji": "🦸",
+				"title": "Dénonce les injustices",
+				"content": "Harcèlement moral, sexuel, pressions, surcharge de travail...<br>Le dire avant de péter les plombs, c'est mieux ! 🤯"
+			},
+			"5": {
+				"emoji": "🧆",
+				"title": "Confesse tes boulettes",
+				"content": "Personne ne pourra te juger dessus, et tout le monde pourra en rire quand même."
+			}
+		},
+		"school": {
+			"1": {
+				"emoji": "🏫",
+				"title": "Le plus grand mur du campus",
+				"content": "<ul class='pl2'><li>Fais la promo des soirées</li><li>Demande et partage les contacts utiles&nbsp;: stages, petits boulots...</li><li>Récolte des avis</li><li>Fais tourner les bons plans</li><li>Déclare ta flamme à l'inconnu(e) que tu as croisé sur le campus</li><li>Vois si quelqu'un aurait retrouvé ton caleçon perdu samedi soir 🩲</li></ul>"
+			},
+			"2": {
+				"emoji": "🦸",
+				"title": "Dénonce les injustices",
+				"content": "Harcèlement moral, sexuel, pressions, inégalités... Ose en parler !<br><img class='width-100 rounded mt1' src='https://media1.tenor.com/images/50fac2bd4fb70a31a34544e413533ecd/tenor.gif?itemid=14147625'  alt='Je suis pas venue ici pour souffrir'>"
+			},
+			"3": {
+				"emoji": "🌈",
+				"title": "Transcender les classes",
+				"content": "Les beaux gosses, les geeks, les gothiques, les baba cool, les introvertis, les stressés, les bobos, les Kevin, les précieuses, les fayots, les pipelettes, ceux qui ont déjà raté leur année... tous réunis dans un seul et même chat. Ça promet !"
+			},
+			"4": {
+				"emoji": "👋",
+				"title": "Plus jamais seul",
+				"content": "Renoue avec la civilisation et retrouve tes congénères autour de vos sujets commun.<br><img class='width-100 rounded mt1' src='assets/illustrations/moche_mais_pas_seul_small.png' alt=\"Tu as le droit d'être moche mais pas d'être seul\" />"
+			},
+			"5": {
+				"emoji": "😎",
+				"title": "Reste dans le game",
+				"content": "Du nouveau défi TikTok à la soirée à ne surtout pas manquer, plus aucun trend n'aura de secret pour toi."
+			}
+		}
 	}
 }

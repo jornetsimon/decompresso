@@ -133,12 +133,29 @@
 			</div>
 			<div style="background-color: white; padding-top: 59px; padding-bottom: 75px">
 				<div class="main-container xs-padding">
-					<div
-						fxLayout="row"
-						fxLayout.lt-md="column"
-						fxLayoutGap="7vmin"
-						style="padding: 50px 0"
-					>
+					<div class="profiles">
+						<div class="intro">Pour quoi faire&nbsp;?</div>
+						<div class="container" fxLayout="row wrap" fxLayoutAlign="center center">
+							<div fxFlex="none" class="label">Je suis :</div>
+							<div fxFlex="none" fxLayout="row wrap" fxLayoutAlign="center center">
+								<div
+									class="profile-button"
+									fxFlex="0 0 auto"
+									(click)="openUseCaseModal('work')"
+								>
+									employé
+								</div>
+								<div
+									class="profile-button"
+									fxFlex="0 0 auto"
+									(click)="openUseCaseModal('school')"
+								>
+									étudiant
+								</div>
+							</div>
+						</div>
+					</div>
+					<div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="7vmin">
 						<div fxFlex="1 0 30%" fxLayout="column" fxLayoutAlign="center center">
 							<div>
 								<div class="section-title" [innerHTML]="t('section2.title')"></div>
