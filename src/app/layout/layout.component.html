@@ -1,3 +1,4 @@
+<div class="language-bar" [class.fun]="(languageService.lang$ | async) === 'fun'"></div>
 <ng-container *ngIf="authService.isAuthenticated$ | async">
 	<ng-container *ngIf="authService.user$ | async as user; else pendingVerificationTpl">
 		<button
