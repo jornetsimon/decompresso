@@ -481,11 +481,12 @@ $section3-unicorn-color: #0087c3;
 	border-radius: 5px;
 	transition: filter 0.5s, box-shadow 0.5s;
 	outline: none;
-	box-shadow: 2px 2px 0 2px #0fa794;
+	box-shadow: 2px 2px 0 2px rgb(15 144 65);
 
 	.unicorn & {
 		background: #15e6cd;
 		border: #13ceb7;
+		box-shadow: 2px 2px 0 2px #0fa794;
 	}
 	.text {
 		transition: filter 0.25s;
