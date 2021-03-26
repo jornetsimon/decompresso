@@ -19,6 +19,7 @@ import { LanguageService } from '../transloco/language.service';
 import { CookiesConsentService } from '../shared/cookies-consent/cookies-consent.service';
 import { SchoolUseCaseModalComponent } from './use-cases/school-use-case-modal/school-use-case-modal.component';
 import { WorkUseCaseModalComponent } from './use-cases/work-use-case-modal/work-use-case-modal.component';
+import { Meta } from '@angular/platform-browser';
 
 @UntilDestroy()
 @Component({
@@ -37,12 +38,22 @@ export class HomeComponent implements OnInit, AfterViewInit {
 		private breakpointObserver: BreakpointObserver,
 		private analyticsService: AnalyticsService,
 		private titleService: TitleService,
+		private meta: Meta,
 		public languageService: LanguageService,
 		public cookiesConsentService: CookiesConsentService
 	) {}
 
 	ngOnInit(): void {
-		this.titleService.setTitle('');
+		this.titleService.setTitle('Le chat anonyme du bureau');
+		this.meta.addTags([
+			{
+				name: 'description',
+				content:
+					"Mettez du fun dans votre journée de travail en discutant incognito avec vos collègues. C'est nouveau, simple et gratuit.",
+			},
+			{ name: 'robots', content: 'index, follow' },
+			{ name: 'language', content: 'French' },
+		]);
 	}
 
 	ngAfterViewInit(): void {
