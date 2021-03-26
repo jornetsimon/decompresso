@@ -114,6 +114,13 @@
 	}
 }
 
+.language-switcher-container {
+	@media (min-width: 768px) {
+		margin-right: 1rem;
+		top: 40px;
+	}
+}
+
 @keyframes fadein {
 	0% {
 		display: none;
