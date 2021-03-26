@@ -15,11 +15,13 @@
 				</div>
 			</a>
 			<div
-				class="language-switcher"
+				class="language-switcher-container"
 				[class.cookies-offset]="(cookiesConsentService.accepted$ | async) === false"
-				(click)="languageService.toggleLanguage()"
 			>
-				<mas-language-switcher></mas-language-switcher>
+				<div class="language-switcher-glow"></div>
+				<div class="language-switcher relative" (click)="languageService.toggleLanguage()">
+					<mas-language-switcher></mas-language-switcher>
+				</div>
 			</div>
 		</div>
 		<div class="relative" style="background-color: white">

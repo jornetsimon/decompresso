@@ -210,12 +210,9 @@ figure figcaption {
 }
 
 $languageSwitcherStickWidth: 767px;
-.language-switcher {
+.language-switcher-container {
 	right: 10px;
 	position: absolute;
-	background-color: rgb(8 61 119 / 3%);
-	border-radius: 50px;
-	padding: 10px min(25px, 4vw);
 
 	@media (max-width: $languageSwitcherStickWidth) {
 		position: fixed;
@@ -223,8 +220,6 @@ $languageSwitcherStickWidth: 767px;
 		bottom: 3vh;
 		right: 3vw;
 		z-index: 1;
-		background-color: #ffe5d4;
-		box-shadow: 0 1px 2px 1px rgb(93 93 93 / 18%);
 		display: flex;
 		justify-content: center;
 		align-items: center;
@@ -232,6 +227,40 @@ $languageSwitcherStickWidth: 767px;
 		&.cookies-offset {
 			margin-bottom: 100px;
 		}
+	}
+}
+.language-switcher {
+	position: relative;
+	background-color: #f8f9fb;
+	border-radius: 50px;
+	padding: 7px min(25px, 4vw);
+}
+.language-switcher-glow {
+	display: flex;
+	flex: initial;
+	flex-direction: row;
+	animation: 15s ease-in-out 0s infinite normal both running pulse;
+	background: conic-gradient(
+		from 217.29deg at 51.63% 52.16%,
+		rgb(36, 0, 255) 0deg,
+		rgb(0, 135, 255) 19.5deg,
+		rgb(255, 29, 122) 102.75deg,
+		rgb(245, 56, 27) 152.25deg,
+		rgb(255, 83, 53) 208.88deg,
+		rgb(105, 30, 255) 291deg
+	);
+	filter: blur(3px);
+	border-radius: 50px;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	transition: opacity 1.5s ease 0s;
+	opacity: 0.75;
+
+	@media (max-width: $languageSwitcherStickWidth) {
+		opacity: 0.5;
 	}
 }
 
@@ -244,5 +273,31 @@ $languageSwitcherStickWidth: 767px;
 .content:not(.compact) {
 	@media (max-width: $languageSwitcherStickWidth) {
 		padding-bottom: 100px;
+	}
+}
+
+@keyframes pulse {
+	0% {
+		transform: rotate(0deg);
+		filter: blur(2px);
+	}
+	10% {
+		filter: blur(3px);
+	}
+	25% {
+		transform: rotate(-0.5deg) translate(1px, 0px) scale(1.01);
+		filter: blur(2px);
+	}
+	67% {
+		transform: rotate(1deg) translate(-1px, -1px) scale(0.99);
+		filter: blur(4px);
+	}
+	80% {
+		transform: rotate(1deg) translate(1px, 2px) scale(0.99);
+		filter: blur(6px);
+	}
+	100% {
+		transform: rotate(0deg);
+		filter: blur(2px);
 	}
 }
