@@ -26,6 +26,10 @@ export const createUser = functions.https.onCall(async (data, context) => {
 	if (!email || !email.match(emailPattern)) {
 		throw new functions.https.HttpsError('invalid-argument', 'invalid_email');
 	}
+	const userAlreadyExists = (await db.doc(`${Endpoints.Users}/${uid}`).get()).exists;
+	if (userAlreadyExists) {
+		throw new functions.https.HttpsError('invalid-argument', 'user-already-exists');
+	}
 	const domain = email.split('@')[1];
 	const publicDomainMatch = await db.collection(Endpoints.PublicEmailDomains).doc(domain).get();
 	const isDomainPublic = publicDomainMatch.exists;
