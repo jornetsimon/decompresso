@@ -16,13 +16,26 @@
 		"sub": "Oubliez la hiérarchie et partagez simplement un moment de convivialité. Découvrez ou redécouvrez les gens qui vous entourent au travail, sans étiquette."
 	},
 	"section3": {
-		"intro": "Une messagerie instantanée",
-		"list": "<li><strong>gratuite</strong> et qui le restera</li><li><strong>simple</strong> et accessible</li><li><strong>indépendante</strong> de votre structure pro</li>"
+		"intro": "Le plus personnel des outils pro",
+		"bubbles": {
+			"1": {
+				"title": "Gratuit",
+				"description": "Accessible librement"
+			},
+			"2": {
+				"title": "Indépendant<br><span class='subtitle'>de votre structure pro</span>",
+				"description": "La garantie de votre anonymat"
+			},
+			"3": {
+				"title": "Respectueux",
+				"description": "Ni partage ni revente de vos données"
+			}
+		}
 	},
 	"section4": {
 		"sub1": {
 			"title": "Pour nous, la meilleure façon de protéger vos données, c'est encore de ne pas les collecter&nbsp;!",
-			"description": "La <span class='dot-underline'>seule</span> information nécessaire : <span class='dot-underline'>votre email professionnel</span>."
+			"description": "La <span class='dot-underline'>seule</span> information nécessaire : <span class='dot-underline'>votre email professionnel</span>.<br/>Elle n'est d'ailleurs nécessaire que pour créer votre compte."
 		},
 		"sub2": {
 			"title": "Des discussions éphémères",

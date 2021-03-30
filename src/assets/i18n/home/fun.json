@@ -16,13 +16,26 @@
 		"sub": "Le bureau, c'est plein de gens bizarres. Mais en même temps, tu n'as pas vraiment le choix.<br/><br/>Partage ce que tu penses, tu découvriras peut-être que tu n'es pas tout seul à penser pareil. \uD83D\uDC40"
 	},
 	"section3": {
-		"intro": "Une messagerie instantanée",
-		"list": "<li><strong>gratuite</strong> et pour toujours, c'est la maison qui offre</li><li><strong>simple</strong> et accessible, surtout si tu sais écrire</li><li><strong>indépendante</strong>, et donc sans embrouille</li>"
+		"intro": "On n'a jamais vu aussi perso <span class='nowrap'>comme outil</span> pro",
+		"bubbles": {
+			"1": {
+				"title": "Gratuit",
+				"description": "C'est la maison<br>qui offre"
+			},
+			"2": {
+				"title": "Indépendant<br><span class='subtitle'>de ta structure pro</span>",
+				"description": "Pas de lézard, pas d'embrouille"
+			},
+			"3": {
+				"title": "Respectueux",
+				"description": "Enfin un site qui fout la paix à tes données"
+			}
+		}
 	},
 	"section4": {
 		"sub1": {
 			"title": "Tes données personnelles, garde-les au chaud",
-			"description": "La <span class='dot-underline'>seule</span> information nécessaire : <span class='dot-underline'>ton email professionnel</span>.<br/>Après, tu peux aussi nous parler de ta chanteuse préférée, mais c'est toi qui vois. \uD83D\uDC69\u200D\uD83C\uDFA4 "
+			"description": "La <span class='dot-underline'>seule</span> information nécessaire : <span class='dot-underline'>ton email professionnel</span>.<br>Elle n'est d'ailleurs nécessaire que pour créer ton compte. 👍<br>Après, tu peux aussi nous parler de ta chanteuse préférée, mais c'est toi qui vois. \uD83D\uDC69\u200D\uD83C\uDFA4 "
 		},
 		"sub2": {
 			"title": "Qui dimanche dit page blanche",

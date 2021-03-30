@@ -205,20 +205,50 @@
 		</div>
 		<div id="section3" #section3 class="relative">
 			<div style="background-color: #ff3c5b; padding-bottom: 29px">
-				<div class="main-container xs-padding">
-					<div
-						fxLayoutAlign="center"
-						style="padding: 30px 0; font-size: 24px; color: white"
-					>
-						<div style="line-height: 1.8em; padding-left: 5vw">
+				<div class="main-container xs-padding py2">
+					<div class="section-title" [innerHTML]="t('section3.intro')"></div>
+					<div class="bubbles-container">
+						<div class="bubble">
+							<div class="title">
+								<div>
+									<span [innerHTML]="t('section3.bubbles.1.title')"></span>
+									<i
+										nz-icon
+										nz-tooltip
+										[nzTooltipTitle]="freeTooltip"
+										nzTooltipColor="#108ee9"
+										nzType="question-circle"
+										nzTheme="outline"
+										style="
+											margin-left: 5px;
+											font-size: 15px;
+											vertical-align: top;
+										"
+									></i>
+									<ng-template #freeTooltip>
+										Décompresso est notre service pilote, né pour valider notre
+										vision. C'est pour cela qu'il est gratuit pour tous. 🙂
+									</ng-template>
+								</div>
+							</div>
 							<div
-								style="font-weight: 300; padding-bottom: 10px; white-space: nowrap"
-							>
-								{{ t('section3.intro') }}
-							</div>
-							<div class="list">
-								<ul [innerHTML]="t('section3.list')"></ul>
-							</div>
+								class="description"
+								[innerHTML]="t('section3.bubbles.1.description')"
+							></div>
+						</div>
+						<div class="bubble">
+							<div class="title" [innerHTML]="t('section3.bubbles.2.title')"></div>
+							<div
+								class="description"
+								[innerHTML]="t('section3.bubbles.2.description')"
+							></div>
+						</div>
+						<div class="bubble">
+							<div class="title" [innerHTML]="t('section3.bubbles.3.title')"></div>
+							<div
+								class="description"
+								[innerHTML]="t('section3.bubbles.3.description')"
+							></div>
 						</div>
 					</div>
 				</div>
@@ -273,7 +303,11 @@
 								></div>
 							</div>
 						</div>
-						<div fxFlex="0 0 40%" fxLayoutAlign="center center" style="padding: 30px 0">
+						<div
+							fxFlex="0 0 40%"
+							fxLayoutAlign="center center"
+							style="padding-top: 30px"
+						>
 							<img
 								id="smile"
 								src="assets/layout/home/smile.svg"
@@ -281,6 +315,50 @@
 								alt="Sourire"
 								style="max-height: 120px"
 							/>
+						</div>
+					</div>
+					<div class="company">
+						<div class="intro">Nos valeurs</div>
+						<div class="container">
+							<div class="section-title">
+								Nous servons l'intérêt des individus dans le monde du travail
+							</div>
+							<nz-divider style="margin: 16px 0"></nz-divider>
+							<div
+								class="main"
+								fxLayout="row nowrap"
+								fxLayout.lt-sm="row wrap"
+								fxLayoutAlign="center center"
+							>
+								<div
+									fxFlex="1 0 40%"
+									fxLayoutAlign="center center"
+									style="padding-bottom: 25px"
+								>
+									<span>Une<br />approche<br />innovante&nbsp;!</span>
+								</div>
+								<div fxFlex="2 1 auto">
+									<ul>
+										<li>
+											Élever les salariés pour faire naître de nouvelles
+											opportunités
+										</li>
+										<li>
+											Trouver un nouvel équilibre entre tous les acteurs du
+											monde professionnel
+										</li>
+										<li>Des solutions où tout le monde y trouve son compte</li>
+										<li *ifLang="'fun'">
+											Un second degré assumé, testé et approuvé par nous 🤪
+										</li>
+									</ul>
+								</div>
+							</div>
+							<div fxLayoutAlign="center" class="mt1">
+								<button nz-button nzGhost routerLink="/about">
+									En savoir plus sur nous
+								</button>
+							</div>
 						</div>
 					</div>
 					<div fxLayout="row wrap" fxLayoutAlign="center baseline">
@@ -291,17 +369,6 @@
 							fxFlexOrder.lt-sm="1"
 						>
 							<span class="text">Je m'inscris</span>
-						</button>
-						<button
-							nz-button
-							nzType="default"
-							nzSize="large"
-							routerLink="/help"
-							class="mx3 my2"
-							style="font-size: 18px"
-							fxFlexOrder.lt-sm="0"
-						>
-							En savoir plus
 						</button>
 					</div>
 				</div>
