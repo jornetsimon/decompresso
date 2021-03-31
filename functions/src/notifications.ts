@@ -9,6 +9,7 @@ import { firestore } from 'firebase-admin/lib/firestore';
 import { fromDocRef, randomIntFromInterval, undefinedFallback } from './utilities';
 import { Observable, of } from 'rxjs';
 import { filter, map, take, timeoutWith } from 'rxjs/operators';
+import { log } from 'firebase-functions/lib/logger';
 import MulticastMessage = messaging.MulticastMessage;
 import Notification = messaging.Notification;
 import Timestamp = firestore.Timestamp;
@@ -47,15 +48,24 @@ export const sendNewMessagesNotification = functions.pubsub
 			seconds: 0,
 			milliseconds: 0,
 		});
-		console.log(`Checking readings since ${lastCheck}`);
-		const membersReading = await db
+		log(`Checking reads since ${lastCheck}`);
+		const outdatedReadsSnap = await db
 			.collection(Endpoints.Reading)
 			.where('last_read_message.createdAt', '<', lastCheck)
 			.get();
+		const nullReadsSnap = await db
+			.collection(Endpoints.Reading)
+			.where('last_read_message', '==', null)
+			.get();
+		const membersReadingDocs = [...outdatedReadsSnap.docs, ...nullReadsSnap.docs];
+
+		log(
+			`${membersReadingDocs.length} users are eligible to a notification from looking at their reading state`
+		);
 
 		const registrationTokens = ((
 			await Promise.all(
-				membersReading.docs.map(
+				membersReadingDocs.map(
 					async (readingDoc): Promise<Array<string> | undefined> => {
 						const userUid = readingDoc.id;
 						const userRef = db.doc(`${Endpoints.Users}/${userUid}`);
@@ -92,6 +102,7 @@ export const sendNewMessagesNotification = functions.pubsub
 							(msg) => msg.author !== userUid && msg.createdAt > lastCheckTimestamp
 						);
 						if (!newMessagesSinceLastCheck) {
+							log(`No new message since last check in ${user?.domain}`);
 							return undefined;
 						}
 
@@ -105,9 +116,7 @@ export const sendNewMessagesNotification = functions.pubsub
 							{ merge: true }
 						);
 
-						console.log(
-							'User ' + userUid + ' will receive a notification for new messages'
-						);
+						log('User ' + userUid + ' will receive a notification for new messages');
 						return Object.values(userTokens);
 					}
 				)
@@ -133,13 +142,13 @@ export const sendNewMessagesNotification = functions.pubsub
 			tokens: registrationTokens,
 		};
 
-		console.log(message);
+		log(message);
 
 		return admin
 			.messaging()
 			.sendMulticast(message)
 			.then((response) => {
-				console.log(response.successCount + ' messages were sent successfully');
+				log(response.successCount + ' messages were sent successfully');
 				return {
 					expected: registrationTokens.length,
 					sent: response.successCount,

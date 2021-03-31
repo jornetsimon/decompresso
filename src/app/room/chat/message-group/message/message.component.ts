@@ -11,7 +11,7 @@ import { ChatService } from '../../chat.service';
 import { Message } from '@model/message';
 import { Reaction, ReactionType } from '@model/reaction';
 import { fromEvent, Observable } from 'rxjs';
-import { debounceTime, filter, first, map, take } from 'rxjs/operators';
+import { debounceTime, filter, first, map, startWith, take } from 'rxjs/operators';
 import { UserService } from '@services/user.service';
 import { GLOBAL_CONFIG } from '../../../../global-config';
 import { getRegExp } from '@utilities/regex';
@@ -61,6 +61,9 @@ export class MessageComponent implements AfterViewInit {
 			this.elRef.nativeElement.closest('#chat-content'),
 			'scroll'
 		).pipe(
+			// Trigger an initial check when the component is created
+			// This is useful to detect the visibility of the first messages in the feed, that don't require scrolling
+			startWith(undefined),
 			debounceTime(500),
 			map(() => {
 				const bubbleElement = this.bubbleRef.nativeElement;
