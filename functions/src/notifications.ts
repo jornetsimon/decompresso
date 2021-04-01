@@ -165,7 +165,7 @@ export const onMemberCreated = functions
 		const memberUid = context.params.memberUid;
 		const user$: Observable<any> = fromDocRef(db.doc(`${Endpoints.Users}/${memberUid}`));
 
-		console.log('Initial nickname : ' + member.nickname);
+		log('Initial nickname : ' + member.nickname);
 
 		return user$
 			.pipe(
@@ -176,7 +176,7 @@ export const onMemberCreated = functions
 			)
 			.toPromise()
 			.then(async (finalNickname) => {
-				console.log('Final nickname : ' + finalNickname);
+				log('Final nickname : ' + finalNickname);
 				const usersSnap = await db
 					.collection(`${Endpoints.Users}`)
 					.where('domain', '==', memberDomain)
@@ -195,7 +195,7 @@ export const onMemberCreated = functions
 						if (!(userTokens && Object.keys(userTokens).length)) {
 							return undefined;
 						}
-						console.log(`=> will send to ${user.nickname}`);
+						log(`=> will send to ${user.nickname}`);
 						return Object.values(userTokens);
 					})
 					// tslint:disable-next-line:readonly-array
@@ -241,7 +241,7 @@ export const onMemberCreated = functions
 					.messaging()
 					.sendMulticast(message)
 					.then((response) => {
-						console.log(response.successCount + ' messages were sent successfully');
+						log(response.successCount + ' messages were sent successfully');
 						return {
 							expected: registrationTokens.length,
 							sent: response.successCount,

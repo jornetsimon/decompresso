@@ -62,18 +62,14 @@ export class EnhancementService {
 	 */
 	setupNotifications(disabledNotificationsWarningTpl?: TemplateRef<void>) {
 		this.pushNotificationsService.setup().subscribe({
-			next: (success) => {
-				if (success) {
-					this.message.success('Notifications activées');
-					this.analyticsService.logEvent(
-						'enable_notifications',
-						GaCategoryEnum.ENGAGEMENT,
-						this.deviceDetectorService.deviceType
-					);
-					this.userEnabledNotifications.next(true);
-				} else {
-					this.message.error(`Impossible d'activer les notification pour l'instant`);
-				}
+			next: () => {
+				this.message.success('Notifications activées');
+				this.analyticsService.logEvent(
+					'enable_notifications',
+					GaCategoryEnum.ENGAGEMENT,
+					this.deviceDetectorService.deviceType
+				);
+				this.userEnabledNotifications.next(true);
 			},
 			error: (error: Error) => {
 				console.error(error);

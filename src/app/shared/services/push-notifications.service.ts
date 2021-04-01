@@ -138,7 +138,7 @@ export class PushNotificationsService {
 			.subscribe();
 	}
 
-	setup(): Observable<boolean> {
+	setup(): Observable<void> {
 		return from(this.requestPermission()).pipe(
 			switchMap((permission) => {
 				if (permission === 'granted') {
@@ -147,13 +147,19 @@ export class PushNotificationsService {
 							if (!token) {
 								throw new Error('could_not_retrieve_token');
 							}
-							return true;
+							return;
 						})
 					);
 				} else {
 					throw new Error('notifications_denied_in_browser');
 				}
-			})
+			}),
+			switchMap(() =>
+				this.setUserSettings({
+					new_members: true,
+					new_messages: true,
+				})
+			)
 		);
 	}
 
