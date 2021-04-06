@@ -10,8 +10,8 @@ import {
 import { ChatService } from '../../chat.service';
 import { Message } from '@model/message';
 import { Reaction, ReactionType } from '@model/reaction';
-import { fromEvent, Observable } from 'rxjs';
-import { debounceTime, filter, first, map, startWith, take } from 'rxjs/operators';
+import { combineLatest, fromEvent, Observable } from 'rxjs';
+import { debounceTime, filter, first, map, startWith } from 'rxjs/operators';
 import { UserService } from '@services/user.service';
 import { GLOBAL_CONFIG } from '../../../../global-config';
 import { getRegExp } from '@utilities/regex';
@@ -21,6 +21,7 @@ import { ReportComponent } from '../../report/report.component';
 import { RoomService } from '@services/room.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { DomSanitizer } from '@angular/platform-browser';
+import { ActivityService } from '@services/activity.service';
 
 @Component({
 	selector: 'mas-message',
@@ -53,7 +54,8 @@ export class MessageComponent implements AfterViewInit {
 		private elRef: ElementRef,
 		private modalService: NzModalService,
 		private nzMessageService: NzMessageService,
-		private domSanitizer: DomSanitizer
+		private domSanitizer: DomSanitizer,
+		private activityService: ActivityService
 	) {}
 
 	ngAfterViewInit() {
@@ -87,14 +89,19 @@ export class MessageComponent implements AfterViewInit {
 		);
 
 		/**
-		 * When the message visibility changes
+		 * When the message visibility changes and the page is also visible
 		 */
-		this.bubbleVisibility
-			.pipe(
+		combineLatest([
+			this.bubbleVisibility.pipe(
 				// Only when it is visible
-				filter((isVisible) => !this.isMine && isVisible),
-				take(1)
-			)
+				filter((isVisible) => !this.isMine && isVisible)
+			),
+			this.activityService.visibility$.pipe(
+				startWith(document.visibilityState),
+				map((visibility) => visibility === 'visible')
+			),
+		])
+			.pipe(first(([messageVisible, pageVisible]) => messageVisible && pageVisible))
 			.subscribe(() => {
 				// Track it as read
 				this.chatService.trackMessageAsRead(this.message);

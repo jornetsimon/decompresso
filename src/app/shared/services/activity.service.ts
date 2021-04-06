@@ -51,9 +51,10 @@ export class ActivityService {
 	 * Uses the Page Visibility API
 	 * @see https://developer.mozilla.org/en-US/docs/Web/API/Page_Visibility_API
 	 */
-	private visibility$ = fromEvent(document, 'visibilitychange').pipe(
-		map(() => document.visibilityState)
-	);
+	visibility$ = fromEvent(document, 'visibilitychange').pipe(map(() => document.visibilityState));
+	/**
+	 * Emits when the page becomes visible
+	 */
 	private visible$ = this.visibility$.pipe(
 		filter((visibility) => visibility === 'visible')
 	) as Observable<'visible'>;
