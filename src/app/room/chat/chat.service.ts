@@ -84,7 +84,7 @@ export class ChatService {
 		 */
 		this.readingState$
 			.pipe(
-				debounceTime(500),
+				debounceTime(1000),
 				withLatestFrom(this.userService.lastReadMessageStored$),
 				filter(
 					// Only when the message ID differs from the one stored in DB

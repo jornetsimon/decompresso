@@ -31,6 +31,8 @@ export class FeedBuilder {
 		private lastReadMessage: Message | null,
 		private feedLoadCount: number,
 		private initializationDate: Date,
+		private visibilityState: VisibilityState,
+		private lastInactivityDate: Date,
 		private lastPurge: Date | undefined
 	) {}
 
@@ -148,17 +150,33 @@ export class FeedBuilder {
 
 	private buildLastReadMessageEntries(): ReadonlyArray<LastReadMessageFeedEntry> {
 		const messagesFromOthers = this.messages.filter(
-			// We want only the messages from other users, but not since the first load
-			(m) =>
-				m.author !== this.userUid &&
-				isBefore(fromUnixTime(m.createdAt.seconds), this.initializationDate)
+			// We want only the messages from other users
+			(m) => m.author !== this.userUid
 		);
-		if (this.lastReadMessage && messagesFromOthers.length) {
+		const messagesBeforeInit = messagesFromOthers.filter(
+			// Only the messages before the first load
+			(m) => isBefore(fromUnixTime(m.createdAt.seconds), this.initializationDate)
+		);
+		const messagesSinceLastInactivity = messagesFromOthers.filter((m) =>
+			// Only the messages since the last inactivity
+			isAfter(fromUnixTime(m.createdAt.seconds), this.lastInactivityDate)
+		);
+		if (
+			this.lastReadMessage &&
+			(messagesBeforeInit.length || messagesSinceLastInactivity.length)
+		) {
+			const latestMessageBeforeInit = messagesBeforeInit[messagesBeforeInit.length - 1];
+			const latestMessage = messagesFromOthers[messagesFromOthers.length - 1];
+
 			const isThereMessagesSinceLastRead = isBefore(
 				fromUnixTime(this.lastReadMessage.createdAt.seconds),
-				fromUnixTime(messagesFromOthers[messagesFromOthers.length - 1].createdAt.seconds)
+				fromUnixTime(latestMessageBeforeInit.createdAt.seconds)
 			);
-			if (isThereMessagesSinceLastRead) {
+			const userMissedMessages =
+				this.visibilityState === 'hidden' &&
+				isBefore(this.lastInactivityDate, fromUnixTime(latestMessage.createdAt.seconds));
+
+			if (isThereMessagesSinceLastRead || userMissedMessages) {
 				const matchedEntryTimestamp = this.buildMessageEntries()
 					.filter((entry) => !entry.isMine)
 					.find(

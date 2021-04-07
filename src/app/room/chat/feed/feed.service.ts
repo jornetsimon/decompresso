@@ -1,13 +1,26 @@
 import { Injectable } from '@angular/core';
 import { combineLatest, Observable, zip } from 'rxjs';
-import { first, map, shareReplay, switchMap, tap, withLatestFrom } from 'rxjs/operators';
+import {
+	filter,
+	first,
+	map,
+	shareReplay,
+	startWith,
+	switchMap,
+	tap,
+	withLatestFrom,
+} from 'rxjs/operators';
 import { RoomService } from '@services/room.service';
 import { UserService } from '@services/user.service';
 import { FeedBuilder } from './feed-builder';
 import { Feed } from './model/feed-entry';
 import { isBefore } from 'date-fns/esm';
 import { timestampToDate } from '@utilities/timestamp';
+import { ActivityService } from '@services/activity.service';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { ChatService } from '../chat.service';
 
+@UntilDestroy()
 @Injectable({
 	providedIn: 'root',
 })
@@ -19,7 +32,8 @@ export class FeedService {
 	/**
 	 * Used to keep track of the reference time for the last read message
 	 */
-	private readonly initializationDate = new Date();
+	private initializationDate = new Date();
+	private lastInactivityDate;
 
 	private feedAuxiliaryStreams$: ReadonlyArray<Observable<unknown>> = [
 		this.roomService.members$,
@@ -51,6 +65,8 @@ export class FeedService {
 				lastReadMessage,
 				this.feedLoadCount,
 				this.initializationDate,
+				document.visibilityState,
+				this.lastInactivityDate,
 				lastPurge
 			);
 
@@ -62,5 +78,20 @@ export class FeedService {
 		shareReplay()
 	);
 
-	constructor(private roomService: RoomService, private userService: UserService) {}
+	constructor(
+		private roomService: RoomService,
+		private userService: UserService,
+		private chatService: ChatService,
+		private activityService: ActivityService
+	) {
+		this.activityService.visibility$
+			.pipe(
+				startWith(document.visibilityState),
+				filter((state) => state === 'hidden'),
+				untilDestroyed(this)
+			)
+			.subscribe(() => {
+				this.lastInactivityDate = new Date();
+			});
+	}
 }
