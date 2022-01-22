@@ -1,27 +1,33 @@
-# Décompresso
+![social_banner](https://user-images.githubusercontent.com/936101/150636820-148340b5-d348-42d3-98ea-ab7cccf6abb6.png)
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 10.1.7.
+Former **anonymous, short-lived work chat** 💬
 
-## Development server
+## Purpose
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Decompresso aimed to provide an independant and secure platform to chat anonymously with your coworkers, in order to open up on topics that would not usually be discussed.
 
-## Code scaffolding
+## How it worked
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+After signing up with their **professional email address** and verifying it, users would get matched into a common chat room based on the email address domain and assigned a random nickname. 
 
-## Build
+Every week, on sunday everning, a purge would happen and wipe all chat messages to start fresh.
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+## Chat features
 
-## Running unit tests
+- Real-time chat
+- Asychronous push notifications (missed messages, joining users)
+- Last read message (indicator & scrolling)
+- Message grouping by user & time frame
+- Like/dislike reactions
+- Mentions
+- Rich message content
+- Reporting system (based on a message)
+- Custom service messages (for special events)
+- Presence detection (online / offline)
+- Inactivity detection
+- Offline mode and async delivery
+- Invitation system
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## Under the hood
 
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+This PWA was powered by Firebase 9 and Angular 11 ✨
